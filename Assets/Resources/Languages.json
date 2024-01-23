@@ -1,0 +1,14 @@
+[
+    {
+      "Id": 0,
+      "CodeISO639_1": "ru",
+      "Name": "РУССКИЙ",
+      "File": "Russian"
+    },
+    {
+      "Id": 1,
+      "CodeISO639_1": "en",
+      "Name": "ENGLISH",
+      "File": "English"
+    }
+]
