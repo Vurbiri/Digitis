@@ -78,11 +78,11 @@ public class SettingsGame : Singleton<SettingsGame>
     }
     private bool Load()
     {
-        var (result, value) = Storage.Load<Profile>(_profileCurrent.key);
-        if (result)
-            _profileCurrent.Copy(value);
+        ReturnValue<Profile> data = Storage.Load<Profile>(_profileCurrent.key);
+        if (data.Result)
+            _profileCurrent.Copy(data.Value);
 
-        return result;
+        return data.Result;
     }
 
     public void Cancel()

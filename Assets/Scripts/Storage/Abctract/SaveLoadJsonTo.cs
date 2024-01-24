@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public abstract class SaveLoadJsonTo
 {
-
     protected Dictionary<string, string> _saved = null;
     protected bool _dictModified = false;
 
@@ -12,12 +11,12 @@ public abstract class SaveLoadJsonTo
 
     public abstract UniTask<bool> Initialize(string key);
 
-    public virtual (bool result, T value) Load<T>(string key)
+    public virtual ReturnValue<T> Load<T>(string key)
     {
         if ( _saved.TryGetValue(key, out string json))
             return Deserialize<T>(json);
 
-        return (false, default);
+        return new();
     }
 
     public abstract void Save(string key, object data, bool isSaveHard, Action<bool> callback);
@@ -43,6 +42,6 @@ public abstract class SaveLoadJsonTo
     }
 
     protected string Serialize(object obj) => Storage.Serialize(obj);
-    protected (bool result, T value) Deserialize<T>(string json) => Storage.Deserialize<T>(json);
+    protected ReturnValue<T> Deserialize<T>(string json) => Storage.Deserialize<T>(json);
 
 }

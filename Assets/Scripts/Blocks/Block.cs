@@ -23,16 +23,18 @@ public class Block : PooledObject
 
         IEnumerator MoveDownCoroutine()
         {
-            float target = _thisTransform.localPosition.y - 1f;
-            Vector3 position;
             float y;
             speed = Mathf.Abs(speed);
+            Vector3 position = _thisTransform.localPosition;
+            position.y -= 1f;
+            float target = position.y;
 
-            do
+            Index = position.ToVector2Int();
+
+            while (!Move(speed * Time.deltaTime))
             {
                 yield return null;
             }
-            while (!Move(speed * Time.deltaTime));
 
             Index = position.ToVector2Int();
             EventEndMoveDown?.Invoke(this);

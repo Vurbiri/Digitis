@@ -47,16 +47,14 @@ public static class Storage
         service.Save(key, data, isSaveHard, (b) => taskSave.TrySetResult(b));
         return taskSave.Task;
     }
-    public static (bool result, T value) Load<T>(string key) => service.Load<T>(key);
+    public static ReturnValue<T> Load<T>(string key) => service.Load<T>(key);
 
-    public static (bool result, T value) Deserialize<T>(string json)
+    public static ReturnValue<T> Deserialize<T>(string json)
     {
-        (bool, T) result = (false, default);
-
+        ReturnValue<T> result = new();
         try
         {
-            result.Item2 = JsonConvert.DeserializeObject<T>(json);
-            result.Item1 = result.Item2 != null;
+            result = new(JsonConvert.DeserializeObject<T>(json));
         }
         catch (Exception ex)
         {
@@ -67,17 +65,17 @@ public static class Storage
     }
     public static string Serialize(object obj) => JsonConvert.SerializeObject(obj);
 
-    public static async UniTask<(bool result, Texture texture)> TryLoadTextureWeb(string url)
+    public static async UniTask<ReturnValue<Texture>> TryLoadTextureWeb(string url)
     {
         if (string.IsNullOrEmpty(url))
-            return (false, null);
+            return new();
 
         using var request = UnityWebRequestTexture.GetTexture(url);
         await request.SendWebRequest();
 
         if (request.result != Result.Success)
-            return (false, null);
+            return new();
 
-        return (true, ((DownloadHandlerTexture)request.downloadHandler).texture);
+        return new(true, ((DownloadHandlerTexture)request.downloadHandler).texture);
     }
 }

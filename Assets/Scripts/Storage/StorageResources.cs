@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class StorageResources
 {
-    public static (bool result, T value) LoadFromJson<T>(string path)
+    public static ReturnValue<T> LoadFromJson<T>(string path)
     {
         string json = Resources.Load<TextAsset>(path).text;
         return Storage.Deserialize<T>(json);

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Networking.UnityWebRequest;
 
 public partial class Localization : Singleton<Localization>
 {
@@ -23,10 +24,10 @@ public partial class Localization : Singleton<Localization>
 
     public bool LoadFromResources()
     {
-        var (result, value) = StorageResources.LoadFromJson<LanguageType[]>(_path);
-        if (result)
+        ReturnValue<LanguageType[]> lt = StorageResources.LoadFromJson<LanguageType[]>(_path);
+        if (lt.Result)
         {
-            _languages = value;
+            _languages = lt.Value;
             return SwitchLanguage(_defaultLang);
         }
 
@@ -81,15 +82,15 @@ public partial class Localization : Singleton<Localization>
 
     private bool SetLanguage(LanguageType type)
     {
-        var (result, value) = StorageResources.LoadFromJson<Dictionary<string, string>>(type.File);
-        if (result)
+        ReturnValue<Dictionary<string, string>> d = StorageResources.LoadFromJson<Dictionary<string, string>>(type.File);
+        if (d.Result)
         {
             CurrentIdLang = type.Id;
-            _language = new(value, new StringComparer());
+            _language = new(d.Value, new StringComparer());
             EventSwitchLanguage?.Invoke();
         }
 
-        return result;
+        return d.Result;
     }
 
     public class StringComparer : IEqualityComparer<string>

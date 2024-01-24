@@ -30,11 +30,11 @@ public class JsonToLocalStorage : SaveLoadJsonTo
 
         if (!string.IsNullOrEmpty(json))
         {
-            var (result, value) = Deserialize<Dictionary<string, string>>(json);
+            ReturnValue<Dictionary<string, string>> d = Deserialize<Dictionary<string, string>>(json);
 
-            if (result)
+            if (d.Result)
             {
-                _saved = value;
+                _saved = d.Value;
                 return true;
             }
         }
