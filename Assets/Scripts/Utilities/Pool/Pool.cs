@@ -28,6 +28,15 @@ public class Pool<T> where T : PooledObject
         return gameObject;
     }
 
+    public T[] GetObjects(Transform parent, int count)
+    {
+        T[] gameObjects = new T[count];
+        for (int i = 0; i < count; i ++)
+            gameObjects[i] = GetObject(parent);
+
+        return gameObjects;
+    }
+
     private void OnDeactivate(PooledObject gameObject)
     {
         gameObject.SetParent(_repository);

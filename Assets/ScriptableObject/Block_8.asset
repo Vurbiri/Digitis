@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce38083493fa16e41a1a28d399b3bf83, type: 3}
-  m_Name: Block_5
+  m_Name: Block_8
   m_EditorClassIdentifier: 
-  _digit: 5
-  _colorBlock: {r: 0.5019608, g: 0, b: 0.5019608, a: 1}
+  _digit: 8
+  _colorBlock: {r: 0.078431375, g: 0.078431375, b: 1, a: 1}
   _colorNumber: {r: 0.85, g: 1, b: 0.9, a: 1}
-  _spriteNumber: {fileID: 21300000, guid: 07f000b83f030534292dc6cf0c6b7143, type: 3}
+  _spriteNumber: {fileID: 21300000, guid: 44f3ce90f6fa0434a8e9fa7303fd9f6e, type: 3}

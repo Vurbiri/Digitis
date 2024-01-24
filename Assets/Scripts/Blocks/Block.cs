@@ -6,15 +6,19 @@ using UnityEngine;
 public class Block : PooledObject
 {
     public Vector2Int Index {  get; private set; }
-    
+    public int Digit { get; private set; }
+    public bool isMovePause { get; set; }
+
     public event Action<Block> EventEndMoveDown;
     
     public void Setup(Vector2 position, BlockSettings settings)
     {
         _thisTransform.localPosition = position;
         Index = position.ToVector2Int();
+        Digit = settings.Digit;
         GetComponent<BlockVisual>().Setup(settings);
         Activate();
+        isMovePause = false;
     }
 
     public void MoveDown(float speed)
@@ -36,11 +40,13 @@ public class Block : PooledObject
                 yield return null;
             }
 
-            Index = position.ToVector2Int();
             EventEndMoveDown?.Invoke(this);
 
             bool Move(float maxDistanceDelta)
             {
+                if(isMovePause)
+                    return false;
+                
                 position = _thisTransform.localPosition;
                 y = position.y - maxDistanceDelta;
                 if(y > target)

@@ -423,7 +423,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sizeArea: {x: 10, y: 20}
-  _blockSettings: {fileID: 11400000, guid: 233f6f77eb5d385429a5b16cb4993baf, type: 2}
+  _blockSettings:
+  - {fileID: 11400000, guid: 1b9223f8127ca434e9f3e4e1f89805b6, type: 2}
+  - {fileID: 11400000, guid: bcfb9b487e098ed4aac85b86113cb9ea, type: 2}
+  - {fileID: 11400000, guid: 7cae4a7e422a7a646a159d034a5baa37, type: 2}
+  - {fileID: 11400000, guid: b48869e07452ce04da734bdf4658d19a, type: 2}
+  - {fileID: 11400000, guid: 233f6f77eb5d385429a5b16cb4993baf, type: 2}
+  - {fileID: 11400000, guid: 92938a09ea9c971418834a8ed08a466f, type: 2}
+  - {fileID: 11400000, guid: bf11764f62b75b1408ddd4be89d9b2dd, type: 2}
+  - {fileID: 11400000, guid: 1b9c655a6b93c25448a44c24daceca19, type: 2}
+  - {fileID: 11400000, guid: d6e73b0f427946f438216bfe86026632, type: 2}
   _prefabBlock: {fileID: 7682831634899210462, guid: 07d5b0ece7a3a4147a3d03bc621bcc5e,
     type: 3}
   _repository: {fileID: 1041258606}

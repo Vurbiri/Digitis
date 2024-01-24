@@ -1,75 +1,60 @@
+
+using System.Collections;
+using UnityEngine;
 #if UNITY_EDITOR
 using NaughtyAttributes;
-using System.Collections;
-
 #endif
-
-using UnityEngine;
 
 public class GameArea : MonoBehaviour
 {
     [SerializeField] private Vector2Int _sizeArea = new(10, 20);
-    [SerializeField] private BlockSettings _blockSettings;
+    [SerializeField] private BlockSettings[] _blockSettings;
     [Space]
     [SerializeField] private Block _prefabBlock;
     [SerializeField] private Transform _repository;
 
-    private int MaxX => _sizeArea.x - 1;
-    private int MaxY => _sizeArea.y - 1;
 
     private Transform _thisTransform;
 
     private Pool<Block> _poolBlocks;
     private BlocksArea _area = null;
+    private BlocksShape _blocksShape;
 
     private Coroutine _coroutine;
 
     private void Awake()
     {
         _thisTransform = transform;
-        _poolBlocks = new(_prefabBlock, _repository, 5);
+        _poolBlocks = new(_prefabBlock, _repository, 100);
         _area = new(_sizeArea);
+        _blocksShape = new(_blockSettings, _area);
+        _blocksShape.EventEndMoveDown += OnBlockEndMoveDown;
+    }
+
+    private void Start()
+    {
+        StartTest();
     }
 
 
     [Button]
     private void StartTest()
     {
-        float speed = 1.75f;
-        WaitForSeconds pause = new(1f);
-        Vector2Int vector;
-        Block block;
+        float speed = 2.5f;
+        _blocksShape.Spawn(_poolBlocks.GetObjects(_thisTransform, 2), speed, Random.Range(0, 9) - 4);
 
-        StopTest();
-        _coroutine = StartCoroutine(Test());
+    }
 
-        IEnumerator Test()
-        {
-            while (true)
-            {
-                yield return pause;
-                vector = new Vector2Int(Random.Range(0, _sizeArea.x), MaxY);
-                if (_area[vector] == null)
-                {
-                    block = _poolBlocks.GetObject(_thisTransform);
-                    block.Setup(vector, _blockSettings);
-                    block.EventEndMoveDown += OnEventEndMoveDown;
-                    if (_area.IsEmptyDownstairs(vector))
-                        block.MoveDown(speed);
-                    else
-                        _area.Add(block);
-                }
-            }
-        }
+    private void OnBlockEndMoveDown(Block block, bool isEnd)
+    {
+        float speed = 2.5f;
 
+        _area.Add(block);
 
-        void OnEventEndMoveDown(Block b)
-        {
-            if (_area.IsEmptyDownstairs(b.Index))
-                b.MoveDown(speed);
-            else
-                _area.Add(b);
-        }
+        if (isEnd)
+            _blocksShape.Spawn(_poolBlocks.GetObjects(_thisTransform, 2), speed, Random.Range(0, 9) - 4);
+        else
+            _blocksShape.BlocksPause(false);
     }
 
     [Button]
