@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.coffee.ui-particle": "4.5.2",
     "com.cysharp.unitask": "2.5.0",
     "com.dbrizov.naughtyattributes": "2.1.4",
     "com.unity.2d.sprite": "1.0.0",

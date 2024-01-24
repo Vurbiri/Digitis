@@ -1,24 +1,29 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
-public class Block : MonoBehaviour
+[RequireComponent(typeof(BlockVisual))]
+public class Block : PooledObject
 {
-
-    private Transform _thisTransform;
-
-    private void Awake()
+    public Vector2Int Index {  get; private set; }
+    
+    public event Action<Block> EventEndMoveDown;
+    
+    public void Setup(Vector2 position, BlockSettings settings)
     {
-        _thisTransform = transform;
-        Debug.Log(_thisTransform.localPosition);
-        Debug.Log(_thisTransform.position);
+        _thisTransform.localPosition = position;
+        Index = position.ToVector2Int();
+        GetComponent<BlockVisual>().Setup(settings);
+        Activate();
     }
 
-    public void MoveTargetY(float target, float speed)
+    public void MoveDown(float speed)
     {
         StartCoroutine(MoveDownCoroutine());
 
         IEnumerator MoveDownCoroutine()
         {
+            float target = _thisTransform.localPosition.y - 1f;
             Vector3 position;
             float y;
             speed = Mathf.Abs(speed);
@@ -27,8 +32,10 @@ public class Block : MonoBehaviour
             {
                 yield return null;
             }
-            while (!Move(speed * Time.deltaTime)); 
-        
+            while (!Move(speed * Time.deltaTime));
+
+            Index = position.ToVector2Int();
+            EventEndMoveDown?.Invoke(this);
 
             bool Move(float maxDistanceDelta)
             {

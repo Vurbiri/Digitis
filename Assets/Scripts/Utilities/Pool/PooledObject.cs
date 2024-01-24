@@ -4,18 +4,24 @@ using UnityEngine;
 public abstract class PooledObject : MonoBehaviour
 {
     public event Action<PooledObject> EventDeactivate;
-    public Transform ThisTransform { get; private set; }
+    protected Transform _thisTransform;
 
-    protected virtual void Awake() =>
-        ThisTransform = transform;
-    
+    protected void Activate() => gameObject.SetActive(true);
 
-    public virtual void Activate() =>
-        gameObject.SetActive(true);
+    public virtual void Initialize()
+    {
+        _thisTransform = transform;
+        gameObject.SetActive(false);
+    }
 
     public virtual void Deactivate()
     {
         gameObject.SetActive(false);
         EventDeactivate?.Invoke(this);
+    }
+
+    public void SetParent(Transform parent)
+    {
+        _thisTransform.SetParent(parent);
     }
 }

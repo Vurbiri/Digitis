@@ -7,7 +7,7 @@ public class Banners : Singleton<Banners>
     [SerializeField] private Transform _repository;
     [SerializeField] int _sizePool = 3;
 
-    private PoolBanners _banners;
+    private Pool<Banner> _banners;
 
     private void Start()
     {
@@ -16,7 +16,7 @@ public class Banners : Singleton<Banners>
 
     public void Message(string message, MessageType messageType, int time, bool isThrough)
     {
-        _banners.GetObject().Setup(_container, message, messageType, time, isThrough);
+        _banners.GetObject(_container).Setup(message, messageType, time, isThrough);
     }
 
 
