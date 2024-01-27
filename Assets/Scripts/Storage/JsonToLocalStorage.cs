@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 
-public class JsonToLocalStorage : SaveLoadJsonTo
+public class JsonToLocalStorage : ASaveLoadJsonTo
 {
     private string _key;
     private UtilityJS _utilityJS;

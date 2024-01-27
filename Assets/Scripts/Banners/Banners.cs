@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Banners : Singleton<Banners>
+public class Banners : ASingleton<Banners>
 {
     [SerializeField] private Banner _prefab;
     [SerializeField] private Transform _container;

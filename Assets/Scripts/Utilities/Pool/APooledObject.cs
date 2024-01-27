@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-public abstract class PooledObject : MonoBehaviour
+public abstract class APooledObject<T> : MonoBehaviour where T : APooledObject<T>
 {
-    public event Action<PooledObject> EventDeactivate;
+    public event Action<T> EventDeactivate;
     protected Transform _thisTransform;
 
     protected void Activate() => gameObject.SetActive(true);
@@ -17,7 +17,7 @@ public abstract class PooledObject : MonoBehaviour
     public virtual void Deactivate()
     {
         gameObject.SetActive(false);
-        EventDeactivate?.Invoke(this);
+        EventDeactivate?.Invoke(this as T);
     }
 
     public void SetParent(Transform parent)

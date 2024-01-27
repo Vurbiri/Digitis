@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 
-public partial class YMoney : Singleton<YMoney>
+public partial class YMoney : ASingleton<YMoney>
 {
     [Space]
     [Header("Полноэкранная реклама")]

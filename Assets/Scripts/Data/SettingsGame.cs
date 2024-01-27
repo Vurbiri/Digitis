@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class SettingsGame : Singleton<SettingsGame>
+public class SettingsGame : ASingleton<SettingsGame>
 {
     [Space]
     [SerializeField] private Profile _profileDesktop = new();

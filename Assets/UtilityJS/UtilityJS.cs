@@ -1,6 +1,6 @@
 using Cysharp.Threading.Tasks;
 
-public partial class UtilityJS : Singleton<UtilityJS>
+public partial class UtilityJS : ASingleton<UtilityJS>
 {
 #if !UNITY_EDITOR
     public bool IsMobile => IsMobileUnityJS();

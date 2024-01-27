@@ -9,11 +9,11 @@ public static class Storage
 {
     private const string keyGlobalSave = "DTS";
     
-    private static SaveLoadJsonTo service;
+    private static ASaveLoadJsonTo service;
 
     public static Type TypeStorage => service?.GetType();
 
-    public static bool Create<T>() where T : SaveLoadJsonTo, new()
+    public static bool Create<T>() where T : ASaveLoadJsonTo, new()
     {
         if (typeof(T) == TypeStorage)
             return true; 

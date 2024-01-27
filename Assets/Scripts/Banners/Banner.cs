@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image), typeof(HorizontalLayoutGroup), typeof(Outline))]
-public class Banner : PooledObject
+public class Banner : APooledObject<Banner>
 {
     [SerializeField] private TMP_Text _text;
     [SerializeField] private Color[] _colors;

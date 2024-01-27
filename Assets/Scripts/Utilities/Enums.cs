@@ -1,6 +1,14 @@
 using System;
 using System.Linq;
 
+
+public enum ShapeSize : byte
+{
+    Domino = 2,
+    Tromino = 3,
+    Tetromino = 4
+}
+
 public enum MixerGroup : byte
 {
     Music,

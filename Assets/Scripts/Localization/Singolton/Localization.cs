@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.Networking.UnityWebRequest;
 
-public partial class Localization : Singleton<Localization>
+public partial class Localization : ASingleton<Localization>
 {
     [SerializeField] private string _path = "Languages";
     [SerializeField] private string _defaultLang = "en";

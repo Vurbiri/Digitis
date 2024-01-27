@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 
-public abstract class SaveLoadJsonTo
+public abstract class ASaveLoadJsonTo
 {
     protected Dictionary<string, string> _saved = null;
     protected bool _dictModified = false;

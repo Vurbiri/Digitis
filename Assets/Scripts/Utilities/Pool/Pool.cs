@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pool<T> where T : PooledObject
+public class Pool<T> where T : APooledObject<T>
 {
     private readonly Stack<T> _pool = new();
     private readonly T _prefab;
@@ -17,15 +17,15 @@ public class Pool<T> where T : PooledObject
 
     public T GetObject(Transform parent)
     {
-        T gameObject;
+        T poolObject;
         if (_pool.Count == 0)
-            gameObject = CreateObject();
+            poolObject = CreateObject();
         else
-            gameObject = _pool.Pop();
+            poolObject = _pool.Pop();
 
-        gameObject.SetParent(parent);
+        poolObject.SetParent(parent);
         
-        return gameObject;
+        return poolObject;
     }
 
     public T[] GetObjects(Transform parent, int count)
@@ -37,10 +37,10 @@ public class Pool<T> where T : PooledObject
         return gameObjects;
     }
 
-    private void OnDeactivate(PooledObject gameObject)
+    private void OnDeactivate(T poolObject)
     {
-        gameObject.SetParent(_repository);
-        _pool.Push(gameObject as T);
+        poolObject.SetParent(_repository);
+        _pool.Push(poolObject as T);
     }
 
     private T CreateObject()

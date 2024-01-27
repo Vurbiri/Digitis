@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 
-public partial class YandexSDK : Singleton<YandexSDK>
+public partial class YandexSDK : ASingleton<YandexSDK>
 {
 #if !UNITY_EDITOR
     public bool IsInitialize => IsInitializeJS();

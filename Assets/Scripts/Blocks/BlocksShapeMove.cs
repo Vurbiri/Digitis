@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class BlocksShape
+public class BlocksShapeMove
 {
-    public event Action<Block, bool> EventEndMoveDown;
+    public event Action EventEndMoveDown;
 
-    private Block[] _blocks;
-    private int _currentCount;
+    private HashSet<Block> _blocks;
 
     private readonly Dictionary<int, BlockSettings> _blockSettings;
 
@@ -18,8 +17,9 @@ public class BlocksShape
     private const int COUNT = 2;
     private const int MIN_DIGIT = 1;
     private const int MAX_DIGIT = 9;
+    private const float SPEED_FALL = 20f;
 
-    public BlocksShape(BlockSettings[] settings, BlocksArea area)
+    public BlocksShapeMove(BlockSettings[] settings, BlocksArea area)
     {
         _blockSettings = new(settings.Length);
         foreach (var block in settings)
@@ -38,25 +38,24 @@ public class BlocksShape
     public bool Spawn(Block[] blocks, float speed, int offset)
     {
         bool isEnd = false;
+        int moveCount = COUNT;
         Vector2Int position;
-        int[] range = RandomRange();
-
+        int[] indexes = RandomRange();
+        
         for (int i = 0; i < COUNT; i++)
         {
             position = positions[i];
             position.x += offset;
-            Setup(blocks[i], position, _blockSettings[range[i]]);
+            Setup(blocks[i], position, _blockSettings[indexes[i]]);
             isEnd = isEnd || !_area.IsEmptyDownstairs(position);
         }
 
         if (isEnd)
             return false;
 
-        foreach (var block in blocks)
-            block.MoveDown(speed);
+        _blocks = new(blocks);
+        StartMove();
 
-        _blocks = blocks;
-        _currentCount = COUNT;
         return true;
 
         #region Local Functions
@@ -65,22 +64,60 @@ public class BlocksShape
             block.Setup(position, settings);
             block.EventEndMoveDown += OnEventEndMoveDown;
         }
+        void StartMove()
+        {
+            foreach (var block in _blocks)
+                block.MoveDown(speed);
+        }
         void OnEventEndMoveDown(Block b)
         {
-            if (_area.IsEmptyDownstairs(b.Index))
+            if (!_area.IsEmptyDownstairs(b))
+                FixedBlock(b);
+
+            if (--moveCount > 0)
+                return;
+
+            CheckBlocks();
+
+            moveCount = _blocks.Count;
+            if (moveCount == 0)
             {
-                b.MoveDown(speed);
+                EventEndMoveDown?.Invoke();
                 return;
             }
+            else if (moveCount < COUNT)
+            {
+                speed = SPEED_FALL;
+            }
 
+            StartMove();
+        }
+        void FixedBlock(Block b)
+        {
+            _area.Add(b);
             b.EventEndMoveDown -= OnEventEndMoveDown;
-            int index = Array.IndexOf(_blocks, b);
-            _blocks[index] = null;
-            isEnd = --_currentCount == 0;
-            if (!isEnd)
-                BlocksPause(true);
-
-            EventEndMoveDown?.Invoke(b, isEnd);
+            _blocks.Remove(b);
+        }
+        void CheckBlocks()
+        {
+            Block bl = null;
+            while (_blocks.Count > 0)
+            {
+                isEnd = true;
+                foreach (var block in _blocks)
+                {
+                    if (!_area.IsEmptyDownstairs(block))
+                    {
+                        bl = block;
+                        isEnd = false;
+                        break;
+                    }
+                }
+                if (!isEnd)
+                    FixedBlock(bl);
+                else
+                    return;
+            }
         }
         int[] RandomRange()
         {
@@ -102,14 +139,5 @@ public class BlocksShape
             return r;
         }
         #endregion
-    }
-
-    public void BlocksPause(bool pause)
-    {
-        foreach (var block in _blocks)
-        {
-            if(block != null)
-                block.isMovePause = pause;
-        }
     }
 }

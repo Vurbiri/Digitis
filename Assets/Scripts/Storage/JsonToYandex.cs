@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 
-public class JsonToYandex : SaveLoadJsonTo
+public class JsonToYandex : ASaveLoadJsonTo
 {
     private string _key;
     private YandexSDK YSDK => YandexSDK.Instance;

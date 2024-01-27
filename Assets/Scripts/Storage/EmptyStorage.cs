@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
 
-public class EmptyStorage : SaveLoadJsonTo
+public class EmptyStorage : ASaveLoadJsonTo
 {
     public override bool IsValid => true;
 
