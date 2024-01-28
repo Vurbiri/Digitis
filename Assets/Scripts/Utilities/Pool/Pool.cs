@@ -28,11 +28,11 @@ public class Pool<T> where T : APooledObject<T>
         return poolObject;
     }
 
-    public T[] GetObjects(Transform parent, int count)
+    public List<T> GetObjects(Transform parent, int count)
     {
-        T[] gameObjects = new T[count];
+        List<T> gameObjects = new(count);
         for (int i = 0; i < count; i ++)
-            gameObjects[i] = GetObject(parent);
+            gameObjects.Add(GetObject(parent));
 
         return gameObjects;
     }
