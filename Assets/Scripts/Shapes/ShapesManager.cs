@@ -5,6 +5,7 @@ using Random = UnityEngine.Random;
 
 public class ShapesManager : MonoBehaviour
 {
+    #region SerializeField
     [Header("Blocks area")]
     [SerializeField] private BlocksArea _area;
     [Header ("Pool Block Data")]
@@ -21,7 +22,9 @@ public class ShapesManager : MonoBehaviour
     [SerializeField] private Shape[] _domino;
     [SerializeField] private Shape[] _tromino;
     [SerializeField] private Shape[] _tetromino;
+    #endregion
 
+    #region private
     private Dictionary<int, BlockSettings> _blockSettings;
     private Pool<Block> _poolBlocks;
 
@@ -31,6 +34,7 @@ public class ShapesManager : MonoBehaviour
 
     private int _minDigit = 1;
     private int _maxDigit;
+    #endregion
 
     public event Action EventEndMoveDown;
 
@@ -66,7 +70,7 @@ public class ShapesManager : MonoBehaviour
         };
     }
 
-    public void CreateForm()
+    public void CreateShape()
     {
         _shapeForm = _currentShapes[Random.Range(0, _currentShapes.Length)];
         int countBlocks = _shapeForm.CountBlocks;
@@ -108,15 +112,21 @@ public class ShapesManager : MonoBehaviour
         #endregion
     }
 
-    public bool StartMove()
+    public bool StartMove(bool isGravity)
     {
-        if(_shapeControl.Create(_shapeForm))
+        if(_shapeControl.SetupForNew(_shapeForm, isGravity))
         {
-            CreateForm();
+            CreateShape();
             _shapeControl.StartMoveDown();
             return true;
         }
         return false;
+    }
+
+    public void StartFall(List<Block> blocks, bool isGravity, int count)
+    {
+        _shapeControl.SetupForFall(blocks, isGravity, count);
+        _shapeControl.StartMoveDown();
     }
 
     public void Rotate() => _shapeControl.Rotate();

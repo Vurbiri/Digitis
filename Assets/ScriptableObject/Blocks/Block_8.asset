@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Block_8
   m_EditorClassIdentifier: 
   _digit: 8
-  _colorBlock: {r: 1, g: 0.48235294, b: 0.07058824, a: 1}
+  _colorBlock: {r: 0.5529412, g: 0.7607843, b: 0.29803923, a: 1}
   _colorNumber: {r: 0.85, g: 1, b: 0.9, a: 1}
   _spriteNumber: {fileID: 21300000, guid: 44f3ce90f6fa0434a8e9fa7303fd9f6e, type: 3}

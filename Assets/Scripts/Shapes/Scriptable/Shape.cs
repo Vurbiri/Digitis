@@ -21,7 +21,6 @@ public class Shape : ScriptableObject
     public void Initialize()
     {
         SubShape = new(_startBlocksPositions, _sizeBound - 1, COUNT_SUBSHAPE);
-
     }
 
     public void Create(List<Block> blocks, BlockSettings[] settings)

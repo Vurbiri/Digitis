@@ -1,14 +1,16 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [RequireComponent(typeof(BlockVisual))]
-public class Block : APooledObject<Block>
+public class Block : APooledObject<Block>, IComparable<Block>
 {
+    [SerializeField] private BlockVisual _blockVisual;
+    
     public Vector2Int Position {  get; private set; }
     public int Digit { get; private set; }
-    
+    public bool IsOne => Digit == 1;
 
     public event Action<Block> EventEndMoveDown;
 
@@ -23,8 +25,15 @@ public class Block : APooledObject<Block>
         _thisTransform.localPosition = position;
         Position = position.ToVector2Int();
 
-        GetComponent<BlockVisual>().Setup(settings);
+        _blockVisual.Setup(settings);
         Activate();
+    }
+
+    public bool IsEqual(Block other)
+    {
+        if (other == null) return false;
+        if (this == other) return false;
+        return Digit == other.Digit;
     }
 
     public void Transfer(Vector2Int position, Transform parent)
@@ -33,14 +42,15 @@ public class Block : APooledObject<Block>
         _thisTransform.localPosition = position.ToVector3();
         Position = _thisTransform.localPosition.ToVector2Int();
     }
+
     public void MoveToDelta(Vector2Int delta)
     {
         _thisTransform.localPosition += delta.ToVector3();
         Position += delta;
-        _target += delta.y;
+        _target = Position.y;
     }
 
-    public void MoveDown(float speed, int distance = 1)
+    public void MoveDown(float speed)
     {
         StartCoroutine(MoveDownCoroutine());
 
@@ -48,8 +58,7 @@ public class Block : APooledObject<Block>
         {
             float y;
             Vector3 position = _thisTransform.localPosition;
-            position.y -= distance;
-            _target = position.y;
+            _target = --position.y;
             speed = Mathf.Abs(speed);
 
             Position = position.ToVector2Int();
@@ -80,5 +89,17 @@ public class Block : APooledObject<Block>
                 }
             }
         }
+    }
+
+    public async UniTask Remove()
+    {
+        await UniTask.Delay(700);
+        
+        base.Deactivate();
+    }
+
+    public int CompareTo(Block other)
+    {
+        return Digit.CompareTo(other.Digit);
     }
 }

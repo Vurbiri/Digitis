@@ -154,7 +154,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _area: {fileID: 945172856}
   _shapesManager: {fileID: 2050258516}
-  _maxDigit: 5
+  _maxDigit: 3
+  _isGravity: 1
 --- !u!4 &64705095
 Transform:
   m_ObjectHideFlags: 0
@@ -1142,7 +1143,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -2
   m_Sprite: {fileID: 21300000, guid: fb5054e078261bf41b6a366c328cf152, type: 3}
-  m_Color: {r: 0.039215688, g: 0.87058824, b: 1, a: 1}
+  m_Color: {r: 0.07450981, g: 0.10588236, b: 0.2509804, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
