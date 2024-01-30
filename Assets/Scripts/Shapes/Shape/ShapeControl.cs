@@ -208,10 +208,6 @@ public class ShapeControl
         {
             await UniTask.Delay(WAIT_BEFORE_FIXED);
 
-            CheckingBoxes();
-        }
-        void CheckingBoxes()
-        {
             for (int i = _blocks.Count - 1; i >= 0; i--)
             {
                 if (!area.IsEmptyDownstairs(_blocks[i]))
@@ -227,6 +223,11 @@ public class ShapeControl
                 return;
             }
 
+            StopMove(OnEventEndMoveDownNotGravity);
+        }
+        void CheckingBoxes()
+        {
+            _isFixed = true;
             StopMove(OnEventEndMoveDownNotGravity);
         }
         void ReStartMoveDown()
@@ -249,6 +250,7 @@ public class ShapeControl
     private void FixedBlock(Block block, Action<Block> callback)
     {
         block.EventEndMoveDown -= callback;
+        block.Fixed();
         area.Add(block);
         _blocks.Remove(block);
     }

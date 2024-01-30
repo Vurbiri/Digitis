@@ -11,7 +11,8 @@ public class ShapesManager : MonoBehaviour
     [Header ("Pool Block Data")]
     [SerializeField] private Block _prefabBlock;
     [SerializeField] private int _sizePool = 100;
-    [SerializeField] private BlockSettings[] _settings;
+    [SerializeField] private BlockSettings _settingBomb;
+    [SerializeField] private BlockSettings[] _settingsBlocks;
     [Space]
     [SerializeField] private Transform _poolRepository;
     [Space]
@@ -40,8 +41,8 @@ public class ShapesManager : MonoBehaviour
 
     private void Awake()
     {
-        _blockSettings = new(_settings.Length);
-        foreach (var block in _settings)
+        _blockSettings = new(_settingsBlocks.Length);
+        foreach (var block in _settingsBlocks)
             _blockSettings[block.Digit] = block;
 
         _poolBlocks = new(_prefabBlock, _poolRepository, _sizePool);
@@ -111,6 +112,8 @@ public class ShapesManager : MonoBehaviour
         }
         #endregion
     }
+
+    public void ShapeToBomb() => _shapeForm.ReSetup(_settingBomb);
 
     public bool StartMove(bool isGravity)
     {

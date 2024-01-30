@@ -3,11 +3,11 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(BlockVisual))]
+[RequireComponent(typeof(BlockSFX))]
 public class Block : APooledObject<Block>, IComparable<Block>
 {
-    [SerializeField] private BlockVisual _blockVisual;
-    
+    private BlockSFX _blockSFX;
+
     public Vector2Int Position {  get; private set; }
     public int Digit { get; private set; }
     public bool IsOne => Digit == 1;
@@ -17,6 +17,11 @@ public class Block : APooledObject<Block>, IComparable<Block>
     private float _target;
     private const string NAME = "Block_{0}";
 
+    private void Awake()
+    {
+        _blockSFX = GetComponent<BlockSFX>();
+    }
+
     public void Setup(Vector2 position, BlockSettings settings)
     {
         Digit = settings.Digit;
@@ -25,8 +30,16 @@ public class Block : APooledObject<Block>, IComparable<Block>
         _thisTransform.localPosition = position;
         Position = position.ToVector2Int();
 
-        _blockVisual.Setup(settings);
+        _blockSFX.Setup(settings);
         Activate();
+    }
+
+    public void ReSetup(BlockSettings settings)
+    {
+        Digit = settings.Digit;
+        gameObject.name = string.Format(NAME, Digit);
+
+        _blockSFX.Setup(settings);
     }
 
     public bool IsEqual(Block other)
@@ -38,9 +51,16 @@ public class Block : APooledObject<Block>, IComparable<Block>
 
     public void Transfer(Vector2Int position, Transform parent)
     {
+        _blockSFX.TrailStop();
         SetParent(parent);
         _thisTransform.localPosition = position.ToVector3();
         Position = _thisTransform.localPosition.ToVector2Int();
+        _blockSFX.TrailPlay();
+    }
+
+    public void Fixed()
+    {
+        _blockSFX.SetTrailDistanceMultiplier(0f);
     }
 
     public void MoveToDelta(Vector2Int delta)
@@ -52,6 +72,8 @@ public class Block : APooledObject<Block>, IComparable<Block>
 
     public void MoveDown(float speed)
     {
+        _blockSFX.SetTrailDistanceMultiplier(speed);
+
         StartCoroutine(MoveDownCoroutine());
 
         IEnumerator MoveDownCoroutine()
@@ -93,8 +115,8 @@ public class Block : APooledObject<Block>, IComparable<Block>
 
     public async UniTask Remove()
     {
-        await UniTask.Delay(700);
-        
+        await _blockSFX.BlockOff();
+
         base.Deactivate();
     }
 

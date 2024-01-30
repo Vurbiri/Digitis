@@ -116,8 +116,8 @@ public class BlocksArea : MonoBehaviour
         {
             int dgt = block.Digit;
 
-            if(!Add())
-                return false;
+            if (dgt == 0) return false;
+            if(!Add()) return false;
 
             foreach (var d in Direction2D.All)
                 if(TryGetBlock(block.Position + d, out Block outBlock))

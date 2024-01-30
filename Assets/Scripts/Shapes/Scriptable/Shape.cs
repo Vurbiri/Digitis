@@ -30,4 +30,11 @@ public class Shape : ScriptableObject
         for (int i = 0; i < _countBlocks; i++)
             blocks[i].Setup(_startBlocksPositions[i] + _offsetForNext, settings[i]);
     }
+
+    public void ReSetup(BlockSettings settings)
+    {
+        foreach (var block in Blocks)
+            block.ReSetup(settings);
+    }
+
 }
