@@ -154,8 +154,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _area: {fileID: 945172856}
   _shapesManager: {fileID: 2050258516}
-  _maxDigit: 3
-  _isGravity: 0
+  _maxDigit: 9
+  _isGravity: 1
 --- !u!4 &64705095
 Transform:
   m_ObjectHideFlags: 0
@@ -590,6 +590,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _size: {x: 10, y: 20}
   _container: {fileID: 1571479057}
+  _timePauseBlocksRemoved: 200
+  _timePauseBombExploded: 150
 --- !u!1 &1041258605
 GameObject:
   m_ObjectHideFlags: 0

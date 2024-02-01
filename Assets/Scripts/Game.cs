@@ -18,7 +18,7 @@ public class Game : MonoBehaviour
 
     private void Start()
     {
-        _shapesManager.Initialize(_maxDigit, ShapeSize.Tromino);
+        _shapesManager.InitializeDigitis(_maxDigit, ShapeSize.Tromino);
         _shapesManager.EventEndMoveDown += OnBlockEndMoveDown;
         _shapesManager.CreateShape();
 
@@ -44,7 +44,7 @@ public class Game : MonoBehaviour
 
         async UniTaskVoid OnBlockEndMoveDownAsync()
         {
-            _columns = await _area.CheckSeriesBlocksAsync();
+            _columns = await _area.CheckNewBlocksDigitisAsync();
             if (FallColumns())
                 return;
 

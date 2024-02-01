@@ -10,7 +10,7 @@ public class BlockVisual : MonoBehaviour
     [SerializeField] private Sprite _spriteBomb;
 
 
-    public void Setup(BlockSettings settings)
+    public void SetupDigitis(BlockSettings settings)
     {
         if(settings.Digit == 0)
             _spriteRendererBlock.sprite = _spriteBomb;
@@ -20,7 +20,18 @@ public class BlockVisual : MonoBehaviour
 
         _spriteRendererNumber.sprite = settings.SpriteNumber;
         _spriteRendererNumber.color = settings.ColorNumber;
-        On();
+
+        _spriteRendererBlock.enabled = true;
+        _spriteRendererNumber.enabled = true;
+    }
+
+    public void SetupTetris(Color color, Sprite sprite)
+    {
+        _spriteRendererBlock.sprite = sprite;
+        _spriteRendererBlock.color = color;
+
+        _spriteRendererBlock.enabled = true;
+        _spriteRendererNumber.enabled = false;
     }
 
     public void Off()
@@ -28,9 +39,5 @@ public class BlockVisual : MonoBehaviour
         _spriteRendererBlock.enabled = false;
         _spriteRendererNumber.enabled = false;
     }
-    public void On()
-    {
-        _spriteRendererBlock.enabled = true;
-        _spriteRendererNumber.enabled = true;
-    }
+
 }

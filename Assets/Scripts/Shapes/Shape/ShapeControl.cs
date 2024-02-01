@@ -50,6 +50,7 @@ public class ShapeControl
             block = _blocks[i];
             position = shapeForm.BlocksPositions[i] + _offset;
             block.Transfer(position, container);
+            block.StartFall(speeds.Current);
             isEmpty = isEmpty && area.IsEmptyDownstairs(position);
             if (isGravity)
                 block.EventEndMoveDown += OnEventEndMoveDownGravity;
@@ -87,9 +88,12 @@ public class ShapeControl
         _isFixed = true;
         _isCollision = false;
         _countBlockMove = _blocks.Count;
-        _blocks.ForEach(block => block.EventEndMoveDown += OnEventEndMoveDownGravity);
         _moveCount = isGravity ? null : count;
-
+        foreach (var block in _blocks)
+        {
+            block.EventEndMoveDown += OnEventEndMoveDownGravity;
+            block.StartFall(speeds.Fall);
+        }
     }
 
     public void SetSpeed(bool isSpeedDown)

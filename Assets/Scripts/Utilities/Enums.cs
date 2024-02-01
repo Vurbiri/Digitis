@@ -9,6 +9,11 @@ public enum ShapeSize : byte
     Tetromino = 4
 }
 
+public enum TypeGame : byte
+{
+    Digitis,
+    Tetris,
+}
 
 public enum MixerGroup : byte
 {

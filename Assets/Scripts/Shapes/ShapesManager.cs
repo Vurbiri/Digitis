@@ -32,8 +32,9 @@ public class ShapesManager : MonoBehaviour
     private Shape[] _currentShapes;
     private ShapeControl _shapeControl = null;
     private Shape _shapeForm = null;
+    private Action _actionCreateShape;
 
-    private int _minDigit = 1;
+    private readonly int _minDigit = 1;
     private int _maxDigit;
     #endregion
 
@@ -58,10 +59,36 @@ public class ShapesManager : MonoBehaviour
             t.Initialize();
     }
 
-    public void Initialize(int maxDigit, ShapeSize shape)
-    {
-        _maxDigit = maxDigit;
+    public void CreateShape() => _actionCreateShape();
 
+    public bool ShapeToBomb() => _shapeForm.ToBomb(_settingBomb);
+
+    public bool StartMove(bool isGravity)
+    {
+        if(_shapeControl.SetupForNew(_shapeForm, isGravity))
+        {
+            _actionCreateShape();
+            _shapeControl.StartMoveDown();
+            return true;
+        }
+        return false;
+    }
+
+    public void StartFall(List<Block> blocks, bool isGravity, int count)
+    {
+        _shapeControl.SetupForFall(blocks, isGravity, count);
+        _shapeControl.StartMoveDown();
+    }
+
+    public void Rotate() => _shapeControl.Rotate();
+
+    public void Shift(Vector2Int direct)=> _shapeControl.Shift(direct);
+
+    #region Digitis
+    public void InitializeDigitis(int maxDigit, ShapeSize shape)
+    {
+        _actionCreateShape = CreateShapeDigitis;
+        _maxDigit = maxDigit;
         _currentShapes = shape switch
         {
             ShapeSize.Domino => _domino,
@@ -70,12 +97,11 @@ public class ShapesManager : MonoBehaviour
             _ => null
         };
     }
-
-    public void CreateShape()
+    private void CreateShapeDigitis()
     {
         _shapeForm = _currentShapes[Random.Range(0, _currentShapes.Length)];
         int countBlocks = _shapeForm.CountBlocks;
-        _shapeForm.Create(_poolBlocks.GetObjects(_nextContainer, countBlocks), RandomSettings());
+        _shapeForm.CreateDigitis(_poolBlocks.GetObjects(_nextContainer, countBlocks), RandomSettings());
 
         #region Local Functions
         BlockSettings[] RandomSettings()
@@ -112,27 +138,26 @@ public class ShapesManager : MonoBehaviour
         }
         #endregion
     }
+    #endregion
 
-    public void ShapeToBomb() => _shapeForm.ReSetup(_settingBomb);
-
-    public bool StartMove(bool isGravity)
+    #region Tetris
+    public void InitializeTetris(ShapeSize shape)
     {
-        if(_shapeControl.SetupForNew(_shapeForm, isGravity))
+        _actionCreateShape = CreateShapeTetris;
+        _currentShapes = shape switch
         {
-            CreateShape();
-            _shapeControl.StartMoveDown();
-            return true;
-        }
-        return false;
+            ShapeSize.Domino => _domino,
+            ShapeSize.Tromino => _tromino,
+            ShapeSize.Tetromino => _tetromino,
+            _ => null
+        };
     }
 
-    public void StartFall(List<Block> blocks, bool isGravity, int count)
+    private void CreateShapeTetris()
     {
-        _shapeControl.SetupForFall(blocks, isGravity, count);
-        _shapeControl.StartMoveDown();
+        _shapeForm = _currentShapes[Random.Range(0, _currentShapes.Length)];
+        int countBlocks = _shapeForm.CountBlocks;
+        _shapeForm.CreateTetris(_poolBlocks.GetObjects(_nextContainer, countBlocks));
     }
-
-    public void Rotate() => _shapeControl.Rotate();
-
-    public void Shift(Vector2Int direct)=> _shapeControl.Shift(direct);
+    #endregion
 }

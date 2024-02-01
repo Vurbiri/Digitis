@@ -10,11 +10,13 @@ public class Block : APooledObject<Block>, IComparable<Block>
 
     public Vector2Int Position {  get; private set; }
     public int Digit { get; private set; }
-    public bool IsOne => Digit == 1;
+    public bool IsOne { get; private set; }
+    public bool IsBomb { get; private set; }
 
     public event Action<Block> EventEndMoveDown;
 
     private float _target;
+
     private const string NAME = "Block_{0}";
 
     private void Awake()
@@ -22,27 +24,40 @@ public class Block : APooledObject<Block>, IComparable<Block>
         _blockSFX = GetComponent<BlockSFX>();
     }
 
-    public void Setup(Vector2 position, BlockSettings settings)
+    private void Setup(Vector2 position)
     {
-        Digit = settings.Digit;
-        gameObject.name = string.Format(NAME, Digit);
-
         _thisTransform.localPosition = position;
         Position = position.ToVector2Int();
 
-        _blockSFX.Setup(settings);
         Activate();
     }
 
-    public void ReSetup(BlockSettings settings)
+    public void SetupDigitis(Vector2 position, BlockSettings settings)
     {
-        Digit = settings.Digit;
-        gameObject.name = string.Format(NAME, Digit);
-
-        _blockSFX.Setup(settings);
+        TypeDigitisSetup(settings);
+        Setup(position);
     }
 
-    public bool IsEqual(Block other)
+    public void TypeDigitisSetup(BlockSettings settings)
+    {
+        Digit = settings.Digit;
+        IsBomb = Digit == 0;
+        IsOne = Digit == 1;
+
+        gameObject.name = string.Format(NAME, Digit);
+
+        _blockSFX.SetupDigitis(settings);
+    }
+
+    public void SetupTetris(Vector2 position, Color color, Sprite sprite)
+    {
+        gameObject.name = string.Format(NAME, 1);
+
+        _blockSFX.SetupTetris(color, sprite);
+        Setup(position);
+    }
+
+    public bool IsEqualDigit(Block other)
     {
         if (other == null) return false;
         if (this == other) return false;
@@ -51,16 +66,25 @@ public class Block : APooledObject<Block>, IComparable<Block>
 
     public void Transfer(Vector2Int position, Transform parent)
     {
-        _blockSFX.TrailStop();
+        //_blockSFX.TrailStop();
         SetParent(parent);
         _thisTransform.localPosition = position.ToVector3();
         Position = _thisTransform.localPosition.ToVector2Int();
+        //_blockSFX.TrailPlay();
+    }
+
+    public void StartFall(float speed)
+    {
+        _blockSFX.SetTrailDistanceMultiplier(speed);
+        _blockSFX.DigitStop();
         _blockSFX.TrailPlay();
     }
 
     public void Fixed()
     {
         _blockSFX.SetTrailDistanceMultiplier(0f);
+        _blockSFX.TrailStop();
+        _blockSFX.DigitPlay();
     }
 
     public void MoveToDelta(Vector2Int delta)
@@ -113,9 +137,19 @@ public class Block : APooledObject<Block>, IComparable<Block>
         }
     }
 
+    public async UniTask Explode()
+    {
+        if(IsBomb)
+            await _blockSFX.ExplodeBomb();
+        else
+            await _blockSFX.Explode();
+
+        base.Deactivate();
+    }
+
     public async UniTask Remove()
     {
-        await _blockSFX.BlockOff();
+        await _blockSFX.Remove();
 
         base.Deactivate();
     }

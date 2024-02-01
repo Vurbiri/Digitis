@@ -16,3 +16,4 @@ MonoBehaviour:
   _colorBlock: {r: 0, g: 0.5019608, b: 0.15686275, a: 1}
   _colorNumber: {r: 0.9411765, g: 0.9411765, b: 1, a: 1}
   _spriteNumber: {fileID: 21300000, guid: 883d47475146c75499b7aaa959f104b1, type: 3}
+  _materialParticle: {fileID: 2100000, guid: 155f60abf22964046ab12559940c1724, type: 2}
