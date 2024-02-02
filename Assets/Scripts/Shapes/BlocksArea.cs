@@ -52,7 +52,6 @@ public class BlocksArea : MonoBehaviour
     public bool IsEmptyDownstairs(Vector2Int index) => IsCorrectIndexY(--index.y) && this[index] == null;
     #endregion
 
-
     public async UniTask<Dictionary<int, Vector2Int>> CheckNewBlocksDigitisAsync()
     {
         if (_blocksAdd.Count > 0) 
@@ -62,11 +61,77 @@ public class BlocksArea : MonoBehaviour
         return null;
     }
 
+    public async UniTask<List<int>> CheckNewBlocksTetrisAsync()
+    {
+        if (_blocksAdd.Count == 0)
+            return null;
+
+        List<int> listY = new();
+        HashSet<int> setY = new();
+        int y;
+        bool isFullLine;
+
+        _blocksAdd.Sort((a, b) => b.Position.y.CompareTo(a.Position.y));
+        foreach (var block in _blocksAdd)
+        {
+            y = block.Position.y;
+            if (!setY.Add(y))
+                continue;
+
+            isFullLine = true;
+            for (int x = 0; x < Size.x; x++)
+            {
+                if (_blocks[x, y] == null)
+                {
+                    isFullLine = false;
+                    break;
+                }
+            }
+
+            if (isFullLine)
+                listY.Add(y);
+        }
+        _blocksAdd.Clear();
+
+        if (listY.Count == 0)
+            return null;
+
+        List<UniTask> tasks = new(Size.x);
+        int count = Size.x - 1, halfCount = Size.x / 2 - 1;
+        int Points = 0, countLine = 1;
+        foreach (int posY in listY)
+        {
+            Points += 100 * countLine++;
+
+            for (int x = halfCount; x >= 0; x--)
+            {
+                tasks.Add(_blocks[x, posY].Remove());
+                tasks.Add(_blocks[count - x, posY].Remove());
+                await UniTask.Delay(_timePauseBlocksRemoved);
+            }
+        }
+
+        await UniTask.WhenAll(tasks);
+        EventAddPoints?.Invoke(Points);
+
+        return listY;
+    }
+
+    public List<Block> GetBlocksAboveLine(int y)
+    {
+        List<Block> blocks = new();
+
+        for (int x = 0; x < _size.x; x++)
+            blocks.AddRange(GetBlocksInColumn(x, y));
+
+        return blocks;
+    }
+
     public List<Block> GetBlocksInColumn(int x, int minY)
     {
         List<Block> blocks = new();
 
-        for (int y = minY; y <= _size.y; y++)
+        for (int y = minY + 1; y <= _size.y; y++)
         {
             if (_blocks[x, y] != null)
             {
@@ -94,25 +159,22 @@ public class BlocksArea : MonoBehaviour
         this[block.Position] = null;
     }
 
-    public async UniTask<Dictionary<int, Vector2Int>> CheckSeriesBlocksAsync()
+    private async UniTask<Dictionary<int, Vector2Int>> CheckSeriesBlocksAsync()
     {
         HashSet<Block> blocksSeries = new();
         HashSet<Block> blocksOne = new();
         HashSet<Block> blocksRemove = new();
-
-        Block tempBlock;
         int Points = 0;
 
-        _blocksAdd.Sort();
-        for (int i = _blocksAdd.Count - 1; i >= 0; i--)
+        _blocksAdd.Sort((a, b) => b.Digit.CompareTo(a.Digit));
+        foreach (var block in _blocksAdd)
         {
-            tempBlock = _blocksAdd[i];
-            if (this[tempBlock.Position] == null || tempBlock.IsOne)
+            if (block.IsOne)
                 continue;
 
-            if (CreateSeries(tempBlock))
+            if (CreateSeries(block))
             {
-                Points += tempBlock.Digit * (2 * blocksSeries.Count + blocksOne.Count - tempBlock.Digit);
+                Points += block.Digit * (2 * blocksSeries.Count + blocksOne.Count - block.Digit);
                 blocksRemove.UnionWith(blocksSeries);
                 blocksRemove.UnionWith(blocksOne);
             }
@@ -155,7 +217,7 @@ public class BlocksArea : MonoBehaviour
         #region Local Functions
         bool CreateSeries(Block block)
         {
-            if (!AddToSeries()) 
+            if (!AddToSeries(block)) 
                 return false;
 
             foreach (var d in Direction2D.Cardinal)
@@ -166,52 +228,35 @@ public class BlocksArea : MonoBehaviour
             return blocksSeries.Count >= block.Digit;
 
             #region Local Functions
-            bool AddToSeries()
+            bool AddToSeries(Block addBlock)
             {
-                if (block.IsOne)
+                if(blocksRemove.Contains(addBlock))
+                    return false;
+
+                if (addBlock.IsOne)
                 {
-                    if (!blocksOne.Add(block))
+                    if (!blocksOne.Add(addBlock))
                         return false;
                 }
                 else
                 {
-                    if (!blocksSeries.Add(block))
+                    if (!blocksSeries.Add(addBlock))
                         return false;
                 }
                 return true;
             }
             #endregion
         }
-        bool TryGetBlock(Vector2Int index, out Block block)
-        {
-            block = null;
-            if (!IsCorrectIndex(index))
-                return false;
-
-            block = this[index];
-            return block != null;
-        }
         #endregion
     }
-
-    public async UniTask<Dictionary<int, Vector2Int>> CheckBombsAsync()
+    private async UniTask<Dictionary<int, Vector2Int>> CheckBombsAsync()
     {
         HashSet<Block> blocksExplode = new();
-        //List<UniTask> tasks = new(blocksExplode.Count);
 
         foreach (var bomb in _bombsAdd)
-        { 
             MarkBlocksToExplode(bomb);
-            //tasks.Add(bomb.ExplodeBomb());
-            //await UniTask.Delay(_timePauseBombExploded);
-        }
-        _bombsAdd.Clear();
 
-        //if (blocksExplode.Count == 0)
-        //{
-        //    await UniTask.WhenAll(tasks);
-        //    return null;
-        //}
+        _bombsAdd.Clear();
 
         Dictionary<int, Vector2Int> columns = new(_size.x);
         Vector2Int index;
@@ -249,16 +294,17 @@ public class BlocksArea : MonoBehaviour
                 if (TryGetBlock(block.Position + d, out Block outBlock))
                     blocksExplode.Add(outBlock);
         }
-        bool TryGetBlock(Vector2Int index, out Block block)
-        {
-            block = null;
-            if (!IsCorrectIndex(index))
-                return false;
-
-            block = this[index];
-            return block != null;
-        }
         #endregion
+    }
+
+    private bool TryGetBlock(Vector2Int index, out Block block)
+    {
+        block = null;
+        if (!IsCorrectIndex(index))
+            return false;
+
+        block = this[index];
+        return block != null;
     }
 
     private bool IsCorrectIndex(Vector2Int index) => IsCorrectIndexX(index.x)  && IsCorrectIndexY(index.y);

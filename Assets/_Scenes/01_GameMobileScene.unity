@@ -154,8 +154,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _area: {fileID: 945172856}
   _shapesManager: {fileID: 2050258516}
-  _maxDigit: 9
+  _shapeType: 3
+  _maxDigit: 4
   _isGravity: 1
+  _isTetris: 0
 --- !u!4 &64705095
 Transform:
   m_ObjectHideFlags: 0
@@ -335,7 +337,7 @@ Camera:
   far clip plane: 20
   field of view: 60
   orthographic: 1
-  orthographic size: 11
+  orthographic size: 12
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -360,7 +362,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.2, y: 9.2, z: -10}
+  m_LocalPosition: {x: 7.2, y: 8.7, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -590,8 +592,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _size: {x: 10, y: 20}
   _container: {fileID: 1571479057}
-  _timePauseBlocksRemoved: 200
-  _timePauseBombExploded: 150
+  _timePauseBlocksRemoved: 225
+  _timePauseBombExploded: 175
 --- !u!1 &1041258605
 GameObject:
   m_ObjectHideFlags: 0
@@ -1214,6 +1216,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bf11764f62b75b1408ddd4be89d9b2dd, type: 2}
   - {fileID: 11400000, guid: 1b9c655a6b93c25448a44c24daceca19, type: 2}
   - {fileID: 11400000, guid: d6e73b0f427946f438216bfe86026632, type: 2}
+  _particleMaterialTetris: {fileID: 2100000, guid: c4db5ea505158754fa0bbbb4c1dfb2d4,
+    type: 2}
   _poolRepository: {fileID: 1041258606}
   _nextContainer: {fileID: 1517009467}
   _speeds:

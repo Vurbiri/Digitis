@@ -13,19 +13,38 @@ public class BlockSFX : MonoBehaviour
         _blockVisual = GetComponent<BlockVisual>();
     }
 
-    public void SetupDigitis(BlockSettings settings)
+    public void SetupDigitisBlock(BlockSettings settings)
     {
-        _blockVisual.SetupDigitis(settings);
-
-        if (settings.Digit == 0)
-            _particles.SetupDigitisBomb(settings);
-        else
-            _particles.SetupDigitisBlock(settings);
+        _blockVisual.SetupDigitisBlock(settings);
+        _particles.SetupDigitisBlock(settings);
     }
-
-    public void SetupTetris(Color color, Sprite sprite)
+    public void SetupDigitisBomb(BlockSettings settings)
+    {
+        _blockVisual.SetupDigitisBomb(settings);
+        _particles.SetupDigitisBomb(settings);
+    }
+    public void SetupTetris(Color color, Sprite sprite, Material particleMaterial)
     {
         _blockVisual.SetupTetris(color, sprite);
+        _particles.SetupTetris(color, particleMaterial);
+    }
+
+    public void Transfer()
+    {
+        _particles.DigitClear();
+        _particles.DigitStop();
+    }
+    public void StartFall(float speed)
+    {
+        SetTrailDistanceMultiplier(speed);
+        _particles.DigitStop();
+        _particles.TrailPlay();
+    }
+    public void Fixed()
+    {
+        SetTrailDistanceMultiplier(0f);
+        _particles.TrailStop();
+        _particles.DigitPlay();
     }
 
     public async UniTask ExplodeBomb()
@@ -46,11 +65,6 @@ public class BlockSFX : MonoBehaviour
         await _particles.Remove();
     }
 
-
-    public void DigitPlay() => _particles.DigitPlay();
-    public void DigitStop() => _particles.DigitStop();
-    public void TrailPlay() => _particles.TrailPlay();
-    public void TrailStop() => _particles.TrailStop();
     public void SetTrailDistanceMultiplier(float rate) => _particles.TrailEmissionDistanceMultiplier = rate;
 
 }

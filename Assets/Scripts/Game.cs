@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -8,23 +9,41 @@ public class Game : MonoBehaviour
 {
     [SerializeField] private BlocksArea _area;
     [SerializeField] private ShapesManager _shapesManager;
+    [Space]
+    [SerializeField] private ShapeSize _shapeType = ShapeSize.Tromino;
     [SerializeField, Range(3,9)] private int _maxDigit = 9;
     [SerializeField] private bool _isGravity = true;
+    [SerializeField] private bool _isTetris = false;
 
     private Dictionary<int, Vector2Int> _columns;
+    private List<int> _lines;
 
     private int _points = 0;
 
 
     private void Start()
     {
-        _shapesManager.InitializeDigitis(_maxDigit, ShapeSize.Tromino);
-        _shapesManager.EventEndMoveDown += OnBlockEndMoveDown;
+        if (_isTetris)
+        {
+            _shapesManager.InitializeTetris(_shapeType);
+            _shapesManager.EventEndMoveDown += OnBlockEndMoveDownTetris;
+        }
+        else
+        {
+            _shapesManager.InitializeDigitis(_maxDigit, _shapeType);
+            _shapesManager.EventEndMoveDown += OnBlockEndMoveDownDigitis;
+        }
+
+
         _shapesManager.CreateShape();
 
         _area.EventAddPoints += OnAddPoints;
 
-        OnBlockEndMoveDown();
+        if (_isTetris)
+            OnBlockEndMoveDownTetris();
+        else
+            OnBlockEndMoveDownDigitis();
+
         StartCoroutine(Rotate());
         StartCoroutine(Shift());
     }
@@ -35,7 +54,7 @@ public class Game : MonoBehaviour
         Debug.Log(_points);
     }
 
-    private void OnBlockEndMoveDown()
+    private void OnBlockEndMoveDownDigitis()
     {
         if (FallColumns())
             return;
@@ -50,7 +69,7 @@ public class Game : MonoBehaviour
 
             if (!_shapesManager.StartMove(_isGravity))
             {
-                _shapesManager.EventEndMoveDown -= OnBlockEndMoveDown;
+                _shapesManager.EventEndMoveDown -= OnBlockEndMoveDownDigitis;
                 StopCoroutine(Rotate());
                 StopCoroutine(Shift());
                 Debug.Log("Stop");
@@ -63,29 +82,70 @@ public class Game : MonoBehaviour
                 return false;
 
             List<Block> blocks;
-            int x = 0,y = 0, count = 0;
+            KeyValuePair<int, Vector2Int> element;
 
             do
             {
-                foreach(var (key, value) in _columns)
-                {
-                    x = key;
-                    y = value.y;
-                    count = value.x;
-                    break;
-                }
-                _columns.Remove(x);
-                blocks = _area.GetBlocksInColumn(x,y);
+                element = _columns.First(); 
+                 _columns.Remove(element.Key);
+                blocks = _area.GetBlocksInColumn(element.Key, element.Value.y);
             }
             while (blocks.Count == 0 && _columns.Count > 0);
 
             if(blocks.Count == 0)
                 return false;
 
-            _shapesManager.StartFall(blocks, _isGravity, count);
+            _shapesManager.StartFall(blocks, _isGravity, element.Value.x);
             return true;
         }
     }
+
+    private void OnBlockEndMoveDownTetris()
+    {
+        if (FallColumns())
+            return;
+
+        OnBlockEndMoveDownAsync().Forget();
+
+        async UniTaskVoid OnBlockEndMoveDownAsync()
+        {
+            _lines = await _area.CheckNewBlocksTetrisAsync();
+            if (FallColumns())
+                return;
+
+            if (!_shapesManager.StartMove(false))
+            {
+                _shapesManager.EventEndMoveDown -= OnBlockEndMoveDownTetris;
+                StopCoroutine(Rotate());
+                StopCoroutine(Shift());
+                Debug.Log("Stop");
+            }
+        }
+
+        bool FallColumns()
+        {
+            if (_lines == null || _lines.Count == 0)
+                return false;
+
+            List<Block> blocks;
+            int y;
+            do
+            {
+                y = _lines[0];
+                _lines.RemoveAt(0);
+                blocks = _area.GetBlocksAboveLine(y);
+            }
+            while (blocks.Count == 0 && _lines.Count > 0);
+
+            if (blocks.Count == 0)
+                return false;
+
+            _shapesManager.StartFall(blocks, false, 1);
+            return true;
+        }
+    }
+
+
 
     private IEnumerator Rotate()
     {
@@ -107,6 +167,9 @@ public class Game : MonoBehaviour
 
     private void Update()
     {
+        if (_isTetris)
+            return;
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             _shapesManager.ShapeToBomb();

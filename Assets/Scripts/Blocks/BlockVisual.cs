@@ -9,13 +9,11 @@ public class BlockVisual : MonoBehaviour
     [Header("Bomb")]
     [SerializeField] private Sprite _spriteBomb;
 
-
-    public void SetupDigitis(BlockSettings settings)
+    public void SetupDigitisBlock(BlockSettings settings) => SetupDigitis(settings, _spriteBlock);
+    public void SetupDigitisBomb(BlockSettings settings) => SetupDigitis(settings, _spriteBomb);
+    private void SetupDigitis(BlockSettings settings, Sprite sprite)
     {
-        if(settings.Digit == 0)
-            _spriteRendererBlock.sprite = _spriteBomb;
-        else
-            _spriteRendererBlock.sprite = _spriteBlock;
+        _spriteRendererBlock.sprite = sprite;
         _spriteRendererBlock.color = settings.ColorBlock;
 
         _spriteRendererNumber.sprite = settings.SpriteNumber;

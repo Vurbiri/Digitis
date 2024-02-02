@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(BlockSFX))]
-public class Block : APooledObject<Block>, IComparable<Block>
+public class Block : APooledObject<Block>
 {
     private BlockSFX _blockSFX;
 
@@ -46,14 +46,17 @@ public class Block : APooledObject<Block>, IComparable<Block>
 
         gameObject.name = string.Format(NAME, Digit);
 
-        _blockSFX.SetupDigitis(settings);
+        if(IsBomb)
+            _blockSFX.SetupDigitisBomb(settings);
+        else
+            _blockSFX.SetupDigitisBlock(settings);
     }
 
-    public void SetupTetris(Vector2 position, Color color, Sprite sprite)
+    public void SetupTetris(Vector2 position, Color color, Sprite sprite, Material particleMaterial)
     {
-        gameObject.name = string.Format(NAME, 1);
+        gameObject.name = string.Format(NAME, gameObject.GetInstanceID());
 
-        _blockSFX.SetupTetris(color, sprite);
+        _blockSFX.SetupTetris(color, sprite, particleMaterial);
         Setup(position);
     }
 
@@ -66,26 +69,14 @@ public class Block : APooledObject<Block>, IComparable<Block>
 
     public void Transfer(Vector2Int position, Transform parent)
     {
-        //_blockSFX.TrailStop();
+        _blockSFX.Transfer();
         SetParent(parent);
         _thisTransform.localPosition = position.ToVector3();
         Position = _thisTransform.localPosition.ToVector2Int();
-        //_blockSFX.TrailPlay();
     }
 
-    public void StartFall(float speed)
-    {
-        _blockSFX.SetTrailDistanceMultiplier(speed);
-        _blockSFX.DigitStop();
-        _blockSFX.TrailPlay();
-    }
-
-    public void Fixed()
-    {
-        _blockSFX.SetTrailDistanceMultiplier(0f);
-        _blockSFX.TrailStop();
-        _blockSFX.DigitPlay();
-    }
+    public void StartFall(float speed) => _blockSFX.StartFall(speed);
+    public void Fixed() => _blockSFX.Fixed();
 
     public void MoveToDelta(Vector2Int delta)
     {
@@ -153,9 +144,6 @@ public class Block : APooledObject<Block>, IComparable<Block>
 
         base.Deactivate();
     }
-
-    public int CompareTo(Block other)
-    {
-        return Digit.CompareTo(other.Digit);
-    }
 }
+
+

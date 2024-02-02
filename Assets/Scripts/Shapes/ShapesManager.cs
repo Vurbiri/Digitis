@@ -14,6 +14,8 @@ public class ShapesManager : MonoBehaviour
     [SerializeField] private BlockSettings _settingBomb;
     [SerializeField] private BlockSettings[] _settingsBlocks;
     [Space]
+    [SerializeField] private Material _particleMaterialTetris;
+    [Space]
     [SerializeField] private Transform _poolRepository;
     [Space]
     [SerializeField] private Transform _nextContainer;
@@ -157,7 +159,7 @@ public class ShapesManager : MonoBehaviour
     {
         _shapeForm = _currentShapes[Random.Range(0, _currentShapes.Length)];
         int countBlocks = _shapeForm.CountBlocks;
-        _shapeForm.CreateTetris(_poolBlocks.GetObjects(_nextContainer, countBlocks));
+        _shapeForm.CreateTetris(_poolBlocks.GetObjects(_nextContainer, countBlocks), _particleMaterialTetris);
     }
     #endregion
 }

@@ -19,3 +19,5 @@ MonoBehaviour:
   _startBlocksPositions:
   - {x: 0, y: 1}
   - {x: 1, y: 1}
+  _colorBlock: {r: 0.1764706, g: 0.9074986, b: 0.98039216, a: 1}
+  _spriteBlock: {fileID: 21300000, guid: 8f51d45867f351f4ea1071629051f19b, type: 3}

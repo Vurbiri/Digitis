@@ -36,12 +36,12 @@ public class Shape : ScriptableObject
         for (int i = 0; i < _countBlocks; i++)
             blocks[i].SetupDigitis(_startBlocksPositions[i] + _offsetForNext, settings[i]);
     }
-    public void CreateTetris(List<Block> blocks)
+    public void CreateTetris(List<Block> blocks, Material particleMaterial)
     {
         Blocks = blocks;
 
         for (int i = 0; i < _countBlocks; i++)
-            blocks[i].SetupTetris(_startBlocksPositions[i] + _offsetForNext, _colorBlock, _spriteBlock);
+            blocks[i].SetupTetris(_startBlocksPositions[i] + _offsetForNext, _colorBlock, _spriteBlock, particleMaterial);
     }
 
     public bool ToBomb(BlockSettings settings)

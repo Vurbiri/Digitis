@@ -3,6 +3,7 @@ using static UnityEngine.ParticleSystem;
 
 public class BlockParticleTrail : ParticleSystemController
 {
+    [SerializeField] private float _angleShapeEmitterForBomb = 20f;
 
     private float _rateOverDistanceMultiplier;
 
@@ -15,17 +16,18 @@ public class BlockParticleTrail : ParticleSystemController
         _rateOverDistanceMultiplier = _emissionModule.rateOverDistanceMultiplier;
     }
 
-    public void SetupDigitisBlock(Color color)
+    public void SetupBlock(Color color) => Setup(color, ParticleSystemShapeType.Rectangle, 360f, 0f);
+    public void SetupBomb(Color color) => Setup(color, ParticleSystemShapeType.Circle, _angleShapeEmitterForBomb, 90f - (_angleShapeEmitterForBomb / 2f));
+
+    private void Setup(Color color, ParticleSystemShapeType shapeType, float angle, float rotationZ)
     {
-        ShapeType = ParticleSystemShapeType.Rectangle;
-        _shapeModule.scale = Vector3.one;
+        ShapeType = shapeType;
+        _shapeModule.angle = angle;
+        _shapeModule.rotation = new(0f, 0f, rotationZ);
         Color = color;
+        Clear();
+        Stop();
     }
 
-    public void SetupDigitisBomb(Color color)
-    {
-        ShapeType = ParticleSystemShapeType.Circle;
-        _shapeModule.scale = Vector3.one * 0.25f;
-        Color = color;
-    }
+    
 }
