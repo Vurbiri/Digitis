@@ -4855,7 +4855,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 218911067
   m_SortingLayer: 3
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_RenderMode: 3
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -5845,8 +5845,8 @@ ParticleSystem:
     serializedVersion: 4
     rateOverTime:
       serializedVersion: 2
-      minMaxState: 3
-      scalar: 8
+      minMaxState: 0
+      scalar: 3
       minScalar: 2
       maxCurve:
         serializedVersion: 2
@@ -5899,8 +5899,8 @@ ParticleSystem:
     rateOverDistance:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1.5
-      minScalar: 1
+      scalar: 6
+      minScalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -9805,8 +9805,8 @@ SpriteRenderer:
   m_SortingLayerID: 218911067
   m_SortingLayer: 3
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 3626bf8fba5cb1046af96425a4ff37bb, type: 3}
-  m_Color: {r: 1, g: 0.23529412, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: a1968c4d3c57934478e3bda992eb263e, type: 3}
+  m_Color: {r: 0.9411765, g: 0.9411765, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -9877,7 +9877,7 @@ GameObject:
   - component: {fileID: 6427073148693459092}
   - component: {fileID: 7682831634899210462}
   - component: {fileID: 6399986927603215527}
-  - component: {fileID: 8524766612614895580}
+  - component: {fileID: 5073039849074681645}
   - component: {fileID: 8625316329591890504}
   m_Layer: 0
   m_Name: Block
@@ -9928,7 +9928,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _particles: {fileID: 2854965740506679334}
---- !u!114 &8524766612614895580
+--- !u!114 &5073039849074681645
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9942,8 +9942,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spriteRendererBlock: {fileID: 8625316329591890504}
   _spriteRendererNumber: {fileID: 6057731465338054035}
-  _spriteBlock: {fileID: 21300000, guid: e2eeb5397324aa041a011e669723dbd6, type: 3}
-  _spriteBomb: {fileID: 21300000, guid: 1f5c492423f5f43489cab7c2dc463912, type: 3}
+  _settings:
+  - {fileID: 11400000, guid: 0091158053c2d5f40a0bc9b05082266a, type: 2}
+  - {fileID: 11400000, guid: 1b9223f8127ca434e9f3e4e1f89805b6, type: 2}
+  - {fileID: 11400000, guid: bcfb9b487e098ed4aac85b86113cb9ea, type: 2}
+  - {fileID: 11400000, guid: 7cae4a7e422a7a646a159d034a5baa37, type: 2}
+  - {fileID: 11400000, guid: b48869e07452ce04da734bdf4658d19a, type: 2}
+  - {fileID: 11400000, guid: 233f6f77eb5d385429a5b16cb4993baf, type: 2}
+  - {fileID: 11400000, guid: 92938a09ea9c971418834a8ed08a466f, type: 2}
+  - {fileID: 11400000, guid: bf11764f62b75b1408ddd4be89d9b2dd, type: 2}
+  - {fileID: 11400000, guid: 1b9c655a6b93c25448a44c24daceca19, type: 2}
+  - {fileID: 11400000, guid: d6e73b0f427946f438216bfe86026632, type: 2}
+  _numSettings: 9
 --- !u!212 &8625316329591890504
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -9985,8 +9995,8 @@ SpriteRenderer:
   m_SortingLayerID: 218911067
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1f5c492423f5f43489cab7c2dc463912, type: 3}
-  m_Color: {r: 0.25490198, g: 0.21568628, b: 0.21568628, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 148b2162df5ec5f458973c7ad638b9d6, type: 3}
+  m_Color: {r: 0.47058824, g: 0, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -10968,8 +10978,8 @@ ParticleSystem:
     serializedVersion: 4
     rateOverTime:
       serializedVersion: 2
-      minMaxState: 3
-      scalar: 5
+      minMaxState: 0
+      scalar: 3
       minScalar: 3
       maxCurve:
         serializedVersion: 2

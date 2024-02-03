@@ -1,19 +1,20 @@
+#if UNITY_EDITOR
+using NaughtyAttributes;
+#endif
 using UnityEngine;
 
-public class BlockVisual : MonoBehaviour
+public class BlockSprites : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer _spriteRendererBlock;
     [SerializeField] private SpriteRenderer _spriteRendererNumber;
-    [Header("Block")]
-    [SerializeField] private Sprite _spriteBlock;
-    [Header("Bomb")]
-    [SerializeField] private Sprite _spriteBomb;
+#if UNITY_EDITOR
+    [SerializeField] private BlockSettings[] _settings;
+    [SerializeField, Range(0,9)] private int _numSettings;
+#endif
 
-    public void SetupDigitisBlock(BlockSettings settings) => SetupDigitis(settings, _spriteBlock);
-    public void SetupDigitisBomb(BlockSettings settings) => SetupDigitis(settings, _spriteBomb);
-    private void SetupDigitis(BlockSettings settings, Sprite sprite)
+    public void SetupDigitis(BlockSettings settings)
     {
-        _spriteRendererBlock.sprite = sprite;
+        _spriteRendererBlock.sprite = settings.SpriteBlock;
         _spriteRendererBlock.color = settings.ColorBlock;
 
         _spriteRendererNumber.sprite = settings.SpriteNumber;
@@ -38,4 +39,11 @@ public class BlockVisual : MonoBehaviour
         _spriteRendererNumber.enabled = false;
     }
 
+#if UNITY_EDITOR
+    [Button]
+    public void SetupDigitis()
+    {
+        SetupDigitis(_settings[_numSettings]);
+    }
+#endif
 }

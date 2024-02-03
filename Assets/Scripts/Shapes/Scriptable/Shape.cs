@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewShape", menuName = "Digitis/Shape", order = 51)]
-public class Shape : ScriptableObject
+public class Shape : ScriptableObject, IRandomizeObject
 {
     [SerializeField] private int _countBlocks;
     [SerializeField] private int _sizeBound;
@@ -12,12 +12,16 @@ public class Shape : ScriptableObject
     [Header("Tetris")]
     [SerializeField] private Color _colorBlock = Color.white;
     [SerializeField] private Sprite _spriteBlock;
+    [Header("Random")]
+    [SerializeField] private int _randomWeight = 1;
 
     public int CountBlocks => _countBlocks;
     public Vector2Int StartOffset => _offsetForArea;
     public Vector2Int[] BlocksPositions => _startBlocksPositions;
     public SubShape SubShape { get; private set; }
     public List<Block> Blocks {get; private set;}
+    public int Weight => _randomWeight;
+    public int MaxCount => 1;
 
     private bool _isBomb = false;
 

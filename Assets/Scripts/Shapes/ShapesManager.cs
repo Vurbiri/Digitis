@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class ShapesManager : MonoBehaviour
 {
@@ -12,6 +11,7 @@ public class ShapesManager : MonoBehaviour
     [SerializeField] private Block _prefabBlock;
     [SerializeField] private int _sizePool = 100;
     [SerializeField] private BlockSettings _settingBomb;
+    [SerializeField] private BlockSettings _settingOne;
     [SerializeField] private BlockSettings[] _settingsBlocks;
     [Space]
     [SerializeField] private Material _particleMaterialTetris;
@@ -28,25 +28,22 @@ public class ShapesManager : MonoBehaviour
     #endregion
 
     #region private
-    private Dictionary<int, BlockSettings> _blockSettings;
     private Pool<Block> _poolBlocks;
 
-    private Shape[] _currentShapes;
     private ShapeControl _shapeControl = null;
     private Shape _shapeForm = null;
     private Action _actionCreateShape;
+    private RandomObjects<Shape> _randomShapes;
+    private RandomObjects<BlockSettings> _randomBlockSettings;
 
-    private readonly int _minDigit = 1;
-    private int _maxDigit;
+    private const int BASE_WEIGHT_ONE = 3;
     #endregion
 
     public event Action EventEndMoveDown;
 
     private void Awake()
     {
-        _blockSettings = new(_settingsBlocks.Length);
-        foreach (var block in _settingsBlocks)
-            _blockSettings[block.Digit] = block;
+        Array.Sort(_settingsBlocks, (a,b) => a.Digit.CompareTo(b.Digit));
 
         _poolBlocks = new(_prefabBlock, _poolRepository, _sizePool);
 
@@ -90,55 +87,22 @@ public class ShapesManager : MonoBehaviour
     public void InitializeDigitis(int maxDigit, ShapeSize shape)
     {
         _actionCreateShape = CreateShapeDigitis;
-        _maxDigit = maxDigit;
-        _currentShapes = shape switch
+        _settingOne.Weight = 100 + BASE_WEIGHT_ONE * maxDigit;
+        _settingOne.MaxCount = shape.ToInt() - 1;
+        _randomBlockSettings = new(_settingsBlocks, maxDigit);
+        _randomShapes = new( shape switch
         {
             ShapeSize.Domino => _domino,
             ShapeSize.Tromino => _tromino,
             ShapeSize.Tetromino => _tetromino,
             _ => null
-        };
+        });
     }
     private void CreateShapeDigitis()
     {
-        _shapeForm = _currentShapes[Random.Range(0, _currentShapes.Length)];
+        _shapeForm = _randomShapes.Next;
         int countBlocks = _shapeForm.CountBlocks;
-        _shapeForm.CreateDigitis(_poolBlocks.GetObjects(_nextContainer, countBlocks), RandomSettings());
-
-        #region Local Functions
-        BlockSettings[] RandomSettings()
-        {
-            int index;
-            int[] indexes = new int[countBlocks];
-            BlockSettings[] settings = new BlockSettings[countBlocks];
-            BlockSettings setting;
-            int digit;
-            bool Equal = false;
-            for (int i = 0; i < countBlocks; i++)
-            {
-                do
-                {
-                    index = Random.Range(_minDigit, _maxDigit + 1);
-                    setting = _blockSettings[index];
-                    digit = setting.Digit;
-                    digit -= digit > 1 ? 1 : 0;
-
-                    for (int j = 0; j < i; j++)
-                    {
-                        if (index == indexes[j])
-                            digit--;
-                        Equal = digit == 0;
-                        if (Equal) break;
-                    }
-
-                } while (Equal);
-
-                indexes[i] = index;
-                settings[i] = setting;
-            }
-            return settings;
-        }
-        #endregion
+        _shapeForm.CreateDigitis(_poolBlocks.GetObjects(_nextContainer, countBlocks), _randomBlockSettings.NextRange(countBlocks));
     }
     #endregion
 
@@ -146,18 +110,18 @@ public class ShapesManager : MonoBehaviour
     public void InitializeTetris(ShapeSize shape)
     {
         _actionCreateShape = CreateShapeTetris;
-        _currentShapes = shape switch
+        _randomShapes = new(shape switch
         {
             ShapeSize.Domino => _domino,
             ShapeSize.Tromino => _tromino,
             ShapeSize.Tetromino => _tetromino,
             _ => null
-        };
+        });
     }
 
     private void CreateShapeTetris()
     {
-        _shapeForm = _currentShapes[Random.Range(0, _currentShapes.Length)];
+        _shapeForm = _randomShapes.Next;
         int countBlocks = _shapeForm.CountBlocks;
         _shapeForm.CreateTetris(_poolBlocks.GetObjects(_nextContainer, countBlocks), _particleMaterialTetris);
     }

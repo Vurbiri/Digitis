@@ -44,8 +44,8 @@ public class Game : MonoBehaviour
         else
             OnBlockEndMoveDownDigitis();
 
-        StartCoroutine(Rotate());
-        StartCoroutine(Shift());
+        //StartCoroutine(Rotate());
+        //StartCoroutine(Shift());
     }
 
     private void OnAddPoints(int points)
@@ -167,13 +167,27 @@ public class Game : MonoBehaviour
 
     private void Update()
     {
-        if (_isTetris)
-            return;
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (!_isTetris && Input.GetKeyDown(KeyCode.Space))
         {
             _shapesManager.ShapeToBomb();
         }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            _shapesManager.Shift(Direction2D.Left);
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            _shapesManager.Shift(Direction2D.Right);
+        }
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            _shapesManager.Rotate();
+        }
+
     }
 
 }

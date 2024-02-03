@@ -32,13 +32,11 @@ public class BlockParticleDigit : ParticleSystemController
 
     private ParticleSystemRenderer _particleRenderer;
     private VelocityOverLifetimeModule _velocityOverLifetimeModule;
-
-    private float _rateOverTimeMultiplier;
+        
     private float _radialMultiplier;
     private float _speedModifierMultiplier;
     private float _sizeMultiplier;
-
-    private float EmissionTimeMultiplier { set => _emissionModule.rateOverTimeMultiplier = _rateOverTimeMultiplier * value; }
+        
     private float RadialSpeedMultiplier { set => _velocityOverLifetimeModule.radialMultiplier = _radialMultiplier * value; }
     private float SpeedMultiplier { set => _velocityOverLifetimeModule.speedModifierMultiplier = _speedModifierMultiplier * value; }
     private float SizeMultiplier { set => _mainModule.startSizeMultiplier = _sizeMultiplier * value; }
@@ -49,8 +47,7 @@ public class BlockParticleDigit : ParticleSystemController
 
         _velocityOverLifetimeModule = _thisParticle.velocityOverLifetime;
         _particleRenderer = GetComponent<ParticleSystemRenderer>();
-
-        _rateOverTimeMultiplier = _emissionModule.rateOverTimeMultiplier;
+                
         _radialMultiplier = _velocityOverLifetimeModule.radialMultiplier;
         _speedModifierMultiplier = _velocityOverLifetimeModule.speedModifierMultiplier;
         _sizeMultiplier = _mainModule.startSizeMultiplier;

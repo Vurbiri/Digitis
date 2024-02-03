@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _digit: 8
   _colorBlock: {r: 0.5529412, g: 0.7607843, b: 0.29803923, a: 1}
+  _spriteBlock: {fileID: 21300000, guid: 85cd852cec151db469ea40f4ab551dc0, type: 3}
   _colorNumber: {r: 0.9411765, g: 0.9411765, b: 1, a: 1}
   _spriteNumber: {fileID: 21300000, guid: 44f3ce90f6fa0434a8e9fa7303fd9f6e, type: 3}
   _materialParticle: {fileID: 2100000, guid: 59acbf5e2cb68af44a9b0d1e5c4c4945, type: 2}
+  _randomWeight: 130
+  _maxCount: 7

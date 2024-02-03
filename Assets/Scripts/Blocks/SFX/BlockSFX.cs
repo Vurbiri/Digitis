@@ -1,26 +1,26 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-[RequireComponent(typeof(BlockVisual))]
+[RequireComponent(typeof(BlockSprites))]
 public class BlockSFX : MonoBehaviour
 {
     [SerializeField] private BlockParticles _particles;
 
-    private BlockVisual _blockVisual;
+    private BlockSprites _blockVisual;
 
     private void Awake()
     {
-        _blockVisual = GetComponent<BlockVisual>();
+        _blockVisual = GetComponent<BlockSprites>();
     }
 
     public void SetupDigitisBlock(BlockSettings settings)
     {
-        _blockVisual.SetupDigitisBlock(settings);
+        _blockVisual.SetupDigitis(settings);
         _particles.SetupDigitisBlock(settings);
     }
     public void SetupDigitisBomb(BlockSettings settings)
     {
-        _blockVisual.SetupDigitisBomb(settings);
+        _blockVisual.SetupDigitis(settings);
         _particles.SetupDigitisBomb(settings);
     }
     public void SetupTetris(Color color, Sprite sprite, Material particleMaterial)
@@ -36,13 +36,13 @@ public class BlockSFX : MonoBehaviour
     }
     public void StartFall(float speed)
     {
-        SetTrailDistanceMultiplier(speed);
+        SetTrailEmissionTimeMultiplier(speed);
         _particles.DigitStop();
         _particles.TrailPlay();
     }
     public void Fixed()
     {
-        SetTrailDistanceMultiplier(0f);
+        SetTrailEmissionTimeMultiplier(0f);
         _particles.TrailStop();
         _particles.DigitPlay();
     }
@@ -65,6 +65,6 @@ public class BlockSFX : MonoBehaviour
         await _particles.Remove();
     }
 
-    public void SetTrailDistanceMultiplier(float rate) => _particles.TrailEmissionDistanceMultiplier = rate;
+    public void SetTrailEmissionTimeMultiplier(float rate) => _particles.TrailEmissionTimeMultiplier = rate;
 
 }

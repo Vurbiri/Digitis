@@ -7,8 +7,7 @@ public class BlockParticles : MonoBehaviour
     [SerializeField] private BlockParticleTrail _particleTrail;
     [SerializeField] private ParticleSystem _particleExplode;
    
-
-    public float TrailEmissionDistanceMultiplier { set => _particleTrail.EmissionDistanceMultiplier = value; }
+    public float TrailEmissionTimeMultiplier { set => _particleTrail.EmissionTimeMultiplier = value; }
 
     public void SetupDigitisBlock(BlockSettings settings)
     {

@@ -12,5 +12,5 @@ public class Speeds
     public float Down => _down;
     public float Fall => _fall;
 
-    private const int level = 10;
+    private const int level = 5;
 }

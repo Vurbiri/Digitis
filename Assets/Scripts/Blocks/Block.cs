@@ -87,7 +87,7 @@ public class Block : APooledObject<Block>
 
     public void MoveDown(float speed)
     {
-        _blockSFX.SetTrailDistanceMultiplier(speed);
+        _blockSFX.SetTrailEmissionTimeMultiplier(speed);
 
         StartCoroutine(MoveDownCoroutine());
 

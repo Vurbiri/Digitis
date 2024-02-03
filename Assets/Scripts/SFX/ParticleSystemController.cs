@@ -9,8 +9,11 @@ public class ParticleSystemController : MonoBehaviour
     protected EmissionModule _emissionModule;
     protected ShapeModule _shapeModule;
 
+    private float _rateOverTimeMultiplier;
+
     protected Color Color { set => _mainModule.startColor = value; }
     protected ParticleSystemShapeType ShapeType { set => _shapeModule.shapeType = value; }
+    public float EmissionTimeMultiplier { set => _emissionModule.rateOverTimeMultiplier = _rateOverTimeMultiplier * value; }
 
     protected virtual void Awake()
     {
@@ -19,6 +22,8 @@ public class ParticleSystemController : MonoBehaviour
         _mainModule = _thisParticle.main;
         _emissionModule = _thisParticle.emission;
         _shapeModule = _thisParticle.shape;
+
+        _rateOverTimeMultiplier = _emissionModule.rateOverTimeMultiplier;
     }
 
     public void Play() => _thisParticle.Play();
