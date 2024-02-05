@@ -35,6 +35,7 @@ public class ShapesManager : MonoBehaviour
     private Action _actionCreateShape;
     private RandomObjects<Shape> _randomShapes;
     private RandomObjects<BlockSettings> _randomBlockSettings;
+    private int _countBlocks;
 
     private const int BASE_WEIGHT_ONE = 3;
     #endregion
@@ -97,12 +98,12 @@ public class ShapesManager : MonoBehaviour
             ShapeSize.Tetromino => _tetromino,
             _ => null
         });
+        _countBlocks = shape.ToInt();
     }
     private void CreateShapeDigitis()
     {
         _shapeForm = _randomShapes.Next;
-        int countBlocks = _shapeForm.CountBlocks;
-        _shapeForm.CreateDigitis(_poolBlocks.GetObjects(_nextContainer, countBlocks), _randomBlockSettings.NextRange(countBlocks));
+        _shapeForm.CreateDigitis(_poolBlocks.GetObjects(_nextContainer, _countBlocks), _randomBlockSettings.NextRange(_countBlocks));
     }
     #endregion
 
@@ -117,13 +118,13 @@ public class ShapesManager : MonoBehaviour
             ShapeSize.Tetromino => _tetromino,
             _ => null
         });
+        _countBlocks = shape.ToInt();
     }
 
     private void CreateShapeTetris()
     {
         _shapeForm = _randomShapes.Next;
-        int countBlocks = _shapeForm.CountBlocks;
-        _shapeForm.CreateTetris(_poolBlocks.GetObjects(_nextContainer, countBlocks), _particleMaterialTetris);
+        _shapeForm.CreateTetris(_poolBlocks.GetObjects(_nextContainer, _countBlocks), _particleMaterialTetris);
     }
     #endregion
 }

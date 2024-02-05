@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc4e54fe8226c2c4f89ad43ff491d29e, type: 3}
   m_Name: TetrominoShapeI
   m_EditorClassIdentifier: 
-  _countBlocks: 4
+  _type: 1
   _sizeBound: 4
   _offsetForNext: {x: 0.5, y: 0}
   _offsetForArea: {x: -1, y: -2}
@@ -23,4 +23,4 @@ MonoBehaviour:
   - {x: 3, y: 2}
   _colorBlock: {r: 0.83137256, g: 1, b: 1, a: 1}
   _spriteBlock: {fileID: 21300000, guid: 9baefb164ac8fd9488649aaa9a077f2d, type: 3}
-  _randomWeight: 105
+  _randomWeight: 100

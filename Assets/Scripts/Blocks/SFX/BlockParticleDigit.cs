@@ -62,7 +62,7 @@ public class BlockParticleDigit : ParticleSystemController
         EmissionTimeMultiplier = 1f;
         _mainModule.gravityModifier = 0;
         RadialSpeedMultiplier = 1f;
-        SpeedMultiplier = 1f;
+        SpeedMultiplier = 1.15f;
         SizeMultiplier = 1f;
         Color = color;
         _particleRenderer.sharedMaterial = material;

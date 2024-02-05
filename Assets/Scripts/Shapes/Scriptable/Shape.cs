@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewShape", menuName = "Digitis/Shape", order = 51)]
 public class Shape : ScriptableObject, IRandomizeObject
 {
-    [SerializeField] private int _countBlocks;
+    [SerializeField] private ShapeType _type;
     [SerializeField] private int _sizeBound;
     [SerializeField] private Vector2 _offsetForNext;
     [SerializeField] private Vector2Int _offsetForArea;
@@ -15,7 +15,6 @@ public class Shape : ScriptableObject, IRandomizeObject
     [Header("Random")]
     [SerializeField] private int _randomWeight = 1;
 
-    public int CountBlocks => _countBlocks;
     public Vector2Int StartOffset => _offsetForArea;
     public Vector2Int[] BlocksPositions => _startBlocksPositions;
     public SubShape SubShape { get; private set; }
@@ -37,15 +36,15 @@ public class Shape : ScriptableObject, IRandomizeObject
         _isBomb = false;
         Blocks = blocks;
 
-        for (int i = 0; i < _countBlocks; i++)
+        for (int i = 0; i < Blocks.Count; i++)
             blocks[i].SetupDigitis(_startBlocksPositions[i] + _offsetForNext, settings[i]);
     }
     public void CreateTetris(List<Block> blocks, Material particleMaterial)
     {
         Blocks = blocks;
 
-        for (int i = 0; i < _countBlocks; i++)
-            blocks[i].SetupTetris(_startBlocksPositions[i] + _offsetForNext, _colorBlock, _spriteBlock, particleMaterial);
+        for (int i = 0; i < Blocks.Count; i++)
+            blocks[i].SetupTetris(_startBlocksPositions[i] + _offsetForNext, _colorBlock, _spriteBlock, _type, particleMaterial);
     }
 
     public bool ToBomb(BlockSettings settings)

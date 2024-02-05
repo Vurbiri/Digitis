@@ -44,8 +44,8 @@ public class Game : MonoBehaviour
         else
             OnBlockEndMoveDownDigitis();
 
-        //StartCoroutine(Rotate());
-        //StartCoroutine(Shift());
+        StartCoroutine(Rotate());
+        StartCoroutine(Shift());
     }
 
     private void OnAddPoints(int points)

@@ -9,12 +9,15 @@ public class RandomObjects<T> where T : class, IRandomizeObject
             if (_isOne)
                 return _randomizeObjects[0].RandomObject;
 
+            Shuffle();
+
             int randomValue = RandomValue;
             T obj = null;
             _weightMax = 0;
+            
             foreach (var rObj in _randomizeObjects)
             {
-                if (rObj.CheckReduce(randomValue, _weightMax))
+                if (rObj.CheckAndChangeWeight(randomValue, _weightMax))
                     obj = rObj.RandomObject;
                 _weightMax = rObj.WeightMax;
             }
@@ -22,7 +25,7 @@ public class RandomObjects<T> where T : class, IRandomizeObject
         }
     }
 
-    private int RandomValue => Random.Range(1, _weightMax);
+    private int RandomValue  =>  Random.Range(0, _weightMax); 
 
     private readonly RandomizeObject[] _randomizeObjects;
     private int _weightMax = 0;
@@ -37,7 +40,7 @@ public class RandomObjects<T> where T : class, IRandomizeObject
 
         for (int i = 0; i < max; i++)
         {
-            _randomizeObjects[i] = new(objects[i], _weightMax);
+            _randomizeObjects[i] = new(objects[i], _weightMax, max);
             _weightMax = _randomizeObjects[i].WeightMax;
         }
     }
@@ -81,6 +84,17 @@ public class RandomObjects<T> where T : class, IRandomizeObject
         }
     }
 
+    private void Shuffle()
+    {
+        RandomizeObject temp;
+        for (int i = _randomizeObjects.Length - 1, j; i >= 1; i--)
+        {
+            j = Random.Range(0, i + 1);
+            temp = _randomizeObjects[j];
+            _randomizeObjects[j] = _randomizeObjects[i];
+            _randomizeObjects[i] = temp;
+        }
+    }
 
     private class RandomizeObject
     {
@@ -90,34 +104,42 @@ public class RandomObjects<T> where T : class, IRandomizeObject
         public int _weightMin;
         public int _weightCurrent;
 
-        private const float REDUCE_WEIGHT = 0.5f;
-        private const float INCREASE_WEIGHT = 1.1f;
+        private readonly int _incrementWeight;
+        private readonly int _decrementWeight;
+        private readonly int _capWeight;
 
-        public RandomizeObject(T obj, int weightMin)
+        public RandomizeObject(T obj, int weightMin, int maxCount)
         {
             RandomObject = obj;
+
+            if (maxCount == 1) return;
+
             _weightMin = weightMin;
             _weightCurrent = obj.Weight;
+
+            _incrementWeight = Mathf.CeilToInt(_weightCurrent  / maxCount);
+            _decrementWeight = _incrementWeight * (maxCount - 1);
+            _capWeight = _weightCurrent + _decrementWeight;
         }
 
         public bool Check(int randomValue)
         {
-            return randomValue > _weightMin && randomValue <= WeightMax;
+            return randomValue >= _weightMin && randomValue < WeightMax;
         }
 
-        public bool CheckReduce(int randomValue, int sumWeight)
+        public bool CheckAndChangeWeight(int randomValue, int sumWeight)
         {
-
-            if (randomValue > _weightMin && randomValue <= WeightMax)
+            if (Check(randomValue))
             {
-                Debug.Log(_weightMin + " - " + randomValue + " - " + WeightMax);
-                _weightCurrent = Mathf.RoundToInt(REDUCE_WEIGHT * _weightCurrent);
+                _weightCurrent = Clamp(_weightCurrent - _decrementWeight);
                 _weightMin = sumWeight;
                 return true;
             }
-            _weightCurrent = Mathf.Clamp(Mathf.RoundToInt(INCREASE_WEIGHT * _weightCurrent), 0, RandomObject.Weight);
+            _weightCurrent = Clamp(_weightCurrent + _incrementWeight);
             _weightMin = sumWeight;
             return false;
+
+            int Clamp(int value) => Mathf.Clamp(value, _incrementWeight, _capWeight);
         }
     }
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc4e54fe8226c2c4f89ad43ff491d29e, type: 3}
   m_Name: TrominoShapeL
   m_EditorClassIdentifier: 
-  _countBlocks: 3
+  _type: 2
   _sizeBound: 3
   _offsetForNext: {x: 0.5, y: 1.5}
   _offsetForArea: {x: -1, y: 0}

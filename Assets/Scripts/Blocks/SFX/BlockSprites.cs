@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 #endif
 using UnityEngine;
@@ -30,6 +31,31 @@ public class BlockSprites : MonoBehaviour
         _spriteRendererBlock.color = color;
 
         _spriteRendererBlock.enabled = true;
+        _spriteRendererNumber.enabled = false;
+    }
+
+    public async UniTaskVoid OffAsync()
+    {
+        Color colorBlock = _spriteRendererBlock.color;
+        Color colorNumber = _spriteRendererNumber.color;
+        int count = 5, pause = 200 / count;
+        float step = 1f / count;
+
+        while(count-- > 0)
+        {
+            colorBlock.a -= step;
+            _spriteRendererBlock.color = colorBlock;
+
+            if (_spriteRendererNumber.enabled)
+            {
+                colorNumber.a -= step;
+                _spriteRendererNumber.color = colorNumber;
+            }
+
+            await UniTask.Delay(pause);
+        }
+
+        _spriteRendererBlock.enabled = false;
         _spriteRendererNumber.enabled = false;
     }
 

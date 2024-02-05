@@ -9,6 +9,18 @@ public enum ShapeSize : byte
     Tetromino = 4
 }
 
+public enum ShapeType : byte
+{
+    None,
+    I,
+    L,
+    J,
+    O,
+    T,
+    S,
+    Z
+}
+
 public enum MixerGroup : byte
 {
     Music,

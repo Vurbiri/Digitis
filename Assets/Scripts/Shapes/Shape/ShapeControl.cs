@@ -26,8 +26,7 @@ public class ShapeControl
     private readonly Speeds speeds;
     private readonly Transform container;
 
-    private const int WAIT_BEFORE_FIXED = 250;
-    //private const int MAX_COUNT_BLOCK = 4;
+    private const int WAIT_BEFORE_FIXED = 1250;
 
     public ShapeControl(BlocksArea area, Speeds speeds)
     {
@@ -102,6 +101,7 @@ public class ShapeControl
 
         _isSpeedDown = isSpeedDown;
         _speed = isSpeedDown ? speeds.Down : speeds.Current;
+        _blocks.ForEach(block => block.Speed = _speed);
     }
 
     public void StartMoveDown()
@@ -210,7 +210,7 @@ public class ShapeControl
         #region Local Functions
         async UniTaskVoid CheckingBoxesAsync()
         {
-            await UniTask.Delay(WAIT_BEFORE_FIXED);
+            await UniTask.Delay((int)(WAIT_BEFORE_FIXED / speeds.Current));
 
             for (int i = _blocks.Count - 1; i >= 0; i--)
             {

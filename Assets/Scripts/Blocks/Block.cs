@@ -6,17 +6,18 @@ using UnityEngine;
 [RequireComponent(typeof(BlockSFX))]
 public class Block : APooledObject<Block>
 {
-    private BlockSFX _blockSFX;
-
     public Vector2Int Position {  get; private set; }
     public int Digit { get; private set; }
     public bool IsOne { get; private set; }
     public bool IsBomb { get; private set; }
+    public float Speed { get => _speed; set { _speed = value; _blockSFX.SetTrailEmissionTimeMultiplier(_speed); } }
 
     public event Action<Block> EventEndMoveDown;
 
+    private BlockSFX _blockSFX;
     private float _target;
-
+    private float _speed;
+    
     private const string NAME = "Block_{0}";
 
     private void Awake()
@@ -52,10 +53,11 @@ public class Block : APooledObject<Block>
             _blockSFX.SetupDigitisBlock(settings);
     }
 
-    public void SetupTetris(Vector2 position, Color color, Sprite sprite, Material particleMaterial)
+    public void SetupTetris(Vector2 position, Color color, Sprite sprite, ShapeType type, Material particleMaterial)
     {
-        gameObject.name = string.Format(NAME, gameObject.GetInstanceID());
-
+        Digit = type.ToInt();
+        gameObject.name = string.Format(NAME, type);
+        
         _blockSFX.SetupTetris(color, sprite, particleMaterial);
         Setup(position);
     }
@@ -87,7 +89,7 @@ public class Block : APooledObject<Block>
 
     public void MoveDown(float speed)
     {
-        _blockSFX.SetTrailEmissionTimeMultiplier(speed);
+        Speed = speed;
 
         StartCoroutine(MoveDownCoroutine());
 
@@ -96,7 +98,6 @@ public class Block : APooledObject<Block>
             float y;
             Vector3 position = _thisTransform.localPosition;
             _target = --position.y;
-            speed = Mathf.Abs(speed);
 
             Position = position.ToVector2Int();
 
@@ -104,14 +105,14 @@ public class Block : APooledObject<Block>
             {
                 yield return null;
             } 
-            while (!Move(speed * Time.deltaTime));
+            while (!Move());
 
             EventEndMoveDown?.Invoke(this);
 
-            bool Move(float maxDistanceDelta)
+            bool Move()
             {
                 position = _thisTransform.localPosition;
-                y = position.y - maxDistanceDelta;
+                y = position.y - _speed * Time.deltaTime;
                 if(y > _target)
                 {
                     position.y = y;
