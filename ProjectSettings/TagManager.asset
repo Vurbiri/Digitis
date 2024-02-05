@@ -8,11 +8,11 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - ScriptObject
   - Water
   - UI
-  - 
-  - 
+  - Empty
+  - Graphic
   - 
   - 
   - 
@@ -52,4 +52,7 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 218911067
+    locked: 0
+  - name: UI
+    uniqueID: 3606806135
     locked: 0

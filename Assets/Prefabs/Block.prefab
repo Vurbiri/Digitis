@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1366000351605436922}
   - component: {fileID: 2207535858262056508}
   - component: {fileID: 9149846695321544915}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ParticleExplode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4854,7 +4854,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 218911067
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 2
   m_RenderMode: 3
   m_MeshDistribution: 0
@@ -4900,7 +4900,7 @@ GameObject:
   - component: {fileID: 5283039612760675500}
   - component: {fileID: 1228636701186775676}
   - component: {fileID: 8459955130983331467}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ParticleTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4975,7 +4975,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 218911067
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: -3
   m_RenderMode: 3
   m_MeshDistribution: 0
@@ -9742,7 +9742,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1698422185679687778}
   - component: {fileID: 6057731465338054035}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Number
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9803,7 +9803,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 218911067
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: a1968c4d3c57934478e3bda992eb263e, type: 3}
   m_Color: {r: 0.9411765, g: 0.9411765, b: 1, a: 1}
@@ -9826,7 +9826,7 @@ GameObject:
   m_Component:
   - component: {fileID: 164108273794817676}
   - component: {fileID: 2854965740506679334}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9879,7 +9879,7 @@ GameObject:
   - component: {fileID: 6399986927603215527}
   - component: {fileID: 5073039849074681645}
   - component: {fileID: 8625316329591890504}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Block
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9993,7 +9993,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 218911067
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 148b2162df5ec5f458973c7ad638b9d6, type: 3}
   m_Color: {r: 0.47058824, g: 0, b: 1, a: 1}
@@ -10018,7 +10018,7 @@ GameObject:
   - component: {fileID: 2268083822275142237}
   - component: {fileID: 2570813680092711269}
   - component: {fileID: 3078532478732392824}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ParticleDigit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10080,7 +10080,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 218911067
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: -3
   m_RenderMode: 3
   m_MeshDistribution: 0

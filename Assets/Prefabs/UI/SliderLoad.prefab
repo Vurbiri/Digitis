@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9006921056635930419}
   - component: {fileID: 8879496979199513039}
   - component: {fileID: 1956256926294144995}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,8 +85,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4508495370180721464}
   - component: {fileID: 4959257419406554873}
-  m_Layer: 7
-  m_Name: SliderLoadi
+  m_Layer: 5
+  m_Name: SliderLoad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -173,7 +173,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1446512895796156478}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -212,7 +212,7 @@ GameObject:
   - component: {fileID: 4936197701609149679}
   - component: {fileID: 336763511032578494}
   - component: {fileID: 5442328287922096397}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}

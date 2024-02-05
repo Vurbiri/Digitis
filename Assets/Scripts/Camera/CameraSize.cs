@@ -1,14 +1,18 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraSize : MonoBehaviour
 {
-    [SerializeField] private float _verticalSizeMin = 12f;
+    [SerializeField] private float _verticalSizeMin = 12.5f;
     [SerializeField] private float _horizontalSizeMin = 7.875f;
     [Space]
-    [Space]
-    [SerializeField] private float _timeRateUpdate = 1.5f;
+    [SerializeField] private float _timeRateUpdateMin = 0.5f;
+    [SerializeField] private float _timeRateUpdateMax = 0.25f;
+    [SerializeField] private float _timeRateUpdateSteep = 5f;
+    
+    public event Action<float> EventChangingOffsetSizeX;
+    public event Action<Vector2> EventChangingSize;
 
     private void Start()
     {
@@ -18,28 +22,42 @@ public class CameraSize : MonoBehaviour
 
         IEnumerator RatioUpdate()
         {
+            float timeRateUpdate = _timeRateUpdateMin;
             float aspectRatio;
             float aspectRatioOld = 0f;
             float verticalSize;
-            WaitForSecondsRealtime delay = new(_timeRateUpdate);
+            float horizontalSize;
+            WaitForSecondsRealtime delay = new(timeRateUpdate);
 
             while (true)
             {
+                yield return delay;
+
                 aspectRatio = thisCamera.aspect;
 
                 if (aspectRatio != aspectRatioOld)
                 {
                     aspectRatioOld = aspectRatio;
-
                     verticalSize = _horizontalSizeMin / aspectRatio;
 
                     if (verticalSize < _verticalSizeMin)
                         verticalSize = _verticalSizeMin;
 
+                    horizontalSize = verticalSize * aspectRatio;
                     thisCamera.orthographicSize = verticalSize;
+
+                    timeRateUpdate = _timeRateUpdateMin;
+
+                    EventChangingOffsetSizeX?.Invoke(horizontalSize - _horizontalSizeMin);
+                    EventChangingSize?.Invoke(new Vector2(horizontalSize, verticalSize) * 2f);
+                }
+                else
+                {
+                    if (timeRateUpdate < _timeRateUpdateMax)
+                        timeRateUpdate += _timeRateUpdateSteep;
                 }
 
-                yield return delay;
+                delay = new(timeRateUpdate);
             }
         }
     }

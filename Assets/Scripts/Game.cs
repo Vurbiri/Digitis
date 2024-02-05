@@ -168,7 +168,7 @@ public class Game : MonoBehaviour
     private void Update()
     {
 
-        if (!_isTetris && Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             _shapesManager.ShapeToBomb();
         }

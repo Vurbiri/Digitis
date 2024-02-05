@@ -33,9 +33,11 @@ public class ShapesManager : MonoBehaviour
     private ShapeControl _shapeControl = null;
     private Shape _shapeForm = null;
     private Action _actionCreateShape;
+    private Func<bool> _funcShapeToBomb;
     private RandomObjects<Shape> _randomShapes;
     private RandomObjects<BlockSettings> _randomBlockSettings;
     private int _countBlocks;
+
 
     private const int BASE_WEIGHT_ONE = 3;
     #endregion
@@ -61,7 +63,7 @@ public class ShapesManager : MonoBehaviour
 
     public void CreateShape() => _actionCreateShape();
 
-    public bool ShapeToBomb() => _shapeForm.ToBomb(_settingBomb);
+    public bool ShapeToBomb() => _funcShapeToBomb();
 
     public bool StartMove(bool isGravity)
     {
@@ -88,6 +90,7 @@ public class ShapesManager : MonoBehaviour
     public void InitializeDigitis(int maxDigit, ShapeSize shape)
     {
         _actionCreateShape = CreateShapeDigitis;
+        _funcShapeToBomb = () => _shapeForm.ToBomb(_settingBomb);
         _settingOne.Weight = 100 + BASE_WEIGHT_ONE * maxDigit;
         _settingOne.MaxCount = shape.ToInt() - 1;
         _randomBlockSettings = new(_settingsBlocks, maxDigit);
@@ -110,6 +113,7 @@ public class ShapesManager : MonoBehaviour
     #region Tetris
     public void InitializeTetris(ShapeSize shape)
     {
+        _funcShapeToBomb = () => false;
         _actionCreateShape = CreateShapeTetris;
         _randomShapes = new(shape switch
         {
