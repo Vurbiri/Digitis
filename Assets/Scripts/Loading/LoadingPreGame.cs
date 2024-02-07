@@ -1,29 +1,28 @@
 using Cysharp.Threading.Tasks;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LoadingPreGame : MonoBehaviour
 {
-    [SerializeField] protected int _nextScene = 1;
+    [Scene]
+    [SerializeField] protected int _nextSceneMobile = 1;
+    [Scene]
+    [SerializeField] protected int _nextSceneDesktop = 1;
     [Space]
     [SerializeField] protected Slider _slider;
     //[SerializeField] private LogOnWindow _logOnWindow;
+
+    private LoadScene _loadScene = null;
 
     private void Start() => Loading().Forget();
 
     private async UniTaskVoid Loading()
     {
         Message.Log("Start LoadingPreGame");
-
-        float progress = 0f;
-        LoadScene loadScene = new(_nextScene);
-        loadScene.Start(OnProgressLoad);
-
+       
         YandexSDK ysdk = YandexSDK.InstanceF;
         Localization localization = Localization.InstanceF;
-        YMoney ym = YMoney.InstanceF;
-
-        ProgressInitialize(0.1f);
 
         if (!localization.Initialize())
         {
@@ -31,10 +30,17 @@ public class LoadingPreGame : MonoBehaviour
             return;
         }
 
-        ProgressInitialize(0.2f);
+        ProgressLoad(0.1f);
 
         if (!await InitializeYSDK())
             Message.Log("YandexSDK - initialization error!");
+
+        ProgressLoad(0.2f);
+
+        bool isDesktop;
+        StartLoadScene();
+
+        ProgressLoad(0.3f);
 
         await CreateStorages();
 
@@ -46,12 +52,27 @@ public class LoadingPreGame : MonoBehaviour
         //    _slider.gameObject.SetActive(true);
         //}
 
-        ProgressInitialize(0.5f);
+        ProgressLoad(0.5f);
 
         Message.Log("End LoadingPreGame");
-        loadScene.End();
+        _loadScene.End();
 
         #region Local Functions
+        void StartLoadScene()
+        {
+            if (ysdk.IsPlayer)
+                isDesktop = ysdk.IsDesktop;
+            else
+                isDesktop = !UtilityJS.IsMobile;
+
+            if (isDesktop)
+                _loadScene = new(_nextSceneDesktop, _slider, true);
+            else
+                _loadScene = new(_nextSceneMobile, _slider, true);
+
+            _loadScene.Start();
+        }
+
         async UniTask<bool> InitializeYSDK()
         {
             if (!await ysdk.InitYsdk())
@@ -63,7 +84,6 @@ public class LoadingPreGame : MonoBehaviour
             if (!await ysdk.InitLeaderboards())
                 Message.Log("Leaderboards - initialization error!");
 
-            ProgressInitialize(0.3f);
             return true;
         }
         async UniTask CreateStorages(string key = null)
@@ -71,13 +91,13 @@ public class LoadingPreGame : MonoBehaviour
             if (!Storage.StoragesCreate())
                 Message.Banner(localization.GetText("ErrorStorage"), MessageType.Error, 7000);
             
-            ProgressInitialize(0.35f);
-            
-            ym.IsFirstStart = !await InitializeStorages();
-            
-            ProgressInitialize(0.4f);
+            ProgressLoad(0.35f);
 
-            //============== local func ===============================
+            Settings.Instance.IsFirstStart = !await InitializeStorages();
+            
+            ProgressLoad(0.4f);
+
+            #region Local Functions
             async UniTask<bool> InitializeStorages()
             {
                 bool isLoad = await Storage.Initialize(key);
@@ -89,28 +109,29 @@ public class LoadingPreGame : MonoBehaviour
 
                 return Load(isLoad);
 
-                //============== local func ===============================
+                #region Local Functions
                 bool Load(bool b)
                 {
                     bool result = false;
 
-                    return result = SettingsGame.Instance.Initialize(b) || result;
+                    return result = Settings.Instance.Initialize(b, isDesktop) || result;
                     //result = PlayerStates.Instance.Initialize(b) || result;
                     //return GameData.Instance.Initialize(b) || result;
                 }
+                #endregion
             }
+            #endregion
         }
-        void OnProgressLoad(float loading)
+        void ProgressLoad(float value)
         {
-            _slider.value = loading * 0.5f + progress;
-        }
-        void ProgressInitialize(float value)
-        {
-            progress = value;
-            _slider.value = loadScene.Progress * 0.5f + progress;
+            if (_loadScene != null)
+                _loadScene.SetProgress(value);
+            else
+                _slider.value = value;
         }
         #endregion
     }
+
 
     //private void OnDisable() => YandexSDK.Instance.LoadingAPI_Ready();
 

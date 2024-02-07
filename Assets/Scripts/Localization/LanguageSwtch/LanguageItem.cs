@@ -11,13 +11,13 @@ public class LanguageItem : MonoBehaviour
     private bool _isSave;
     private int _id = -1;
     private Localization _localization;
-    private SettingsGame _settings;
+    private Settings _settings;
     private Toggle _thisToggle;
 
     private void Awake()
     {
         _localization = Localization.InstanceF;
-        _settings = SettingsGame.InstanceF;
+        _settings = Settings.InstanceF;
         _thisToggle = GetComponent<Toggle>();
     }
 

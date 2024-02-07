@@ -4,21 +4,11 @@
 
   "Digitis": "Digitis",
 
-  "Researches": "Researches",
   "Settings": "Settings",
   "Music": "Music",
   "SFX": "Sound",
-  "Following": "Move to the cursor/finger",
-  "ScreenStick": "Screen stick",
-  "Accelerometer": "Accelerometer",
-  "ZeroAngle": "Starting tilt angle",
-  "Points": "Points",
   "Score": "Score",
   "Level": "Level",
-  "NextLevel": "Next level",
-  "HP": "Durability",
-  "Speed": "Speed",
-  "Stealth": "Stealth",
 
   "ResetForAd": "Resetting researches for viewing Ad",
   "RepairForAd": "Repair the probe at 35% for viewing Ad",
@@ -43,7 +33,6 @@
   "ToMenu": "To menu",
   "Pause": "Pause",
   "GameOver": "Game over",
-  "GameComplete": "Game complete",
 
   "Empty": "Empty",
   "Error": "!ERROR!",
@@ -59,16 +48,8 @@
 
   "Leaderboard": "Leaders",
   "PersonalRecord": "New personal best!",
-  "Prize": "Prize rank!",
-  "PrizeReward": "+{0} experience",
+  "Top": "Top rank!",
 
   "Help": "Help",
-  "Control": "Control",
-  "Enemies": "Enemies",
-  "Damage": "Damage",
-  "RangeAttack": "Attack range",
-  "MaxBullets": "Max bullets",
-  "SpawnBulletsTime": "Time bullet spawn",
-  "Debuff": "slows by {0}%",
-  "Gravity": "Gravitational field"
+  "Control": "Control"
 }

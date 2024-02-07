@@ -5,14 +5,12 @@ using System.Collections.Generic;
 public class JsonToLocalStorage : ASaveLoadJsonTo
 {
     private string _key;
-    private UtilityJS _utilityJS;
 
-    public override bool IsValid => UtilityJS.InstanceF.IsStorage();
+    public override bool IsValid => UtilityJS.IsStorage();
 
     public async override UniTask<bool> Initialize(string key)
     {
         _key = key;
-        _utilityJS = UtilityJS.InstanceF;
 
         string json;
 
@@ -20,7 +18,7 @@ public class JsonToLocalStorage : ASaveLoadJsonTo
 
         try
         {
-            json = _utilityJS.GetStorage(_key);
+            json = UtilityJS.GetStorage(_key);
         }
         catch (Exception ex)
         {
@@ -55,7 +53,7 @@ public class JsonToLocalStorage : ASaveLoadJsonTo
         try
         {
             string json = Serialize(_saved);
-            result = _utilityJS.SetStorage(_key, json);
+            result = UtilityJS.SetStorage(_key, json);
 
         }
         catch (Exception ex)

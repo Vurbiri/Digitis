@@ -12,6 +12,6 @@ public class CanvasWorldDependsCamera : MonoBehaviour
         position.z = 0;
         thisRectTransform.position = position;
 
-        _cameraSize.EventChangingSize += (size) => thisRectTransform.sizeDelta = size;
+        _cameraSize.EventChangingSize += (halfSize) => thisRectTransform.sizeDelta = halfSize * 2f;
     }
 }

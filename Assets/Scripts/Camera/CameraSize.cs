@@ -5,11 +5,11 @@ using UnityEngine;
 public class CameraSize : MonoBehaviour
 {
     [SerializeField] private float _verticalSizeMin = 12.5f;
-    [SerializeField] private float _horizontalSizeMin = 7.875f;
+    [SerializeField] private float _horizontalSizeMin = 8.25f;
     [Space]
     [SerializeField] private float _timeRateUpdateMin = 0.5f;
-    [SerializeField] private float _timeRateUpdateMax = 0.25f;
-    [SerializeField] private float _timeRateUpdateSteep = 5f;
+    [SerializeField] private float _timeRateUpdateMax = 5;
+    [SerializeField] private float _timeRateUpdateSteep = 0.25f;
     
     public event Action<float> EventChangingOffsetSizeX;
     public event Action<Vector2> EventChangingSize;
@@ -49,7 +49,7 @@ public class CameraSize : MonoBehaviour
                     timeRateUpdate = _timeRateUpdateMin;
 
                     EventChangingOffsetSizeX?.Invoke(horizontalSize - _horizontalSizeMin);
-                    EventChangingSize?.Invoke(new Vector2(horizontalSize, verticalSize) * 2f);
+                    EventChangingSize?.Invoke(new(horizontalSize, verticalSize));
                 }
                 else
                 {

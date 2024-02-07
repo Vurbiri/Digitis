@@ -1,50 +1,56 @@
 using Cysharp.Threading.Tasks;
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static System.Collections.Specialized.BitVector32;
+using UnityEngine.UI;
 
 public class LoadScene 
 {
     private AsyncOperation _asyncOperation = null;
     private readonly int _nextScene;
+    private float _addProgress = 0f;
+    private readonly Slider _slider = null;
+    private readonly bool _isAddProgress = false;
 
-    public float Progress { get; private set; }
+    private float Progress
+    {
+        get
+        {
+            if(_isAddProgress)
+                return _asyncOperation.progress * 0.555f + _addProgress;
 
-    private event Action<float> EventProgress;
+            return _asyncOperation.progress * 1.11f;
+        }
+    }
+
     public LoadScene(int nextScene) => _nextScene = nextScene;
+    public LoadScene(int nextScene, Slider slider, bool isAddProgress = false) : this(nextScene)
+    {
+        _slider = slider;
+        _isAddProgress = isAddProgress;
+    }
 
-    public void Start(Action<float> action = null)
+    public void Start()
     {
         _asyncOperation = SceneManager.LoadSceneAsync(_nextScene);
         _asyncOperation.allowSceneActivation = false;
-        if (action != null)
-        {
-            EventProgress = action;
+        if (_slider != null)
             ProgressAsync().Forget();
-        }
 
         async UniTaskVoid ProgressAsync()
         {
             while (!_asyncOperation.isDone)
             {
-                Progress = _asyncOperation.progress * 1.11f;
-                EventProgress.Invoke(Progress);
+                _slider.value = Progress;
                 await UniTask.Yield();
             }
         }
     }
 
-    public void End()
-    {
-        if (_asyncOperation != null)
-            _asyncOperation.allowSceneActivation = true;
+    public void End() => _asyncOperation.allowSceneActivation = true;
 
-        if (EventProgress != null)
-        {
-            Progress = 1f;
-            EventProgress.Invoke(Progress);
-            EventProgress = null;
-        }
+    public void SetProgress(float progress)
+    {
+        _addProgress = progress;
+        _slider.value = Progress;
     }
 }

@@ -12,9 +12,7 @@ public partial class YMoney : ASingleton<YMoney>
     [Header("Реклама за вознаграждение")]
     [SerializeField] private float _repairRewardedAd = 0.35f;
     [SerializeField] private int _addLevelRewardedAd = 3;
-
-    public bool IsFirstStart { get; set; } = true;
-
+    
     public float RepairFullscreenAd => _repairFullscreenAd;
     public int LevelFullscreenAd { get; private set; }
     public int LevelHardFullscreenAd { get; private set; }

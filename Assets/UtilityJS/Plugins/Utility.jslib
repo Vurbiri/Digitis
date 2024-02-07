@@ -10,28 +10,6 @@ var UtilityPlugin =
         console.error(UTF8ToString(msg));
     },
 
-    IsAccelerometerJS: function () {
-        try {
-            navigator.permissions.query({name: 'accelerometer'})
-                .then((result) => {
-                    if (result.state === "granted") {
-						console.log("++ IsAccelerometerJS: true ++");
-                        window.unityInstance.SendMessage('UtilityJS', 'OnEndIsAccelerometer', 1);
-                    } else {
-                        console.log("-- IsAccelerometerJS: false --");
-						window.unityInstance.SendMessage('UtilityJS', 'OnEndIsAccelerometer', 0);
-                    }
-				})
-				.catch((message) => {
-					console.log("-- IsAccelerometerJS: " + message + " --");
-					window.unityInstance.SendMessage('UtilityJS', 'OnEndIsAccelerometer', 0);
-				});
-        } catch (message) {
-            console.log("-- IsAccelerometerJS: " + message + " --");
-			window.unityInstance.SendMessage('UtilityJS', 'OnEndIsAccelerometer', 0);
-        }
-    },
-
     SetStorageJS: function (key, data) {
         try {
             var sKey = UTF8ToString(key);
@@ -136,13 +114,6 @@ var UtilityPlugin =
         return isCookieEnabled;
     },
 
-    QuitJS: function (url) {
-        window.unityInstance
-            .Quit()
-            .then(() => {
-                window.location.replace(UTF8ToString(url));
-        });
-    },
 }
 
 mergeInto(LibraryManager.library, UtilityPlugin);

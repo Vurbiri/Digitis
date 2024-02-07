@@ -20,6 +20,4 @@ public partial class UtilityJS
     private static extern string GetCookiesJS(string key);
     [DllImport("__Internal")]
     private static extern bool IsCookiesJS();
-    [DllImport("__Internal")]
-    private static extern void IsAccelerometerJS();
 }

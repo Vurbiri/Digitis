@@ -4,7 +4,7 @@ public static class Message
 {
     public static void Log(string msg)
     {
-        UtilityJS.InstanceF.Log(msg);
+        UtilityJS.Log(msg);
     }
 
     public static void Banner(string message, MessageType type = MessageType.Normal, int time = 5000, bool isThrough = true)

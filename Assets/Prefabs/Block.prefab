@@ -4934,7 +4934,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22f832ed2fd20f64298855484ba45600, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _angleShapeEmitterForBomb: 20
+  _shapeTypeForBlock: 18
+  _shapeTypeForBomb: 10
+  _arcShapeEmitterForBomb: 12
 --- !u!199 &1228636701186775676
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -5640,7 +5642,7 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 18
+    type: 10
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
@@ -5784,7 +5786,7 @@ ParticleSystem:
           m_PostInfinity: 2
           m_RotationOrder: 4
     arc:
-      value: 30
+      value: 12
       mode: 0
       spread: 0
       speed:
@@ -10126,6 +10128,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c41c37c3e4a38a647a4d6d56db28a532, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shapeTypeForBlock: 18
+  _radiusThicknessForBlock: 1
+  _emissionTimeMultiplierForBlock: 1
+  _radialSpeedMultiplierForBlock: 1
+  _speedMultiplierForBlock: 1.2
+  _sizeMultiplierForBlock: 1
+  _shapeTypeForBomb: 10
+  _arcShapeEmitterForBomb: 12
+  _radiusThicknessForBomb: 0
+  _emissionTimeMultiplierForBomb: 12
+  _radialSpeedMultiplierForBomb: 0
+  _speedMultiplierForBomb: 1.3
+  _sizeMultiplierForBomb: 0.75
   _timeRemoveStart: 1000
   _timeRemoveNext: 300
   _radialSpeedRemove: 2
@@ -10773,14 +10788,14 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 18
+    type: 10
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
-    radiusThickness: 1
+    radiusThickness: 0
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
-    m_Rotation: {x: 0, y: 0, z: 0}
+    m_Rotation: {x: 0, y: 0, z: 85}
     m_Scale: {x: 1, y: 1, z: 1}
     placementMode: 2
     m_MeshMaterialIndex: 0
@@ -10917,7 +10932,7 @@ ParticleSystem:
           m_PostInfinity: 2
           m_RotationOrder: 4
     arc:
-      value: 360
+      value: 12
       mode: 0
       spread: 0
       speed:
