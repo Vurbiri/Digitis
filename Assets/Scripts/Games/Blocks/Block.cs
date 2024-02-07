@@ -53,12 +53,12 @@ public class Block : APooledObject<Block>
             _blockSFX.SetupDigitisBlock(settings);
     }
 
-    public void SetupTetris(Vector2 position, Color color, Sprite sprite, ShapeType type, Material particleMaterial)
+    public void SetupTetris(Vector2 position, ShapeTetris shapeTetris, int id, Material particleMaterial)
     {
-        Digit = type.ToInt();
-        gameObject.name = string.Format(NAME, type);
+        Digit = id;
+        gameObject.name = string.Format(NAME, id);
         
-        _blockSFX.SetupTetris(color, sprite, particleMaterial);
+        _blockSFX.SetupTetris(shapeTetris, particleMaterial);
         Setup(position);
     }
 

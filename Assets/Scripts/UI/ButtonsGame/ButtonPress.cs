@@ -8,8 +8,6 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     , IPointerEnterHandler, IPointerExitHandler
 #endif
 {
-    [SerializeField] private float _ratePress = 0.5f;
-
     private WaitForSeconds _delay;
     private Coroutine _coroutine;
 
@@ -17,20 +15,23 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private void Start()
     {
-        _delay = new(_ratePress);
+        Settings settings = Settings.InstanceF;
+        SetSensitivity(settings.SensitivityButtons);
+        settings.EventChangeSensitivityButtons += SetSensitivity;
     }
 
     private void StopPress()
     {
-        if (_coroutine != null)
-            StopCoroutine(_coroutine);
+        if (_coroutine == null)
+            return;
+            
+        StopCoroutine(_coroutine);
         _coroutine = null;
     }
 
     private void StartPress()
     {
-        if (_coroutine == null)
-            _coroutine = StartCoroutine(StartPressCoroutine());
+        _coroutine ??= StartCoroutine(StartPressCoroutine());
 
         IEnumerator StartPressCoroutine()
         {
@@ -41,6 +42,8 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             }
         }
     }
+
+    private void SetSensitivity(float sensitivity) => _delay = new(sensitivity);
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -58,5 +61,11 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void OnPointerExit(PointerEventData eventData)
     {
         StopPress();
+    }
+
+    private void OnDestroy()
+    {
+        if(Settings.Instance != null)
+            Settings.Instance.EventChangeSensitivityButtons -= SetSensitivity;
     }
 }

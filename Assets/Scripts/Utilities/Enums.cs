@@ -9,16 +9,16 @@ public enum ShapeSize : byte
     Tetromino = 4
 }
 
-public enum ShapeType : byte
+public enum ShapeType : sbyte
 {
-    None,
-    I,
-    L,
-    J,
-    O,
-    T,
-    S,
-    Z
+    None = -1,
+    I = 0,
+    L = 1,
+    J = 2,
+    O = 3,
+    T = 4,
+    S = 5,
+    Z = 6
 }
 
 public enum MixerGroup : byte
@@ -40,6 +40,12 @@ public enum MessageType : byte
     Warning,
     Error,
     FatalError
+}
+
+public enum GameModeStart : byte
+{
+    GameNew,
+    GameContinue
 }
 
 public static class ExtensionsEnum

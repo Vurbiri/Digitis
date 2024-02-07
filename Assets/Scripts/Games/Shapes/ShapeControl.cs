@@ -74,6 +74,7 @@ public class ShapeControl
 
             _speed = speeds.Current;
             _isFixed = false;
+            _isSpeedDown = false;
             _isCollision = false;
             _moveCount = null;
             _countBlockMove = _blocks.Count;
@@ -85,6 +86,7 @@ public class ShapeControl
         _blocks = blocks;
         _speed = speeds.Fall;
         _isFixed = true;
+        _isSpeedDown = false;
         _isCollision = false;
         _countBlockMove = _blocks.Count;
         _moveCount = isGravity ? null : count;
@@ -97,7 +99,8 @@ public class ShapeControl
 
     public void SetSpeed(bool isSpeedDown)
     {
-        if (_isFixed) return;
+        if (_isFixed)
+            return;
 
         _isSpeedDown = isSpeedDown;
         _speed = isSpeedDown ? speeds.Down : speeds.Current;

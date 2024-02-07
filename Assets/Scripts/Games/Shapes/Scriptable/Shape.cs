@@ -10,15 +10,17 @@ public class Shape : ScriptableObject, IRandomizeObject
     [SerializeField] private Vector2Int _offsetForArea;
     [SerializeField] private Vector2Int[] _startBlocksPositions;
     [Header("Tetris")]
-    [SerializeField] private Color _colorBlock = Color.white;
-    [SerializeField] private Sprite _spriteBlock;
+    [SerializeField] private ShapeTetris _shapeTetris;
     [Header("Random")]
     [SerializeField] private int _randomWeight = 1;
 
+    public ShapeType Type => _type;
+    public int ID {get; private set;}
     public Vector2Int StartOffset => _offsetForArea;
     public Vector2Int[] BlocksPositions => _startBlocksPositions;
     public SubShape SubShape { get; private set; }
     public List<Block> Blocks {get; private set;}
+    public ShapeTetris ShapeTetris => _shapeTetris;
     public int Weight => _randomWeight;
     public int MaxCount => 1;
 
@@ -29,6 +31,7 @@ public class Shape : ScriptableObject, IRandomizeObject
     public void Initialize()
     {
         SubShape = new(_startBlocksPositions, _sizeBound - 1, COUNT_SUBSHAPE);
+        ID = _type.ToInt();
     }
 
     public void CreateDigitis(List<Block> blocks, BlockSettings[] settings)
@@ -39,12 +42,20 @@ public class Shape : ScriptableObject, IRandomizeObject
         for (int i = 0; i < Blocks.Count; i++)
             blocks[i].SetupDigitis(_startBlocksPositions[i] + _offsetForNext, settings[i]);
     }
+    public void CreateBomb(List<Block> blocks, BlockSettings setting)
+    {
+        _isBomb = true;
+        Blocks = blocks;
+
+        for (int i = 0; i < Blocks.Count; i++)
+            blocks[i].SetupDigitis(_startBlocksPositions[i] + _offsetForNext, setting);
+    }
     public void CreateTetris(List<Block> blocks, Material particleMaterial)
     {
         Blocks = blocks;
 
         for (int i = 0; i < Blocks.Count; i++)
-            blocks[i].SetupTetris(_startBlocksPositions[i] + _offsetForNext, _colorBlock, _spriteBlock, _type, particleMaterial);
+            blocks[i].SetupTetris(_startBlocksPositions[i] + _offsetForNext, _shapeTetris, ID, particleMaterial);
     }
 
     public bool ToBomb(BlockSettings settings)

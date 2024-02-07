@@ -1,23 +1,16 @@
-using System.Collections.Generic;
+using UnityEngine;
 
 public static class Extensions
 {
-    public static bool RemoveByValue<TKey, TValue>(this Dictionary<TKey, TValue> self, TValue value)
+    public static int RandomIndex<T>(this T[] self, int lastIndex = -1)
     {
-        TKey key = default;
-        bool isFind = false;
-        foreach(var kvp in self)
-        {
-            if (value.Equals(kvp.Value))
-            { 
-                isFind = true;
-                key = kvp.Key;
-                break;
-            }
-        }
-        if (isFind)
-            isFind = self.Remove(key);
-
-        return isFind;
+        int index;
+        do
+        { 
+            index = Random.Range(0, self.Length); 
+        } 
+        while (self.Length > 1 && index == lastIndex);
+        
+        return index;
     }
 }

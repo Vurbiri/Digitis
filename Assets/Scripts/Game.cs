@@ -14,30 +14,36 @@ public class Game : MonoBehaviour
     [Header("Digitis")]
     [SerializeField] private int _startCountShapesForLevel_D = 20;
     [SerializeField] private int _countShapesPerLevel_D = 2;
+    [SerializeField] private int _countBombsStart = 3;
     [Header("Tetris")]
     [SerializeField] private int _startCountShapesForLevel_T = 15;
     [SerializeField] private int _countShapesPerLevel_T = 2;
-    [SerializeField] private int _pointsPerLine = 100;
-    [Space]
-    [SerializeField] private ShapeSize _shapeType = ShapeSize.Tromino;
-    [SerializeField, Range(3,9)] private int _maxDigit = 9;
-    [SerializeField] private bool _isGravity = true;
-    [SerializeField] private bool _isTetris = false;
+    [SerializeField] private int _pointsPerLine = 50;
 
     private Dictionary<int, Vector2Int> _columns;
     private List<int> _lines;
+    private GameData _gameData;
+    private int _countShapesMax;
 
-    private int _currentShapes;
-    private int _currentLevel = 1;
+    private GameModeStart ModeStart { get => _gameData.ModeStart; set => _gameData.ModeStart = value; }
+    private bool IsDigitis => _gameData.IsDigitis;
 
-    public int Level { get => _currentLevel; private set { _currentLevel = value; EventChangeLevel?.Invoke(value.ToString()); } }
+    public int Level { get => _gameData.CurrentLevel; private set { _gameData.CurrentLevel = value; EventChangeLevel?.Invoke(value.ToString()); } }
+    public int CountBombs { get => _gameData.CountBombs; private set { _gameData.CountBombs = value; EventChangeCountBombs?.Invoke(value); } }
+    public int CountShapes { get => _gameData.CountShapes; private set { _gameData.CountShapes = value; EventChangeCountShapes?.Invoke(value); } }
+    public int CountShapesMax { get => _countShapesMax; private set { _countShapesMax = value; EventChangeCountShapesMax?.Invoke(value); } }
+
     public ScoreGame Score { get; private set; }
 
     public event Action<string> EventChangeLevel;
+    public event Action<int> EventChangeCountBombs;
+    public event Action<int> EventChangeCountShapes;
+    public event Action<int> EventChangeCountShapesMax;
 
     private void Awake()
     {
         Score = new(0, _pointsPerLine);
+        _gameData = GameData.InstanceF;
 
         _area.ActionCalkScoreDigitis = Score.CalkScoreDigitis;
         _area.ActionCalkScoreTetris = Score.CalkScoreTetris;
@@ -53,34 +59,53 @@ public class Game : MonoBehaviour
 
     private void Start()
     {
-        Level = 10;
-
-        if (_isTetris)
-        {
-            SetCurrentShapes(_startCountShapesForLevel_T, _countShapesPerLevel_T);
-            _shapesManager.InitializeTetris(_shapeType);
-            _shapesManager.EventEndMoveDown += OnBlockEndMoveDownTetris;
-        }
+        if (IsDigitis)
+            SetupDigitis();
         else
-        {
-            SetCurrentShapes(_startCountShapesForLevel_D, _countShapesPerLevel_D);
-            _shapesManager.InitializeDigitis(_maxDigit, _shapeType);
-            _shapesManager.EventEndMoveDown += OnBlockEndMoveDownDigitis;
-        }
+            SetupTetris();
 
+        ModeStart = GameModeStart.GameContinue;
+        _gameController.ControlEnable = true;
 
-        _shapesManager.CreateShape();
-
-        if (_isTetris)
-            OnBlockEndMoveDownTetris();
-        else
+        if (IsDigitis)
             OnBlockEndMoveDownDigitis();
+        else
+            OnBlockEndMoveDownTetris();
 
         StartCoroutine(Rotate());
         StartCoroutine(Shift());
 
-        //_gameController.ControlEnable = true;
-    }
+        #region Local Functions
+        void SetupDigitis()
+        {
+            if(ModeStart == GameModeStart.GameNew)
+            {
+                CountBombs = _countBombsStart;
+                SetCurrentShapes(_startCountShapesForLevel_D, _countShapesPerLevel_D);
+                _shapesManager.InitializeNewDigitis(_gameData.MaxDigit, _gameData.ShapeType);
+            }
+            else
+            {
+                _shapesManager.InitializeContinueDigitis(_gameData.MaxDigit, _gameData.ShapeType, _gameData.NextShape, _gameData.NextBlocksShape);
+            }
+            _shapesManager.EventEndMoveDown += OnBlockEndMoveDownDigitis;
+        }
+        void SetupTetris()
+        {
+            if (ModeStart == GameModeStart.GameNew)
+            {
+                SetCurrentShapes(_startCountShapesForLevel_T, _countShapesPerLevel_T);
+                _shapesManager.InitializeNewTetris();
+            }
+            else
+            {
+                _shapesManager.InitializeContinueTetris(_gameData.NextShape);
+            }
+
+            _shapesManager.EventEndMoveDown += OnBlockEndMoveDownTetris;
+        }
+        #endregion
+}
 
     private void OnBlockEndMoveDownDigitis()
     {
@@ -96,18 +121,7 @@ public class Game : MonoBehaviour
             if (FallColumns())
                 return;
 
-            if (_shapesManager.StartMove(_isGravity, Level))
-            {
-                if (--_currentShapes == 0)
-                    LevelUp(_startCountShapesForLevel_D, _countShapesPerLevel_D);
-            }
-            else
-            {
-                _shapesManager.EventEndMoveDown -= OnBlockEndMoveDownDigitis;
-                StopCoroutine(Rotate());
-                StopCoroutine(Shift());
-                Debug.Log("Stop");
-            }
+            StartMove(_gameData.IsGravity);
         }
 
         bool FallColumns()
@@ -129,7 +143,7 @@ public class Game : MonoBehaviour
             if(blocks.Count == 0)
                 return false;
 
-            _shapesManager.StartFall(blocks, _isGravity, element.Value.x);
+            _shapesManager.StartFall(blocks, _gameData.IsDigitis, element.Value.x);
             return true;
         }
         #endregion
@@ -148,18 +162,7 @@ public class Game : MonoBehaviour
             if (FallLines())
                 return;
 
-            if (!_shapesManager.StartMove(false, Level))
-            {
-                if (--_currentShapes == 0)
-                    LevelUp(_startCountShapesForLevel_T, _countShapesPerLevel_T);
-            }
-            else
-            {
-                _shapesManager.EventEndMoveDown -= OnBlockEndMoveDownTetris;
-                StopCoroutine(Rotate());
-                StopCoroutine(Shift());
-                Debug.Log("Stop");
-            }
+            StartMove(false);
         }
 
         bool FallLines()
@@ -186,20 +189,50 @@ public class Game : MonoBehaviour
         #endregion
     }
 
-    private void LevelUp(int startShapes, int perLevel)
+    private void StartMove(bool isGravity)
     {
-        Level++;
-        SetCurrentShapes(startShapes, perLevel);
+        if (_shapesManager.StartMove(isGravity, Level))
+        {
+            if (--CountShapes == 0)
+                LevelUp();
+        }
+        else
+        {
+            _shapesManager.EventEndMoveDown -= OnBlockEndMoveDownDigitis;
+            _shapesManager.EventEndMoveDown -= OnBlockEndMoveDownTetris;
+            StopCoroutine(Rotate());
+            StopCoroutine(Shift());
+            Debug.Log("Stop");
+        }
+
+        void LevelUp()
+        {
+            Level++;
+            if (IsDigitis)
+            {
+                CountBombs++;
+                SetCurrentShapes(_startCountShapesForLevel_D, _countShapesPerLevel_D);
+            }
+            else
+            {
+                SetCurrentShapes(_startCountShapesForLevel_T, _countShapesPerLevel_T);
+            }
+        }
     }
 
-    private void SetCurrentShapes(int startShapes, int perLevel) => _currentShapes = startShapes + perLevel * (Level - 1);
+    private void SetCurrentShapes(int startShapes, int perLevel)
+    {
+        CountShapesMax = startShapes + perLevel * (Level - 1);
+        _gameData.CountShapes = CountShapesMax;
+    }
 
     private void OnBomb()
     {
-        if (_shapesManager.ShapeToBomb())
-        {
+        if (CountBombs <= 0) 
+            return;
 
-        }
+        if (_shapesManager.ShapeToBomb())
+            CountBombs--;
     }
 
     private IEnumerator Rotate()

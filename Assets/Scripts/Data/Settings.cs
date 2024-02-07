@@ -15,11 +15,15 @@ public class Settings : ASingleton<Settings>
 
     private Profile _profileCurrent = null;
 
+    public float SensitivityButtons { get => _profileCurrent.sensitivityButtons; set { _profileCurrent.sensitivityButtons = value; EventChangeSensitivityButtons?.Invoke(value); } }
+
     public float MinValue => _audioMinValue;
     public float MaxValue => _audioMaxValue;
 
     public bool IsDesktop { get; private set; } = true;
     public bool IsFirstStart { get; set; } = true;
+
+    public event Action<float> EventChangeSensitivityButtons;
 
     private YandexSDK _ysdk;
     private Localization _localization;
@@ -93,8 +97,6 @@ public class Settings : ASingleton<Settings>
 
     private void DefaultProfile()
     {
-        
-
         _profileCurrent = (IsDesktop ? _profileDesktop : _profileMobile).Clone();
 
         if (_ysdk.IsInitialize)
@@ -109,7 +111,7 @@ public class Settings : ASingleton<Settings>
             SetVolume(mixer, _profileCurrent.volumes[mixer.ToInt()]);
     }
 
-
+    #region Nested Classe
     [System.Serializable]
     private class Profile
     {
@@ -117,13 +119,16 @@ public class Settings : ASingleton<Settings>
         public string key = "std";
         [JsonProperty("ilg")]
         public int idLang = 1;
+        [JsonProperty("ilg")]
+        public float sensitivityButtons = 0.2f;
         [JsonProperty("vls")]
         public float[] volumes = { 1f, 1f };
 
         [JsonConstructor]
-        public Profile(int idLang, float[] volumes)
+        public Profile(int idLang, float sensitivityButtons, float[] volumes)
         {
             this.idLang = idLang;
+            this.sensitivityButtons = sensitivityButtons;
             volumes.CopyTo(this.volumes, 0);
         }
 
@@ -134,13 +139,15 @@ public class Settings : ASingleton<Settings>
             if (profile == null) return;
 
             idLang = profile.idLang;
+            sensitivityButtons = profile.sensitivityButtons;
             profile.volumes.CopyTo(volumes, 0);
         }
 
         public Profile Clone()
         {
-            return new(idLang, volumes) { key = key };
+            return new(idLang, sensitivityButtons, volumes) { key = key };
         }
 
     }
+    #endregion
 }

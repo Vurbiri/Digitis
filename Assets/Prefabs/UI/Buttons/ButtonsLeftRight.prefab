@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 3755456073144373885}
   - component: {fileID: 2153762194909671778}
   m_Layer: 5
-  m_Name: ButtonMidleOnePress
+  m_Name: ButtonsLeftRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

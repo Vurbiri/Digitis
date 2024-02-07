@@ -23,10 +23,10 @@ public class BlockSFX : MonoBehaviour
         _blockVisual.SetupDigitis(settings);
         _particles.SetupDigitisBomb(settings);
     }
-    public void SetupTetris(Color color, Sprite sprite, Material particleMaterial)
+    public void SetupTetris(ShapeTetris shapeTetris, Material particleMaterial)
     {
-        _blockVisual.SetupTetris(color, sprite);
-        _particles.SetupTetris(color, particleMaterial);
+        _blockVisual.SetupTetris(shapeTetris.ColorBlock, shapeTetris.SpriteBlock);
+        _particles.SetupTetris(shapeTetris.ColorBlock, particleMaterial);
     }
 
     public void Transfer()

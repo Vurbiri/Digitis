@@ -13,14 +13,14 @@ public class LoadingPreGame : MonoBehaviour
     [SerializeField] protected Slider _slider;
     //[SerializeField] private LogOnWindow _logOnWindow;
 
-    private LoadScene _loadScene = null;
-
     private void Start() => Loading().Forget();
 
     private async UniTaskVoid Loading()
     {
         Message.Log("Start LoadingPreGame");
-       
+
+        LoadScene loadScene = null;
+
         YandexSDK ysdk = YandexSDK.InstanceF;
         Localization localization = Localization.InstanceF;
 
@@ -55,7 +55,7 @@ public class LoadingPreGame : MonoBehaviour
         ProgressLoad(0.5f);
 
         Message.Log("End LoadingPreGame");
-        _loadScene.End();
+        loadScene.End();
 
         #region Local Functions
         void StartLoadScene()
@@ -66,11 +66,11 @@ public class LoadingPreGame : MonoBehaviour
                 isDesktop = !UtilityJS.IsMobile;
 
             if (isDesktop)
-                _loadScene = new(_nextSceneDesktop, _slider, true);
+                loadScene = new(_nextSceneDesktop, _slider, true);
             else
-                _loadScene = new(_nextSceneMobile, _slider, true);
+                loadScene = new(_nextSceneMobile, _slider, true);
 
-            _loadScene.Start();
+            loadScene.Start();
         }
 
         async UniTask<bool> InitializeYSDK()
@@ -114,9 +114,8 @@ public class LoadingPreGame : MonoBehaviour
                 {
                     bool result = false;
 
-                    return result = Settings.Instance.Initialize(b, isDesktop) || result;
-                    //result = PlayerStates.Instance.Initialize(b) || result;
-                    //return GameData.Instance.Initialize(b) || result;
+                    result = Settings.Instance.Initialize(b, isDesktop) || result;
+                    return GameData.Instance.Initialize(b) || result;
                 }
                 #endregion
             }
@@ -124,8 +123,8 @@ public class LoadingPreGame : MonoBehaviour
         }
         void ProgressLoad(float value)
         {
-            if (_loadScene != null)
-                _loadScene.SetProgress(value);
+            if (loadScene != null)
+                loadScene.SetProgress(value);
             else
                 _slider.value = value;
         }

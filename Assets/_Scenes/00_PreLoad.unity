@@ -235,12 +235,12 @@ GameObject:
   m_Component:
   - component: {fileID: 175614215}
   - component: {fileID: 175614216}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Settings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &175614215
 Transform:
@@ -273,12 +273,14 @@ MonoBehaviour:
   _profileDesktop:
     key: sttd
     idLang: 1
+    sensitivityButtons: 0.2
     volumes:
     - 1
     - 1
   _profileMobile:
     key: sttm
     idLang: 1
+    sensitivityButtons: 0.2
     volumes:
     - 1
     - 1
@@ -398,7 +400,7 @@ GameObject:
   m_Component:
   - component: {fileID: 470621065}
   - component: {fileID: 470621064}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: YandexSDK
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -509,6 +511,67 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 475711537}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &523976397
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 523976399}
+  - component: {fileID: 523976398}
+  m_Layer: 3
+  m_Name: GameData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!114 &523976398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523976397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4faf9d96d5bd7746ab942e34badd4b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isNotDestroying: 1
+  _isDigitis: 1
+  _dataDigitis:
+    modeStart: 0
+    currentLevel: 5
+    countShapes: 0
+    nextShape: 0
+    shapeType: 2
+    maxDigit: 4
+    isGravity: 1
+    countBombs: 0
+    nextBlocksShape: 
+  _dataTetris:
+    modeStart: 0
+    currentLevel: 1
+    countShapes: 0
+    nextShape: 0
+--- !u!4 &523976399
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523976397}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1045299651
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,7 +582,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1045299653}
   - component: {fileID: 1045299652}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: YMoney
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -568,7 +631,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1307781868}
   - component: {fileID: 1307781867}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: LoadingPreGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -849,12 +912,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2119322353}
   - component: {fileID: 2119322352}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Localization
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!114 &2119322352
 MonoBehaviour:
@@ -895,6 +958,7 @@ SceneRoots:
   - {fileID: 1307781868}
   - {fileID: 2119322353}
   - {fileID: 175614215}
+  - {fileID: 523976399}
   - {fileID: 1045299653}
   - {fileID: 470621065}
   - {fileID: 394035159}
