@@ -152,18 +152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 800c71d33c60cb244afe1e41de59074b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _area: {fileID: 945172856}
   _shapesManager: {fileID: 2050258516}
   _gameController: {fileID: 2067819112}
-  _startCountShapesForLevel_D: 20
-  _countShapesPerLevel_D: 2
-  _startCountShapesForLevel_T: 15
-  _countShapesPerLevel_T: 2
-  _pointsPerLine: 100
-  _shapeType: 3
-  _maxDigit: 4
-  _isGravity: 1
-  _isTetris: 0
+  _startCountShapes: 20
+  _shapesPerLevel: 3
+  _pointsPerLine: 50
 --- !u!4 &64705095
 Transform:
   m_ObjectHideFlags: 0
@@ -2071,6 +2064,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ca683504588f0f4b8d5111b3d9e3381, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _game: {fileID: 64705094}
   _size: {x: 10, y: 20}
   _container: {fileID: 1571479057}
   _timePauseBlocksRemoved: 225
@@ -8742,7 +8736,6 @@ MonoBehaviour:
     type: 3}
   _sizePool: 100
   _settingBomb: {fileID: 11400000, guid: 0091158053c2d5f40a0bc9b05082266a, type: 2}
-  _settingOne: {fileID: 11400000, guid: 1b9223f8127ca434e9f3e4e1f89805b6, type: 2}
   _settingsBlocks:
   - {fileID: 11400000, guid: 1b9223f8127ca434e9f3e4e1f89805b6, type: 2}
   - {fileID: 11400000, guid: bcfb9b487e098ed4aac85b86113cb9ea, type: 2}
@@ -8760,8 +8753,8 @@ MonoBehaviour:
   _speeds:
     _start: 1
     _perLevel: 0.5
-    _down: 10
-    _fall: 15
+    _down: 15
+    _fall: 20
   _domino:
   - {fileID: 11400000, guid: 6b17771de0d873b4593aee873cf0a185, type: 2}
   _tromino:

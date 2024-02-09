@@ -273,7 +273,7 @@ MonoBehaviour:
   _profileDesktop:
     key: sttd
     idLang: 1
-    sensitivityButtons: 0.2
+    sensitivityButtons: 0.1
     volumes:
     - 1
     - 1
@@ -542,21 +542,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
   _isDigitis: 1
+  _countBombsStart: 3
   _dataDigitis:
     modeStart: 0
-    currentLevel: 5
+    currentLevel: 1
     countShapes: 0
-    nextShape: 0
+    nextShape: -1
+    score: 0
     shapeType: 2
-    maxDigit: 4
-    isGravity: 1
-    countBombs: 0
+    maxDigit: 7
+    _isGravity: 1
+    _countBombs: 3
     nextBlocksShape: 
   _dataTetris:
     modeStart: 0
     currentLevel: 1
     countShapes: 0
-    nextShape: 0
+    nextShape: -1
+    score: 0
 --- !u!4 &523976399
 Transform:
   m_ObjectHideFlags: 0

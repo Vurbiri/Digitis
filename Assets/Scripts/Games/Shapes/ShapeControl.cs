@@ -12,12 +12,15 @@ public class ShapeControl
 
     private SubShape _shape;
     private Vector2Int _offset;
+    private Vector2Int _deferredShift;
+    private bool _deferredRotation;
 
     private float _speed;
     private bool _isFixed = true;
     private bool _isSpeedDown = false;
     private float _countBlockMove;
     private bool _isCollision = false;
+    private bool  _isGravity;
 
     private int? _moveCount = null;
 
@@ -26,7 +29,8 @@ public class ShapeControl
     private readonly Speeds speeds;
     private readonly Transform container;
 
-    private const int WAIT_BEFORE_FIXED = 1250;
+    private const int WAIT_BEFORE_FIXED_LESS_6 = 500;
+    private const int WAIT_BEFORE_FIXED = 3000;
 
     public ShapeControl(BlocksArea area, Speeds speeds)
     {
@@ -73,11 +77,14 @@ public class ShapeControl
             if (!isEmpty) return;
 
             _speed = speeds.Current;
+            _deferredShift = Vector2Int.zero;
+            _deferredRotation = false;
             _isFixed = false;
             _isSpeedDown = false;
             _isCollision = false;
             _moveCount = null;
             _countBlockMove = _blocks.Count;
+            _isGravity = isGravity;
         }
         #endregion
     }
@@ -85,11 +92,14 @@ public class ShapeControl
     {
         _blocks = blocks;
         _speed = speeds.Fall;
+        _deferredShift = Vector2Int.zero;
+        _deferredRotation = false;
         _isFixed = true;
         _isSpeedDown = false;
         _isCollision = false;
         _countBlockMove = _blocks.Count;
         _moveCount = isGravity ? null : count;
+        _isGravity = isGravity;
         foreach (var block in _blocks)
         {
             block.EventEndMoveDown += OnEventEndMoveDownGravity;
@@ -119,29 +129,66 @@ public class ShapeControl
         _blocks.ForEach(block => block.MoveDown(_speed));
     }
 
-    public void Shift(Vector2Int direct)
+    public void TryShift(Vector2Int direct)
     {
-        if (_isFixed || _isSpeedDown)
+        if (_isFixed || _isSpeedDown || _deferredShift == direct)
             return;
 
         if (!area.IsEmptyArea(_blocks, direct))
             return;
 
+        if (!_isGravity && !_isCollision)
+        {
+            if (!area.IsEmptyArea(_blocks, direct + Vector2Int.up))
+            {
+                if (_blocks[0].IsDeferredOrder)
+                {
+                    _deferredShift = direct;
+                    _deferredRotation = false;
+                }
+                return;
+            }
+        }
+
+        Shift(direct);
+    }
+    private void Shift(Vector2Int direct)
+    {
+        _deferredShift = Vector2Int.zero;
         _offset += direct;
         for (int i = 0; i < _blocks.Count; i++)
             _blocks[i].MoveToDelta(direct);
     }
-    public void Rotate()
+    
+    public void TryRotate()
     {
-        if(_isFixed || _isSpeedDown)
+        if(_isFixed || _isSpeedDown || _deferredRotation)
             return;
 
         if (!area.IsEmptyArea(_shape.CollisionRotation, _offset))
             return;
-        
+
+        if (!_isGravity && !_isCollision)
+        {
+            if (!area.IsEmptyArea(_shape.CollisionRotation, _offset + Vector2Int.up))
+            {
+                if (_blocks[0].IsDeferredOrder)
+                {
+                    _deferredShift = Vector2Int.zero;
+                    _deferredRotation = true;
+                }
+                return;
+            }
+        }
+
+        Rotate();
+    }
+    private void Rotate()
+    {
         for (int i = 0; i < _blocks.Count; i++)
             _blocks[i].MoveToDelta(_shape.DeltaPositions[i]);
-
+       
+        _deferredRotation = false;
         _shape = _shape.NextSubShape;
     }
 
@@ -201,20 +248,31 @@ public class ShapeControl
 
         if (!_isCollision)
         {
-            ReStartMoveDown();
-            return;
+            if(DeferredOrder())
+                CheckingBoxes();
+            else
+                ReStartMoveDown();
         }
-
-        if (_isSpeedDown)
-            CheckingBoxes();
+        else if (_isSpeedDown)
+        {
+            _isFixed = true;
+            StopMove(OnEventEndMoveDownNotGravity);
+        }
         else
+        {
+            DeferredOrder();
             CheckingBoxesAsync().Forget();
+        }
 
         #region Local Functions
         async UniTaskVoid CheckingBoxesAsync()
         {
-            await UniTask.Delay((int)(WAIT_BEFORE_FIXED / speeds.Current));
+            await UniTask.Delay((int)(speeds.Current < 6f ? WAIT_BEFORE_FIXED_LESS_6 : WAIT_BEFORE_FIXED / speeds.Current));
 
+            CheckingBoxes();
+        }
+        void CheckingBoxes()
+        {
             for (int i = _blocks.Count - 1; i >= 0; i--)
             {
                 if (!area.IsEmptyDownstairs(_blocks[i]))
@@ -232,16 +290,20 @@ public class ShapeControl
 
             StopMove(OnEventEndMoveDownNotGravity);
         }
-        void CheckingBoxes()
-        {
-            _isFixed = true;
-            StopMove(OnEventEndMoveDownNotGravity);
-        }
         void ReStartMoveDown()
         {
             _isCollision = false;
             _countBlockMove = _blocks.Count;
             StartMoveDown();
+        }
+        bool DeferredOrder()
+        {
+            bool isOrder = _deferredRotation;
+            if (_deferredRotation)
+                Rotate();
+            else if (isOrder = _deferredShift != Vector2Int.zero)
+                Shift(_deferredShift);
+            return isOrder;
         }
         #endregion
     }

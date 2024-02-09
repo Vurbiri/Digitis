@@ -129,7 +129,7 @@ public class Settings : ASingleton<Settings>
         {
             this.idLang = idLang;
             this.sensitivityButtons = sensitivityButtons;
-            volumes.CopyTo(this.volumes, 0);
+            this.volumes = (float[])volumes.Clone();
         }
 
         public Profile() { }

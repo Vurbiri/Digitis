@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class BlocksArea : MonoBehaviour
 {
+    [SerializeField] private Game _game;
+    [Space]
     [SerializeField] private Vector2Int _size = new(10, 20);
     [SerializeField] private Transform _container;
     [Space]
     [SerializeField] private int _timePauseBlocksRemoved = 200;
     [SerializeField] private int _timePauseBombExploded = 150;
 
+    private GameData _gameData;
     private Block[,] _blocks;
     private readonly List<Block> _blocksAdd = new();
     private readonly List<Block> _bombsAdd = new();
@@ -21,9 +24,6 @@ public class BlocksArea : MonoBehaviour
         set => _blocks[index.x, index.y] = value;
     }
 
-    public Action<int, int, int> ActionCalkScoreDigitis;
-    public Action<int> ActionCalkScoreTetris;
-
     public Transform Container => _container;
     public Vector2Int Size => _size;
 
@@ -31,14 +31,61 @@ public class BlocksArea : MonoBehaviour
 
     private void Awake()
     {
+        _gameData = GameData.InstanceF;
         _blocks = new Block[_size.x, _size.y + ADD_VIRTUAL_Y_SIZE];
+    }
+
+    public void SetArea(Func<Vector2, int, Block> getBlock)
+    {
+        Vector2Int position = Vector2Int.zero;
+        int value;
+        Block block;
+        for (int x = 0; x < _gameData.Area.GetLength(0); x++)
+        {
+            for (int y = 0; y < _gameData.Area.GetLength(1); y++)
+            {
+                value = _gameData.Area[x, y];
+                if (value >= 0)
+                {
+                    position.x = x; position.y = y;
+                    block = getBlock.Invoke(position, value);
+                    this[position] = block;
+                    block.EventDeactivate += OnDeactivate;
+                }
+            }
+        }
+    }
+    public void SaveArea()
+    {
+        int maxY = MaxNotEmptyLine();
+        if(_gameData.Area.GetLength(1) != maxY)
+            _gameData.Area = new int[_size.x, maxY];
+        Block block;
+        for (int x = 0; x < _size.x; x++)
+        {
+            for (int y = 0; y < maxY; y++)
+            {
+                block = _blocks[x, y];
+                _gameData.Area[x, y] = block == null ? -1 : block.Digit;
+            }
+        }
+
+        int MaxNotEmptyLine()
+        {
+            for (int y = _size.y - 1; y >= 0; y--)
+                for (int x = 0; x < _size.x; x++)
+                    if (_blocks[x, y] != null)
+                        return y + 1;
+
+            return 0;
+        }
     }
 
     #region IsEmpty...
     public bool IsEmptyArea(HashSet<Vector2Int> set, Vector2Int offset)
     {
         foreach(var s in set)
-        if(!IsEmptyCell(s + offset))
+            if(!IsEmptyCell(s + offset))
                 return false;
         return true;
     }
@@ -103,7 +150,7 @@ public class BlocksArea : MonoBehaviour
         int countLine = 1;
         foreach (int posY in listY)
         {
-            ActionCalkScoreTetris(countLine++);
+            _game.CalkScoreTetris(countLine++);
 
             for (int x = halfCount; x >= 0; x--)
             {
@@ -118,16 +165,6 @@ public class BlocksArea : MonoBehaviour
         return listY;
     }
 
-    public List<Block> GetBlocksAboveLine(int y)
-    {
-        List<Block> blocks = new();
-
-        for (int x = 0; x < _size.x; x++)
-            blocks.AddRange(GetBlocksInColumn(x, y));
-
-        return blocks;
-    }
-
     public List<Block> GetBlocksInColumn(int x, int minY)
     {
         List<Block> blocks = new();
@@ -140,6 +177,15 @@ public class BlocksArea : MonoBehaviour
                 _blocks[x, y] = null;
             }
         }
+
+        return blocks;
+    }
+    public List<Block> GetBlocksAboveLine(int y)
+    {
+        List<Block> blocks = new();
+
+        for (int x = 0; x < _size.x; x++)
+            blocks.AddRange(GetBlocksInColumn(x, y));
 
         return blocks;
     }
@@ -174,7 +220,7 @@ public class BlocksArea : MonoBehaviour
 
             if (CreateSeries(block))
             {
-                ActionCalkScoreDigitis(block.Digit, blocksSeries.Count,  blocksOne.Count);
+                _game.CalkScoreDigitis(block.Digit, blocksSeries.Count,  blocksOne.Count);
                 blocksRemove.UnionWith(blocksSeries);
                 blocksRemove.UnionWith(blocksOne);
             }

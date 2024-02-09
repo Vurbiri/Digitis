@@ -2,7 +2,7 @@ public class ScoreBoard : ABoard
 {
     private void Start()
     {
-        SetValue(_game.Score.Value.ToString());
-        _game.Score.EventChangePoints += SetValue;
+        SetValue(_game.Score.ToString());
+        _game.EventChangePoints += SetValue;
     }
 }

@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,6 @@ public class ShapesManager : MonoBehaviour
     [SerializeField] private Block _prefabBlock;
     [SerializeField] private int _sizePool = 100;
     [SerializeField] private BlockSettings _settingBomb;
-    [SerializeField] private BlockSettings _settingOne;
     [SerializeField] private BlockSettings[] _settingsBlocks;
     [Space]
     [SerializeField] private Material _particleMaterialTetris;
@@ -28,8 +28,8 @@ public class ShapesManager : MonoBehaviour
     #endregion
 
     #region private
+    private GameData _gameData;
     private Pool<Block> _poolBlocks;
-
     private ShapeControl _shapeControl = null;
     private Shape _shape = null;
     private Action _actionCreateShape;
@@ -47,9 +47,9 @@ public class ShapesManager : MonoBehaviour
     private void Awake()
     {
         Array.Sort(_settingsBlocks, (a,b) => a.Digit.CompareTo(b.Digit));
-       
-        _poolBlocks = new(_prefabBlock, _poolRepository, _sizePool);
 
+        _gameData = GameData.InstanceF;
+        _poolBlocks = new(_prefabBlock, _poolRepository, _sizePool);
         _shapeControl = new ShapeControl(_area, _speeds);
         _shapeControl.EventEndMoveDown += () => EventEndMoveDown?.Invoke();
 
@@ -64,7 +64,7 @@ public class ShapesManager : MonoBehaviour
         Array.Sort(_tetromino, (a, b) => a.ID.CompareTo(b.ID));
     }
 
-    public bool ShapeToBomb() => _funcShapeToBomb();
+    public bool ShapeToBomb() => _funcShapeToBomb.Invoke();
 
     public bool StartMove(bool isGravity, int level)
     {
@@ -72,7 +72,7 @@ public class ShapesManager : MonoBehaviour
 
         if (_shapeControl.SetupForNew(_shape, isGravity))
         {
-            _actionCreateShape();
+            _actionCreateShape.Invoke();
             _shapeControl.StartMoveDown();
             return true;
         }
@@ -85,27 +85,52 @@ public class ShapesManager : MonoBehaviour
         _shapeControl.StartMoveDown();
     }
 
-    public void Left() => _shapeControl.Shift(Vector2Int.left);
-    public void Right() => _shapeControl.Shift(Vector2Int.right);
+    public void Left() => _shapeControl.TryShift(Vector2Int.left);
+    public void Right() => _shapeControl.TryShift(Vector2Int.right);
 
     public void StartMoveDown() => _shapeControl.SetSpeed(true);
     public void EndMoveDown() => _shapeControl.SetSpeed(false);
 
-    public void Rotate() => _shapeControl.Rotate();
+    public void Rotate() => _shapeControl.TryRotate();
+
+    public List<Block> GetBlocksInColumn(int x, int minY) => _area.GetBlocksInColumn(x, minY);
+    public List<Block> GetBlocksAboveLine(int y) => _area.GetBlocksAboveLine(y);
 
     #region Digitis
-    public void InitializeNewDigitis(int maxDigit, ShapeSize shape)
+    public void InitializeDigitis()
     {
-        InitializeDigitis(maxDigit, shape);
-        CreateShapeDigitis();
-    }
-    public void InitializeContinueDigitis(int maxDigit, ShapeSize shape, ShapeType nextShape, int[] nextBlocksShape)
-    {
-        Shape[] shapes = InitializeDigitis(maxDigit, shape);
-        CreateShape();
+        Shape[] shapes = Initialize(_gameData.MaxDigit, _gameData.ShapeType);
+        if (_gameData.ModeStart == GameModeStart.GameNew)
+        {
+            CreateShapeDigitis();
+        }
+        else
+        {
+            CreateShapeDigitisContinue(_gameData.NextShape, _gameData.NextBlocksShape);
+            _area.SetArea(GetBlockDigitis);
+        }
 
         #region Local Functions
-        void CreateShape()
+        Shape[] Initialize(int maxDigit, ShapeSize shape)
+        {
+            _actionCreateShape = CreateShapeDigitis;
+            _funcShapeToBomb = () => _shape.ToBomb(_settingBomb);
+            _settingsBlocks[0].Weight = 100 + BASE_WEIGHT_ONE * maxDigit;
+            _settingsBlocks[0].MaxCount = shape.ToInt() - 1;
+            _randomBlockSettings = new(_settingsBlocks, maxDigit);
+            Shape[] shapes = shape switch
+            {
+                ShapeSize.Domino => _domino,
+                ShapeSize.Tromino => _tromino,
+                ShapeSize.Tetromino => _tetromino,
+                _ => null
+            };
+            _randomShapes = new(shapes);
+            _countBlocks = shape.ToInt();
+
+            return shapes;
+        }
+        void CreateShapeDigitisContinue(ShapeType nextShape, int[] nextBlocksShape)
         {
             _shape = shapes[nextShape.ToInt()];
 
@@ -117,31 +142,32 @@ public class ShapesManager : MonoBehaviour
 
             BlockSettings[] settings = new BlockSettings[nextBlocksShape.Length];
             for (int i = 0; i < nextBlocksShape.Length; i++)
-                settings[i] = _settingsBlocks[nextBlocksShape[i]];
+                settings[i] = _settingsBlocks[nextBlocksShape[i] - 1];
 
             _shape.CreateDigitis(_poolBlocks.GetObjects(_nextContainer, _countBlocks), settings);
+        }
+        Block GetBlockDigitis(Vector2 position, int digit)
+        {
+            Block block = _poolBlocks.GetObject(_area.Container);
+            if (digit > 0)
+                block.SetupDigitis(position, _settingsBlocks[digit - 1]);
+            else
+                block.SetupDigitis(position, _settingBomb);
+            return block;
         }
         #endregion
     }
 
-    private Shape[] InitializeDigitis(int maxDigit, ShapeSize shape)
+    public void SaveShapeDigitis()
     {
-        _actionCreateShape = CreateShapeDigitis;
-        _funcShapeToBomb = () => _shape.ToBomb(_settingBomb);
-        _settingOne.Weight = 100 + BASE_WEIGHT_ONE * maxDigit;
-        _settingOne.MaxCount = shape.ToInt() - 1;
-        _randomBlockSettings = new(_settingsBlocks, maxDigit);
-        Shape[] shapes = shape switch
-        {
-            ShapeSize.Domino => _domino,
-            ShapeSize.Tromino => _tromino,
-            ShapeSize.Tetromino => _tetromino,
-            _ => null
-        };
-        _randomShapes = new(shapes);
-        _countBlocks = shape.ToInt();
+        SaveShapeTetris();
 
-        return shapes;
+        int count = _shape.Blocks.Count;
+        if (_gameData.NextBlocksShape.Length != count)
+            _gameData.NextBlocksShape = new int[count];
+        for (int i = 0; count > i; i++)
+            _gameData.NextBlocksShape[i] = _shape.Blocks[i].Digit;
+
     }
 
     private void CreateShapeDigitis()
@@ -149,33 +175,50 @@ public class ShapesManager : MonoBehaviour
         _shape = _randomShapes.Next;
         _shape.CreateDigitis(_poolBlocks.GetObjects(_nextContainer, _countBlocks), _randomBlockSettings.NextRange(_countBlocks));
     }
+
+    public UniTask<Dictionary<int, Vector2Int>> CheckNewBlocksDigitisAsync() => _area.CheckNewBlocksDigitisAsync();
     #endregion
 
     #region Tetris
-    public void InitializeNewTetris()
+    public void InitializeTetris()
     {
-        InitializeTetris();
-        CreateShapeTetris();
-    }
-    public void InitializeContinueTetris(ShapeType nextShape)
-    {
-        InitializeTetris();
-        CreateShape();
+        Initialize();
+        if (_gameData.ModeStart == GameModeStart.GameNew)
+        {
+            CreateShapeTetris();
+        }
+        else
+        {
+            CreateShapeTetrisContinue(_gameData.NextShape);
+            _area.SetArea(GetBlockTetris);
+        }
 
         #region Local Functions
-        void CreateShape()
+        void Initialize()
+        {
+            _funcShapeToBomb = () => false;
+            _actionCreateShape = CreateShapeTetris;
+            _randomShapes = new(_tetromino);
+            _countBlocks = 4;
+        }
+        void CreateShapeTetrisContinue(ShapeType nextShape)
         {
             _shape = _tetromino[nextShape.ToInt()];
             _shape.CreateTetris(_poolBlocks.GetObjects(_nextContainer, _countBlocks), _particleMaterialTetris);
         }
+        Block GetBlockTetris(Vector2 position, int id)
+        {
+            Block block = _poolBlocks.GetObject(_area.Container);
+            block.SetupTetris(position, _tetromino[id].ShapeTetris, id, _particleMaterialTetris);
+            return block;
+        }
         #endregion
     }
-    private void InitializeTetris()
+
+    public void SaveShapeTetris()
     {
-        _funcShapeToBomb = () => false;
-        _actionCreateShape = CreateShapeTetris;
-        _randomShapes = new(_tetromino);
-        _countBlocks = 4;
+        _area.SaveArea();
+        _gameData.NextShape = _shape.Type;
     }
 
     private void CreateShapeTetris()
@@ -183,5 +226,7 @@ public class ShapesManager : MonoBehaviour
         _shape = _randomShapes.Next;
         _shape.CreateTetris(_poolBlocks.GetObjects(_nextContainer, _countBlocks), _particleMaterialTetris);
     }
+
+    public UniTask<List<int>> CheckNewBlocksTetrisAsync() => _area.CheckNewBlocksTetrisAsync();
     #endregion
 }

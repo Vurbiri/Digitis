@@ -11,6 +11,7 @@ public class Block : APooledObject<Block>
     public bool IsOne { get; private set; }
     public bool IsBomb { get; private set; }
     public float Speed { get => _speed; set { _speed = value; _blockSFX.SetTrailEmissionTimeMultiplier(_speed); } }
+    public bool IsDeferredOrder { get; private set; }
 
     public event Action<Block> EventEndMoveDown;
 
@@ -23,14 +24,6 @@ public class Block : APooledObject<Block>
     private void Awake()
     {
         _blockSFX = GetComponent<BlockSFX>();
-    }
-
-    private void Setup(Vector2 position)
-    {
-        _thisTransform.localPosition = position;
-        Position = position.ToVector2Int();
-
-        Activate();
     }
 
     public void SetupDigitis(Vector2 position, BlockSettings settings)
@@ -62,6 +55,14 @@ public class Block : APooledObject<Block>
         Setup(position);
     }
 
+    private void Setup(Vector2 position)
+    {
+        _thisTransform.localPosition = position;
+        Position = position.ToVector2Int();
+
+        Activate();
+    }
+
     public bool IsEqualDigit(Block other)
     {
         if (other == null) return false;
@@ -75,6 +76,7 @@ public class Block : APooledObject<Block>
         SetParent(parent);
         _thisTransform.localPosition = position.ToVector3();
         Position = _thisTransform.localPosition.ToVector2Int();
+        IsDeferredOrder = false;
     }
 
     public void StartFall(float speed) => _blockSFX.StartFall(speed);
@@ -98,7 +100,6 @@ public class Block : APooledObject<Block>
             float y;
             Vector3 position = _thisTransform.localPosition;
             _target = --position.y;
-
             Position = position.ToVector2Int();
 
             do
@@ -117,12 +118,14 @@ public class Block : APooledObject<Block>
                 {
                     position.y = y;
                     _thisTransform.localPosition = position;
+                    IsDeferredOrder = y - _target < 0.2f;
                     return false;
                 }
                 else
                 {
                     position.y = _target;
                     _thisTransform.localPosition = position;
+                    IsDeferredOrder = false;
                     return true;
                 }
             }
