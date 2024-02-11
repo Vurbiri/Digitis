@@ -26,13 +26,17 @@ public class Block : APooledObject<Block>
         _blockSFX = GetComponent<BlockSFX>();
     }
 
-    public void SetupDigitis(Vector2 position, BlockSettings settings)
+    public void Setup(Vector2 position, BlockSettings settings)
     {
-        TypeDigitisSetup(settings);
-        Setup(position);
+        TypeSetup(settings);
+
+        _thisTransform.localPosition = position;
+        Position = position.ToVector2Int();
+
+        Activate();
     }
 
-    public void TypeDigitisSetup(BlockSettings settings)
+    public void TypeSetup(BlockSettings settings)
     {
         Digit = settings.Digit;
         IsBomb = Digit == 0;
@@ -41,26 +45,9 @@ public class Block : APooledObject<Block>
         gameObject.name = string.Format(NAME, Digit);
 
         if(IsBomb)
-            _blockSFX.SetupDigitisBomb(settings);
+            _blockSFX.SetupBomb(settings);
         else
-            _blockSFX.SetupDigitisBlock(settings);
-    }
-
-    public void SetupTetris(Vector2 position, ShapeTetris shapeTetris, int id, Material particleMaterial)
-    {
-        Digit = id;
-        gameObject.name = string.Format(NAME, id);
-        
-        _blockSFX.SetupTetris(shapeTetris, particleMaterial);
-        Setup(position);
-    }
-
-    private void Setup(Vector2 position)
-    {
-        _thisTransform.localPosition = position;
-        Position = position.ToVector2Int();
-
-        Activate();
+            _blockSFX.SetupBlock(settings);
     }
 
     public bool IsEqualDigit(Block other)

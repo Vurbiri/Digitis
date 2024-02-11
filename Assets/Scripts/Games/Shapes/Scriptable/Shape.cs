@@ -9,8 +9,6 @@ public class Shape : ScriptableObject, IRandomizeObject
     [SerializeField] private Vector2 _offsetForNext;
     [SerializeField] private Vector2Int _offsetForArea;
     [SerializeField] private Vector2Int[] _startBlocksPositions;
-    [Header("Tetris")]
-    [SerializeField] private ShapeTetris _shapeTetris;
     [Header("Random")]
     [SerializeField] private int _randomWeight = 1;
 
@@ -20,7 +18,6 @@ public class Shape : ScriptableObject, IRandomizeObject
     public Vector2Int[] BlocksPositions => _startBlocksPositions;
     public SubShape SubShape { get; private set; }
     public List<Block> Blocks {get; private set;}
-    public ShapeTetris ShapeTetris => _shapeTetris;
     public int Weight => _randomWeight;
     public int MaxCount => 1;
 
@@ -34,13 +31,13 @@ public class Shape : ScriptableObject, IRandomizeObject
         ID = _type.ToInt();
     }
 
-    public void CreateDigitis(List<Block> blocks, BlockSettings[] settings)
+    public void CreateBlock(List<Block> blocks, BlockSettings[] settings)
     {
         _isBomb = false;
         Blocks = blocks;
 
         for (int i = 0; i < Blocks.Count; i++)
-            blocks[i].SetupDigitis(_startBlocksPositions[i] + _offsetForNext, settings[i]);
+            blocks[i].Setup(_startBlocksPositions[i] + _offsetForNext, settings[i]);
     }
     public void CreateBomb(List<Block> blocks, BlockSettings setting)
     {
@@ -48,14 +45,7 @@ public class Shape : ScriptableObject, IRandomizeObject
         Blocks = blocks;
 
         for (int i = 0; i < Blocks.Count; i++)
-            blocks[i].SetupDigitis(_startBlocksPositions[i] + _offsetForNext, setting);
-    }
-    public void CreateTetris(List<Block> blocks, Material particleMaterial)
-    {
-        Blocks = blocks;
-
-        for (int i = 0; i < Blocks.Count; i++)
-            blocks[i].SetupTetris(_startBlocksPositions[i] + _offsetForNext, _shapeTetris, ID, particleMaterial);
+            blocks[i].Setup(_startBlocksPositions[i] + _offsetForNext, setting);
     }
 
     public bool ToBomb(BlockSettings settings)
@@ -65,7 +55,7 @@ public class Shape : ScriptableObject, IRandomizeObject
 
         _isBomb = true;
         foreach (var block in Blocks)
-            block.TypeDigitisSetup(settings);
+            block.TypeSetup(settings);
 
         return true;
     }

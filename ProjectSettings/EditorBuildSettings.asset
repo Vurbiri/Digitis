@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/_Scenes/00_PreLoad.unity
     guid: f4a23acb25726eb45a2d0d5477747cad
   - enabled: 1
-    path: Assets/_Scenes/01_GameMobileScene.unity
+    path: Assets/_Scenes/01_MainMenuMobile.unity
+    guid: 504da945a4defbb43828a495b8a6b3bf
+  - enabled: 1
+    path: Assets/_Scenes/02_GameMobile.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects: {}

@@ -4,143 +4,113 @@ using UnityEngine;
 
 public class GameData : ASingleton<GameData>
 {
-    private const string KEY_DIGITIS = "gmd";
-    private const string KEY_TETRIS = "gmt";
+    private const string KEY = "gmd";
     
-    [Space]
-    [SerializeField] private bool _isDigitis = true;
-    [Header("Digitis")]
     [SerializeField] private int _countBombsStart = 3;
     [SerializeField] private GameDigitisSave _dataDigitis;
-    [Header("Tetris")]
-    [SerializeField] private GameTetrisSave _dataTetris;
 
-    private GameTetrisSave _currentData;
-
-    public bool IsDigitis => _isDigitis;
-
-    public GameModeStart ModeStart { get => _currentData.modeStart; set => _currentData.modeStart = value; }
-    public int CurrentLevel { get => _currentData.currentLevel; set => _currentData.currentLevel = value; }
-    public int Score { get => _currentData.score; set => _currentData.score = value; }
-    public int CountShapes { get => _currentData.countShapes; set => _currentData.countShapes = value; }
-    public ShapeSize ShapeType { get => _dataDigitis.shapeType; set => _dataDigitis.shapeType = value; }
-    public int MaxDigit { get => _dataDigitis.maxDigit; set => _dataDigitis.maxDigit = value; }
-    public bool IsGravity { get => _currentData.IsGravity; set => _currentData.IsGravity = value; }
-    public int CountBombs { get => _currentData.CountBombs; set => _currentData.CountBombs = value; }
-    public ShapeType NextShape { get => _currentData.nextShape; set => _currentData.nextShape = value; }
-    public int[] NextBlocksShape { get => _dataDigitis.nextBlocksShape; set => _dataDigitis.nextBlocksShape = value; }
-    public int[,] Area { get => _currentData.area; set => _currentData.area = value; }
+    public GameModeStart ModeStart { get => _dataDigitis.ModeStart; set => _dataDigitis.ModeStart = value; }
+    public int CurrentLevel { get => _dataDigitis.CurrentLevel; set => _dataDigitis.CurrentLevel = value; }
+    public int Score { get => _dataDigitis.Score; set => _dataDigitis.Score = value; }
+    public int CountShapes { get => _dataDigitis.CountShapes; set => _dataDigitis.CountShapes = value; }
+    public ShapeSize ShapeType { get => _dataDigitis.ShapeType; set => _dataDigitis.ShapeType = value; }
+    public int MaxDigit { get => _dataDigitis.MaxDigit; set => _dataDigitis.MaxDigit = value; }
+    public int CountBombs { get => _dataDigitis.CountBombs; set => _dataDigitis.CountBombs = value; }
+    public ShapeType NextShape { get => _dataDigitis.NextShape; set => _dataDigitis.NextShape = value; }
+    public int[] NextBlocksShape { get => _dataDigitis.NextBlocksShape; set => _dataDigitis.NextBlocksShape = value; }
+    public int[,] Area { get => _dataDigitis.Area; set => _dataDigitis.Area = value; }
 
     public bool Initialize(bool isLoad)
     {
         bool result = false;
         if (isLoad)
             result = Load();
-        SetGameType(_isDigitis);
+#if !UNITY_EDITOR
+        if (!result)
+            _dataDigitis.Reset(_countBombsStart);
+#endif
+
         return result;
     }
 
     private bool Load()
     {
-        ReturnValue<GameDigitisSave> dataDigitis = Storage.Load<GameDigitisSave>(KEY_DIGITIS);
-        if (dataDigitis.Result)
-            _dataDigitis = dataDigitis.Value;
-        ReturnValue<GameTetrisSave> dataTetris = Storage.Load<GameTetrisSave>(KEY_TETRIS);
-        if (dataTetris.Result)
-            _dataTetris = dataTetris.Value;
+        ReturnValue<GameDigitisSave> data = Storage.Load<GameDigitisSave>(KEY);
+        if (data.Result)
+            _dataDigitis = data.Value;
 
-        return dataDigitis.Result || dataTetris.Result;
+        return data.Result;
     }
 
-    public void SaveDigitis(bool isSaveHard, Action<bool> callback) => Storage.Save(KEY_DIGITIS, _dataDigitis, isSaveHard, callback);
-    public void SaveTetris(bool isSaveHard, Action<bool> callback) => Storage.Save(KEY_TETRIS, _dataTetris, isSaveHard, callback);
+    public void Save(bool isSaveHard, Action<bool> callback) => Storage.Save(KEY, _dataDigitis, isSaveHard, callback);
 
     public void ResetData()
     {
-        ModeStart = GameModeStart.GameNew;
-        CurrentLevel = 1;
-        Score = 0;
-        Area = new int[0, 0];
-        if (IsDigitis)
+        _dataDigitis.Reset(_countBombsStart);
+    }
+
+    #region Nested Classe
+    [System.Serializable]
+    private class GameDigitisSave
+    {
+        [JsonProperty("mst")]
+        public GameModeStart ModeStart { get; set; }
+
+        [JsonProperty("clv"), SerializeField]
+        private int _currentLevel = 1;
+        [JsonProperty("shp"), SerializeField]
+        private ShapeSize _shapeType = ShapeSize.Domino;
+        [JsonProperty("mdg"), SerializeField, Range(3, 9)]
+        private int _maxDigit = 7;
+
+        [JsonProperty("scr")]
+        public int Score { get; set; }
+        [JsonProperty("csh")]
+        public int CountShapes { get; set; }
+        [JsonProperty("bmb")]
+        public int CountBombs { get; set; } = 3;
+        [JsonProperty("nsh")]
+        public ShapeType NextShape { get; set; }
+        [JsonProperty("nbs")]
+        public int[] NextBlocksShape { get; set; } = new int[2];
+        [JsonProperty("are")]
+        public int[,] Area { get; set; } = new int[0, 0];
+        
+
+        [JsonIgnore]
+        public int CurrentLevel { get => _currentLevel; set => _currentLevel = value; }
+        [JsonIgnore]
+        public ShapeSize ShapeType { get => _shapeType; set => _shapeType = value; }
+        [JsonIgnore]
+        public int MaxDigit { get => _maxDigit; set => _maxDigit = value; }
+
+        public GameDigitisSave() { }
+
+        [JsonConstructor]
+        public GameDigitisSave(GameModeStart modeStart, int currentLevel, ShapeSize shapeType, int maxDigit, int score, int countShapes, int countBombs, ShapeType nextShape, int[] nextBlocksShape, int[,] area) 
         {
-            CountBombs = _countBombsStart;
+            ModeStart = modeStart;
+            _currentLevel = currentLevel;
+            _shapeType = shapeType;
+            _maxDigit = maxDigit;
+            Score = score;
+            CountShapes = countShapes;
+            CountBombs = countBombs;
+            NextShape = nextShape;
+            NextBlocksShape = nextBlocksShape;
+            Area = area;
+        }
+
+        public void Reset(int countBomb)
+        {
+            ModeStart = GameModeStart.GameNew;
+            CurrentLevel = 1;
+            Score = 0;
+            Area = new int[0, 0];
+            CountBombs = countBomb;
             NextBlocksShape = new int[0];
         }
     }
 
-    public void SetGameType(bool isDigitis)
-    {  
-        _isDigitis = isDigitis;
-        _currentData = isDigitis ? _dataDigitis : _dataTetris;
-    }
-    
-    #region Nested Classe
-    [System.Serializable]
-    private class GameDigitisSave : GameTetrisSave
-    {
-        [JsonProperty("shp")]
-        public ShapeSize shapeType = ShapeSize.Domino;
-        [JsonProperty("mdg")]
-        [Range(3, 9)] public int maxDigit = 7;
-        [JsonProperty("isg"), SerializeField]
-        private bool _isGravity = true;
-        [JsonProperty("bmb"), SerializeField]
-        private int _countBombs;
-        [JsonProperty("nbs")]
-        public int[] nextBlocksShape;
-
-        [JsonIgnore]
-        public override bool IsGravity { get => _isGravity; set => _isGravity = value; }
-        [JsonIgnore]
-        public override int CountBombs { get => _countBombs; set => _countBombs = value; }
-
-        public GameDigitisSave() : base() { }
-
-        [JsonConstructor]
-        public GameDigitisSave(GameModeStart modeStart, int currentLevel, int countShapes, ShapeType nextShape, int score, int[,] area, ShapeSize shapeType, int maxDigit, bool isGravity, int countBombs, int[] nextBlocksShape) 
-            : base(modeStart, currentLevel, countShapes, nextShape, score, area)
-        {
-            this.shapeType = shapeType;
-            this.maxDigit = maxDigit;
-            _isGravity = isGravity;
-            _countBombs = countBombs;
-            this.nextBlocksShape = nextBlocksShape;
-        }
-    }
-
-    [System.Serializable]
-    private class GameTetrisSave
-    {
-        [JsonProperty("mst")]
-        public GameModeStart modeStart = GameModeStart.GameNew;
-        [JsonProperty("clv")]
-        public int currentLevel = 1;
-        [JsonProperty("csh")]
-        public int countShapes;
-        [JsonProperty("nsh")]
-        public ShapeType nextShape;
-        [JsonProperty("scr")]
-        public int score;
-        [JsonProperty("are")]
-        public int[,] area = new int[0, 0];
-        
-        [JsonIgnore]
-        public virtual bool IsGravity { get => false; set { } }
-        [JsonIgnore]
-        public virtual int CountBombs { get => 0; set { } }
-
-        public GameTetrisSave() { }
-
-        [JsonConstructor]
-        public GameTetrisSave(GameModeStart modeStart, int currentLevel, int countShapes, ShapeType nextShape, int score, int[,] area)
-        {
-            this.modeStart = modeStart;
-            this.currentLevel = currentLevel;
-            this.countShapes = countShapes;
-            this.nextShape = nextShape;
-            this.score = score;
-            this.area = area;
-        }
-    }
     #endregion
 }

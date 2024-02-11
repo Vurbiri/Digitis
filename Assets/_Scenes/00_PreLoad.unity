@@ -273,7 +273,7 @@ MonoBehaviour:
   _profileDesktop:
     key: sttd
     idLang: 1
-    sensitivityButtons: 0.1
+    sensitivityButtons: 0.2
     volumes:
     - 1
     - 1
@@ -541,25 +541,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
-  _isDigitis: 1
   _countBombsStart: 3
   _dataDigitis:
-    modeStart: 0
-    currentLevel: 1
-    countShapes: 0
-    nextShape: -1
-    score: 0
-    shapeType: 2
-    maxDigit: 7
-    _isGravity: 1
-    _countBombs: 3
-    nextBlocksShape: 
-  _dataTetris:
-    modeStart: 0
-    currentLevel: 1
-    countShapes: 0
-    nextShape: -1
-    score: 0
+    _currentLevel: 1
+    _shapeType: 2
+    _maxDigit: 3
 --- !u!4 &523976399
 Transform:
   m_ObjectHideFlags: 0
@@ -746,7 +732,7 @@ Camera:
   m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
-  m_OcclusionCulling: 0
+  m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
 --- !u!4 &1365277350
@@ -776,7 +762,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RenderShadows: 1
+  m_RenderShadows: 0
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0

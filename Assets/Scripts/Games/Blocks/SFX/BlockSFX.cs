@@ -13,20 +13,15 @@ public class BlockSFX : MonoBehaviour
         _blockVisual = GetComponent<BlockSprites>();
     }
 
-    public void SetupDigitisBlock(BlockSettings settings)
+    public void SetupBlock(BlockSettings settings)
     {
-        _blockVisual.SetupDigitis(settings);
-        _particles.SetupDigitisBlock(settings);
+        _blockVisual.Setup(settings);
+        _particles.SetupBlock(settings);
     }
-    public void SetupDigitisBomb(BlockSettings settings)
+    public void SetupBomb(BlockSettings settings)
     {
-        _blockVisual.SetupDigitis(settings);
-        _particles.SetupDigitisBomb(settings);
-    }
-    public void SetupTetris(ShapeTetris shapeTetris, Material particleMaterial)
-    {
-        _blockVisual.SetupTetris(shapeTetris.ColorBlock, shapeTetris.SpriteBlock);
-        _particles.SetupTetris(shapeTetris.ColorBlock, particleMaterial);
+        _blockVisual.Setup(settings);
+        _particles.SetupBomb(settings);
     }
 
     public void Transfer()

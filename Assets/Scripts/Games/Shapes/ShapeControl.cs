@@ -12,25 +12,16 @@ public class ShapeControl
 
     private SubShape _shape;
     private Vector2Int _offset;
-    private Vector2Int _deferredShift;
-    private bool _deferredRotation;
 
     private float _speed;
     private bool _isFixed = true;
     private bool _isSpeedDown = false;
     private float _countBlockMove;
-    private bool _isCollision = false;
-    private bool  _isGravity;
-
-    private int? _moveCount = null;
 
     private readonly Vector2Int startPosition;
     private readonly BlocksArea area;
     private readonly Speeds speeds;
     private readonly Transform container;
-
-    private const int WAIT_BEFORE_FIXED_LESS_6 = 500;
-    private const int WAIT_BEFORE_FIXED = 3000;
 
     public ShapeControl(BlocksArea area, Speeds speeds)
     {
@@ -40,7 +31,7 @@ public class ShapeControl
         startPosition = new(area.Size.x / 2 - 1 , area.Size.y);
     }
 
-    public bool SetupForNew(Shape shapeForm, bool isGravity)
+    public bool SetupForNew(Shape shapeForm)
     {
         CopyFromShapeForm();
 
@@ -55,10 +46,7 @@ public class ShapeControl
             block.Transfer(position, container);
             block.StartFall(speeds.Current);
             isEmpty = isEmpty && area.IsEmptyDownstairs(position);
-            if (isGravity)
-                block.EventEndMoveDown += OnEventEndMoveDownGravity;
-            else
-                block.EventEndMoveDown += OnEventEndMoveDownNotGravity;
+            block.EventEndMoveDown += OnEventEndMoveDown;
         }
 
         ResetParameters();
@@ -77,32 +65,22 @@ public class ShapeControl
             if (!isEmpty) return;
 
             _speed = speeds.Current;
-            _deferredShift = Vector2Int.zero;
-            _deferredRotation = false;
             _isFixed = false;
             _isSpeedDown = false;
-            _isCollision = false;
-            _moveCount = null;
             _countBlockMove = _blocks.Count;
-            _isGravity = isGravity;
         }
         #endregion
     }
-    public void SetupForFall(List<Block> blocks, bool isGravity, int count)
+    public void SetupForFall(List<Block> blocks)
     {
         _blocks = blocks;
         _speed = speeds.Fall;
-        _deferredShift = Vector2Int.zero;
-        _deferredRotation = false;
         _isFixed = true;
         _isSpeedDown = false;
-        _isCollision = false;
         _countBlockMove = _blocks.Count;
-        _moveCount = isGravity ? null : count;
-        _isGravity = isGravity;
         foreach (var block in _blocks)
         {
-            block.EventEndMoveDown += OnEventEndMoveDownGravity;
+            block.EventEndMoveDown += OnEventEndMoveDown;
             block.StartFall(speeds.Fall);
         }
     }
@@ -119,42 +97,18 @@ public class ShapeControl
 
     public void StartMoveDown()
     {
-        if(_moveCount != null && _moveCount-- <= 0)
-        {
-            StopMove(OnEventEndMoveDownGravity);
-            return;
-        }
-        
         _offset.y -= 1;
         _blocks.ForEach(block => block.MoveDown(_speed));
     }
 
     public void TryShift(Vector2Int direct)
     {
-        if (_isFixed || _isSpeedDown || _deferredShift == direct)
+        if (_isFixed || _isSpeedDown)
             return;
 
         if (!area.IsEmptyArea(_blocks, direct))
             return;
 
-        if (!_isGravity && !_isCollision)
-        {
-            if (!area.IsEmptyArea(_blocks, direct + Vector2Int.up))
-            {
-                if (_blocks[0].IsDeferredOrder)
-                {
-                    _deferredShift = direct;
-                    _deferredRotation = false;
-                }
-                return;
-            }
-        }
-
-        Shift(direct);
-    }
-    private void Shift(Vector2Int direct)
-    {
-        _deferredShift = Vector2Int.zero;
         _offset += direct;
         for (int i = 0; i < _blocks.Count; i++)
             _blocks[i].MoveToDelta(direct);
@@ -162,37 +116,19 @@ public class ShapeControl
     
     public void TryRotate()
     {
-        if(_isFixed || _isSpeedDown || _deferredRotation)
+        if(_isFixed || _isSpeedDown)
             return;
 
         if (!area.IsEmptyArea(_shape.CollisionRotation, _offset))
             return;
 
-        if (!_isGravity && !_isCollision)
-        {
-            if (!area.IsEmptyArea(_shape.CollisionRotation, _offset + Vector2Int.up))
-            {
-                if (_blocks[0].IsDeferredOrder)
-                {
-                    _deferredShift = Vector2Int.zero;
-                    _deferredRotation = true;
-                }
-                return;
-            }
-        }
-
-        Rotate();
-    }
-    private void Rotate()
-    {
         for (int i = 0; i < _blocks.Count; i++)
             _blocks[i].MoveToDelta(_shape.DeltaPositions[i]);
-       
-        _deferredRotation = false;
-        _shape = _shape.NextSubShape;
+
+        _shape = _shape.NextSubShape; 
     }
 
-    private void OnEventEndMoveDownGravity(Block block)
+    private void OnEventEndMoveDown(Block block)
     {
         if (!area.IsEmptyDownstairs(block))
         {
@@ -213,7 +149,7 @@ public class ShapeControl
         _speed = speeds.Fall;
 
         while (_blocksCollision.Count > 0)
-            FixedBlock(_blocksCollision.Dequeue(), OnEventEndMoveDownGravity);
+            FixedBlock(_blocksCollision.Dequeue());
 
         CheckingBoxes();
 
@@ -231,96 +167,18 @@ public class ShapeControl
             {
                 if (!area.IsEmptyDownstairs(_blocks[--count]))
                 {
-                    FixedBlock(_blocks[count], OnEventEndMoveDownGravity);
+                    FixedBlock(_blocks[count]);
                     count = _blocks.Count;
                 }
             }
         }
-        #endregion
-    }
-    private void OnEventEndMoveDownNotGravity(Block block)
-    {
-        if (!area.IsEmptyDownstairs(block))
-            _isCollision = true;
-
-        if (--_countBlockMove > 0)
-            return;
-
-        if (!_isCollision)
+        void FixedBlock(Block block)
         {
-            if(DeferredOrder())
-                CheckingBoxes();
-            else
-                ReStartMoveDown();
-        }
-        else if (_isSpeedDown)
-        {
-            _isFixed = true;
-            StopMove(OnEventEndMoveDownNotGravity);
-        }
-        else
-        {
-            DeferredOrder();
-            CheckingBoxesAsync().Forget();
-        }
-
-        #region Local Functions
-        async UniTaskVoid CheckingBoxesAsync()
-        {
-            await UniTask.Delay((int)(speeds.Current < 6f ? WAIT_BEFORE_FIXED_LESS_6 : WAIT_BEFORE_FIXED / speeds.Current));
-
-            CheckingBoxes();
-        }
-        void CheckingBoxes()
-        {
-            for (int i = _blocks.Count - 1; i >= 0; i--)
-            {
-                if (!area.IsEmptyDownstairs(_blocks[i]))
-                {
-                    _isFixed = true;
-                    FixedBlock(_blocks[i], OnEventEndMoveDownNotGravity);
-                }
-            }
-
-            if (!_isFixed)
-            {
-                ReStartMoveDown();
-                return;
-            }
-
-            StopMove(OnEventEndMoveDownNotGravity);
-        }
-        void ReStartMoveDown()
-        {
-            _isCollision = false;
-            _countBlockMove = _blocks.Count;
-            StartMoveDown();
-        }
-        bool DeferredOrder()
-        {
-            bool isOrder = _deferredRotation;
-            if (_deferredRotation)
-                Rotate();
-            else if (isOrder = _deferredShift != Vector2Int.zero)
-                Shift(_deferredShift);
-            return isOrder;
+            block.EventEndMoveDown -= OnEventEndMoveDown;
+            block.Fixed();
+            area.Add(block);
+            _blocks.Remove(block);
         }
         #endregion
-    }
-
-    private void StopMove(Action<Block> callback)
-    {
-        while (_blocks.Count > 0)
-            FixedBlock(_blocks[0], callback);
-
-        EventEndMoveDown?.Invoke();
-    }
-
-    private void FixedBlock(Block block, Action<Block> callback)
-    {
-        block.EventEndMoveDown -= callback;
-        block.Fixed();
-        area.Add(block);
-        _blocks.Remove(block);
     }
 }

@@ -9,20 +9,15 @@ public class BlockParticles : MonoBehaviour
    
     public float TrailEmissionTimeMultiplier { set => _particleTrail.EmissionTimeMultiplier = value; }
 
-    public void SetupDigitisBlock(BlockSettings settings)
+    public void SetupBlock(BlockSettings settings)
     {
         _particleDigit.SetupBlock(settings.MaterialParticle, settings.ColorBlock);
         _particleTrail.SetupBlock(settings.ColorBlock);
     }
-    public void SetupDigitisBomb(BlockSettings settings)
+    public void SetupBomb(BlockSettings settings)
     {
         _particleDigit.SetupBomb(settings.MaterialParticle, settings.ColorNumber);
         _particleTrail.SetupBomb(settings.ColorNumber);
-    }
-    public void SetupTetris(Color color, Material particleMaterial)
-    {
-        _particleDigit.SetupBlock(particleMaterial, color);
-        _particleTrail.SetupBlock(color);
     }
 
     public async UniTask ExplodeBomb()

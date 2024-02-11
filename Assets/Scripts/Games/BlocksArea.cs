@@ -89,6 +89,7 @@ public class BlocksArea : MonoBehaviour
                 return false;
         return true;
     }
+
     public bool IsEmptyArea(List<Block> blocks, Vector2Int offset)
     {
         foreach (var block in blocks)
@@ -101,68 +102,13 @@ public class BlocksArea : MonoBehaviour
     public bool IsEmptyDownstairs(Vector2Int index) => IsCorrectIndexY(--index.y) && this[index] == null;
     #endregion
 
-    public async UniTask<Dictionary<int, Vector2Int>> CheckNewBlocksDigitisAsync()
+    public async UniTask<Dictionary<int, int>> CheckNewBlocksAsync()
     {
         if (_blocksAdd.Count > 0) 
             return await CheckSeriesBlocksAsync();
         else if (_bombsAdd.Count > 0)
             return await CheckBombsAsync();
         return null;
-    }
-
-    public async UniTask<List<int>> CheckNewBlocksTetrisAsync()
-    {
-        if (_blocksAdd.Count == 0)
-            return null;
-
-        List<int> listY = new();
-        HashSet<int> setY = new();
-        int y;
-        bool isFullLine;
-
-        _blocksAdd.Sort((a, b) => b.Position.y.CompareTo(a.Position.y));
-        foreach (var block in _blocksAdd)
-        {
-            y = block.Position.y;
-            if (!setY.Add(y))
-                continue;
-
-            isFullLine = true;
-            for (int x = 0; x < Size.x; x++)
-            {
-                if (_blocks[x, y] == null)
-                {
-                    isFullLine = false;
-                    break;
-                }
-            }
-
-            if (isFullLine)
-                listY.Add(y);
-        }
-        _blocksAdd.Clear();
-
-        if (listY.Count == 0)
-            return null;
-
-        List<UniTask> tasks = new(Size.x);
-        int count = Size.x - 1, halfCount = Size.x / 2 - 1;
-        int countLine = 1;
-        foreach (int posY in listY)
-        {
-            _game.CalkScoreTetris(countLine++);
-
-            for (int x = halfCount; x >= 0; x--)
-            {
-                tasks.Add(_blocks[x, posY].Remove());
-                tasks.Add(_blocks[count - x, posY].Remove());
-                await UniTask.Delay(_timePauseBlocksRemoved);
-            }
-        }
-
-        await UniTask.WhenAll(tasks);
-
-        return listY;
     }
 
     public List<Block> GetBlocksInColumn(int x, int minY)
@@ -177,15 +123,6 @@ public class BlocksArea : MonoBehaviour
                 _blocks[x, y] = null;
             }
         }
-
-        return blocks;
-    }
-    public List<Block> GetBlocksAboveLine(int y)
-    {
-        List<Block> blocks = new();
-
-        for (int x = 0; x < _size.x; x++)
-            blocks.AddRange(GetBlocksInColumn(x, y));
 
         return blocks;
     }
@@ -206,7 +143,7 @@ public class BlocksArea : MonoBehaviour
         this[block.Position] = null;
     }
 
-    private async UniTask<Dictionary<int, Vector2Int>> CheckSeriesBlocksAsync()
+    private async UniTask<Dictionary<int, int>> CheckSeriesBlocksAsync()
     {
         HashSet<Block> blocksSeries = new();
         HashSet<Block> blocksOne = new();
@@ -220,7 +157,7 @@ public class BlocksArea : MonoBehaviour
 
             if (CreateSeries(block))
             {
-                _game.CalkScoreDigitis(block.Digit, blocksSeries.Count,  blocksOne.Count);
+                _game.CalkScore(block.Digit, blocksSeries.Count,  blocksOne.Count);
                 blocksRemove.UnionWith(blocksSeries);
                 blocksRemove.UnionWith(blocksOne);
             }
@@ -232,23 +169,17 @@ public class BlocksArea : MonoBehaviour
         if (blocksRemove.Count == 0) 
             return null;
 
-        Dictionary<int, Vector2Int> columns = new(_size.x);
+        Dictionary<int, int> columns = new(_size.x);
         List<UniTask> tasks = new(blocksRemove.Count);
         Vector2Int index;
 
         foreach (var block in blocksRemove)
         {
             index = block.Position;
-            if (columns.TryGetValue(index.x, out Vector2Int value))
-            {
-                value.x++;
-                value.y = Mathf.Min(value.y, index.y);
-            }
+            if (columns.TryGetValue(index.x, out int value))
+                value = Mathf.Min(value, index.y);
             else
-            {
-                value.x = 1;
-                value.y = index.y;
-            }
+                value = index.y;
             columns[index.x] = value;
 
             tasks.Add(block.Remove());
@@ -294,7 +225,7 @@ public class BlocksArea : MonoBehaviour
         }
         #endregion
     }
-    private async UniTask<Dictionary<int, Vector2Int>> CheckBombsAsync()
+    private async UniTask<Dictionary<int, int>> CheckBombsAsync()
     {
         HashSet<Block> blocksExplode = new();
 
@@ -303,23 +234,17 @@ public class BlocksArea : MonoBehaviour
 
         _bombsAdd.Clear();
 
-        Dictionary<int, Vector2Int> columns = new(_size.x);
+        Dictionary<int, int> columns = new(_size.x);
         Vector2Int index;
         List<UniTask> tasks = new(blocksExplode.Count);
 
         foreach (var blockExplode in blocksExplode)
         {
             index = blockExplode.Position;
-            if (columns.TryGetValue(index.x, out Vector2Int value))
-            {
-                value.x++;
-                value.y = Mathf.Min(value.y, index.y);
-            }
+            if (columns.TryGetValue(index.x, out int value))
+                value = Mathf.Min(value, index.y);
             else
-            {
-                value.x = 1;
-                value.y = index.y;
-            }
+                value = index.y;
             columns[index.x] = value;
 
             tasks.Add(blockExplode.Explode());
