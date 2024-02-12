@@ -2,29 +2,38 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ButtonHold : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
-#if !UNITY_EDITOR
-    , IPointerEnterHandler, IPointerExitHandler
-#endif
+public class ButtonHold : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
 {
     public event Action EventButtonStartHold;
     public event Action EventButtonEndHold;
 
+    private bool _isHold = false;
+
     public void OnPointerDown(PointerEventData eventData)
     {
-        EventButtonStartHold?.Invoke();
-    }
-    public void OnPointerEnter(PointerEventData eventData)
-    {
+        if (_isHold)
+            return;
+        _isHold = true;
+
         EventButtonStartHold?.Invoke();
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        EventButtonEndHold?.Invoke();
+        HoldEnd();
     }
     public void OnPointerExit(PointerEventData eventData)
     {
+        HoldEnd();
+    }
+
+
+    private void HoldEnd()
+    {
+        if (!_isHold)
+            return;
+        _isHold = false;
+
         EventButtonEndHold?.Invoke();
     }
 }
