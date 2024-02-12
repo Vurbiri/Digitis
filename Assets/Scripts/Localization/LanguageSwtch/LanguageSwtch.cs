@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LanguageSwatch : ToggleGroup
+public class LanguageSwitch : ToggleGroup
 {
-    [SerializeField] private LanguageItem langPrefab;
+    [SerializeField] private LanguageItem _langPrefab;
     [Space]
     [SerializeField] private bool _isSave = false;
 
@@ -11,8 +11,8 @@ public class LanguageSwatch : ToggleGroup
     {
         base.Awake();
         
-        this.allowSwitchOff = false;
+        allowSwitchOff = false;
         foreach (var item in Localization.Instance.Languages)
-            Instantiate(langPrefab, transform).Setup(item, this, _isSave);
+            Instantiate(_langPrefab, transform).Setup(item, this, _isSave);
     }
 }

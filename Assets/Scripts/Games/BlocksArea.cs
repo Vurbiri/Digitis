@@ -5,15 +5,13 @@ using UnityEngine;
 
 public class BlocksArea : MonoBehaviour
 {
-    [SerializeField] private Game _game;
-    [Space]
     [SerializeField] private Vector2Int _size = new(10, 20);
     [SerializeField] private Transform _container;
     [Space]
     [SerializeField] private int _timePauseBlocksRemoved = 200;
     [SerializeField] private int _timePauseBombExploded = 150;
 
-    private GameData _gameData;
+    private DataGame _dataGames;
     private Block[,] _blocks;
     private readonly List<Block> _blocksAdd = new();
     private readonly List<Block> _bombsAdd = new();
@@ -31,7 +29,7 @@ public class BlocksArea : MonoBehaviour
 
     private void Awake()
     {
-        _gameData = GameData.InstanceF;
+        _dataGames = DataGame.InstanceF;
         _blocks = new Block[_size.x, _size.y + ADD_VIRTUAL_Y_SIZE];
     }
 
@@ -40,11 +38,11 @@ public class BlocksArea : MonoBehaviour
         Vector2Int position = Vector2Int.zero;
         int value;
         Block block;
-        for (int x = 0; x < _gameData.Area.GetLength(0); x++)
+        for (int x = 0; x < _dataGames.SaveArea.GetLength(0); x++)
         {
-            for (int y = 0; y < _gameData.Area.GetLength(1); y++)
+            for (int y = 0; y < _dataGames.SaveArea.GetLength(1); y++)
             {
-                value = _gameData.Area[x, y];
+                value = _dataGames.SaveArea[x, y];
                 if (value >= 0)
                 {
                     position.x = x; position.y = y;
@@ -58,15 +56,15 @@ public class BlocksArea : MonoBehaviour
     public void SaveArea()
     {
         int maxY = MaxNotEmptyLine();
-        if(_gameData.Area.GetLength(1) != maxY)
-            _gameData.Area = new int[_size.x, maxY];
+        if(_dataGames.SaveArea.GetLength(1) != maxY)
+            _dataGames.SaveArea = new int[_size.x, maxY];
         Block block;
         for (int x = 0; x < _size.x; x++)
         {
             for (int y = 0; y < maxY; y++)
             {
                 block = _blocks[x, y];
-                _gameData.Area[x, y] = block == null ? -1 : block.Digit;
+                _dataGames.SaveArea[x, y] = block == null ? -1 : block.Digit;
             }
         }
 
@@ -157,7 +155,7 @@ public class BlocksArea : MonoBehaviour
 
             if (CreateSeries(block))
             {
-                _game.CalkScore(block.Digit, blocksSeries.Count,  blocksOne.Count);
+                _dataGames.CalkScore(block.Digit, blocksSeries.Count,  blocksOne.Count);
                 blocksRemove.UnionWith(blocksSeries);
                 blocksRemove.UnionWith(blocksOne);
             }

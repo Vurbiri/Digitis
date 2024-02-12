@@ -1,30 +1,32 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(CustomButtonTargetGraphic))]
-public class CustomButton : Button
+[RequireComponent(typeof(CustomTargetGraphic))]
+public class CustomToggle : Toggle
 {
-    private CustomButtonTargetGraphic _targetGraphic;
+    private CustomTargetGraphic _targetGraphic;
 
     protected override void Awake()
     {
         base.Awake();
 
-        _targetGraphic = GetComponent<CustomButtonTargetGraphic>();
+        _targetGraphic = GetComponent<CustomTargetGraphic>();
         _targetGraphic.Initialize(interactable);
 
         transition = Transition.None;
+
+        onValueChanged.AddListener(OnSelect);
     }
 
     protected override void DoStateTransition(SelectionState state, bool instant)
     {
-        if (!gameObject.activeInHierarchy)
+        if (!gameObject.activeInHierarchy || _targetGraphic == null)
             return;
 
         switch (state)
         {
             case SelectionState.Normal:
-                _targetGraphic.SetNormalState();
+                OnSelect(isOn);
                 break;
             case SelectionState.Highlighted:
                 _targetGraphic.SetHighlightedState();
@@ -42,5 +44,12 @@ public class CustomButton : Button
                 _targetGraphic.SetDisabledState();
                 break;
         }
+    }
+    private void OnSelect(bool value)
+    {
+        if (isOn)
+            _targetGraphic.SetSelectedState();
+        else
+            _targetGraphic.SetNormalState();
     }
 }

@@ -17,8 +17,6 @@ public class ShapesManager : MonoBehaviour
     [SerializeField] private Transform _poolRepository;
     [Space]
     [SerializeField] private Transform _nextContainer;
-    [Header("Speeds")]
-    [SerializeField] private Speeds _speeds;
     [Header("Shapes")]
     [SerializeField] private Shape[] _domino;
     [SerializeField] private Shape[] _tromino;
@@ -26,7 +24,7 @@ public class ShapesManager : MonoBehaviour
     #endregion
 
     #region private
-    private GameData _gameData;
+    private DataGame _gameData;
     private Pool<Block> _poolBlocks;
     private ShapeControl _shapeControl = null;
     private Shape _shape = null;
@@ -43,9 +41,9 @@ public class ShapesManager : MonoBehaviour
     {
         Array.Sort(_settingsBlocks, (a,b) => a.Digit.CompareTo(b.Digit));
 
-        _gameData = GameData.InstanceF;
+        _gameData = DataGame.InstanceF;
         _poolBlocks = new(_prefabBlock, _poolRepository, _sizePool);
-        _shapeControl = new ShapeControl(_area, _speeds);
+        _shapeControl = new ShapeControl(_area, _gameData.Speeds);
         _shapeControl.EventEndMoveDown += () => EventEndMoveDown?.Invoke();
 
         foreach (var d in _domino)
@@ -122,7 +120,7 @@ public class ShapesManager : MonoBehaviour
 
     public bool StartMove(int level)
     {
-        _speeds.Level = level;
+        _gameData.Speeds.Level = level;
 
         if (_shapeControl.SetupForNew(_shape))
         {

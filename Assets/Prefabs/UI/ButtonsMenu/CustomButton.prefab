@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.039215688, g: 0.87058824, b: 1, a: 1}
+  m_Color: {r: 0.039215688, g: 0.8705883, b: 1, a: 255}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 0
@@ -241,7 +241,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44bcd212ff0c02c41a45147d8e16a038, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetIcon: {fileID: 7322763064093519844}
+  _thisRectTransform: {fileID: 5275315403223843145}
+  _icon: {fileID: 7322763064093519844}
+  _iconNormalColor: {r: 0.039215688, g: 0.8705883, b: 1, a: 255}
+  _iconDisabledColor: {r: 0.039215688, g: 0.8705883, b: 1, a: 0.5019608}
+  _isIconResize: 0
   _targetImages:
   - {fileID: 8875011479578851009}
   - {fileID: 382767315352081281}
@@ -249,7 +253,6 @@ MonoBehaviour:
   _targetAnimators:
   - {fileID: 5616783645052277958}
   - {fileID: 2987415056385067647}
-  _size: {x: 4, y: 4}
   _stateBlock:
     normal:
       speed: 1

@@ -93,7 +93,7 @@ public class LoadingPreGame : MonoBehaviour
             
             ProgressLoad(0.35f);
 
-            Settings.Instance.IsFirstStart = !await InitializeStorages();
+            SettingsGame.Instance.IsFirstStart = !await InitializeStorages();
             
             ProgressLoad(0.4f);
 
@@ -114,8 +114,8 @@ public class LoadingPreGame : MonoBehaviour
                 {
                     bool result = false;
 
-                    result = Settings.Instance.Initialize(b, isDesktop) || result;
-                    return GameData.Instance.Initialize(b) || result;
+                    result = SettingsGame.Instance.Initialize(b, isDesktop) || result;
+                    return DataGame.Instance.Initialize(b) || result;
                 }
                 #endregion
             }

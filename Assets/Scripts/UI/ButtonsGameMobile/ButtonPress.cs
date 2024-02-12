@@ -12,7 +12,7 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private void Start()
     {
-        Settings settings = Settings.InstanceF;
+        SettingsGame settings = SettingsGame.InstanceF;
         SetSensitivity(settings.SensitivityButtons);
         settings.EventChangeSensitivityButtons += SetSensitivity;
     }
@@ -53,7 +53,7 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private void OnDestroy()
     {
-        if(Settings.Instance != null)
-            Settings.Instance.EventChangeSensitivityButtons -= SetSensitivity;
+        if(SettingsGame.Instance != null)
+            SettingsGame.Instance.EventChangeSensitivityButtons -= SetSensitivity;
     }
 }

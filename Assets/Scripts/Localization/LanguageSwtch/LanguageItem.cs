@@ -1,24 +1,28 @@
 using TMPro;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Toggle))]
 public class LanguageItem : MonoBehaviour
 {
+    [SerializeField] private Toggle _toggle;
     [SerializeField] private Image _icon;
     [SerializeField] private TMP_Text _name;
+    [SerializeField] private Animator _animator;
+    [Space]
+    [SerializeField] private AnimatorController _controllerClockwise;
+    [SerializeField] private AnimatorController _controllerCounterclockwise;
 
     private bool _isSave;
     private int _id = -1;
     private Localization _localization;
-    private Settings _settings;
-    private Toggle _thisToggle;
+    private SettingsGame _settings;
+    
 
     private void Awake()
     {
         _localization = Localization.InstanceF;
-        _settings = Settings.InstanceF;
-        _thisToggle = GetComponent<Toggle>();
+        _settings = SettingsGame.InstanceF;
     }
 
     public void Setup(Localization.LanguageType languageType, ToggleGroup toggleGroup, bool isSave) 
@@ -29,9 +33,11 @@ public class LanguageItem : MonoBehaviour
         _id = languageType.Id;
         _isSave = isSave;
 
-        _thisToggle.isOn = _localization.CurrentIdLang == _id;
-        _thisToggle.group = toggleGroup;
-        _thisToggle.onValueChanged.AddListener(OnSelect);
+        _animator.runtimeAnimatorController = _id % 2 == 0 ? _controllerCounterclockwise : _controllerClockwise;
+
+        _toggle.isOn = _localization.CurrentIdLang == _id;
+        _toggle.group = toggleGroup;
+        _toggle.onValueChanged.AddListener(OnSelect);
         _localization.EventSwitchLanguage += OnSwitchLanguage;
     }
 
@@ -45,9 +51,9 @@ public class LanguageItem : MonoBehaviour
 
     private void OnSwitchLanguage()
     {
-        _thisToggle.onValueChanged.RemoveListener(OnSelect);
-        _thisToggle.isOn = _localization.CurrentIdLang == _id;
-        _thisToggle.onValueChanged.AddListener(OnSelect);
+        _toggle.onValueChanged.RemoveListener(OnSelect);
+        _toggle.isOn = _localization.CurrentIdLang == _id;
+        _toggle.onValueChanged.AddListener(OnSelect);
     }
 
     private void OnDestroy()

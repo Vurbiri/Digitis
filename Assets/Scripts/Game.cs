@@ -5,37 +5,26 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-
 public class Game : MonoBehaviour
 {
     [SerializeField] private ShapesManager _shapesManager;
     [SerializeField] private AGameController _gameController;
-    [Space]
-    [SerializeField] private int _startCountShapes = 20;
-    [SerializeField] private int _shapesPerLevel = 3;
-
+    
     private Dictionary<int, int> _columns;
-    private GameData _gameData;
-    private int _countShapesMax;
+    private DataGame _dataGame;
+    
     private bool _isSave = false;
 
-    private GameModeStart ModeStart { get => _gameData.ModeStart; set => _gameData.ModeStart = value; }
-
-    public int Level { get => _gameData.CurrentLevel; private set { _gameData.CurrentLevel = value; EventChangeLevel?.Invoke(value.ToString()); } }
-    public int Score { get => _gameData.Score; private set { _gameData.Score = value; EventChangePoints?.Invoke(value.ToString()); } }
-    public int CountBombs { get => _gameData.CountBombs; private set { _gameData.CountBombs = value; EventChangeCountBombs?.Invoke(value); } }
-    public int CountShapes { get => _gameData.CountShapes; private set { _gameData.CountShapes = value; EventChangeCountShapes?.Invoke(value); } }
-    public int CountShapesMax { get => _countShapesMax; private set { _countShapesMax = value; EventChangeCountShapesMax?.Invoke(value); } }
-
-    public event Action<string> EventChangeLevel;
-    public event Action<string> EventChangePoints;
-    public event Action<int> EventChangeCountBombs;
-    public event Action<int> EventChangeCountShapes;
-    public event Action<int> EventChangeCountShapesMax;
+    private GameModeStart ModeStart { get => _dataGame.ModeStart; set => _dataGame.ModeStart = value; }
+    private int Level { get => _dataGame.Level;}
+    private int CountBombs { get => _dataGame.CountBombs; set => _dataGame.CountBombs = value; }
+    private int CountShapes { get => _dataGame.CountShapes; set => _dataGame.CountShapes = value; }
+    private int CountShapesMax { get => _dataGame.CountShapesMax; }
 
     private void Awake()
     {
-        _gameData = GameData.InstanceF;
+        _dataGame = DataGame.InstanceF;
+        _dataGame.EventChangeScore += OnChangeScore;
 
         _gameController.EventLeftPress += _shapesManager.Left;
         _gameController.EventRightPress += _shapesManager.Right;
@@ -44,7 +33,7 @@ public class Game : MonoBehaviour
         _gameController.EventRotationPress += _shapesManager.Rotate;
         _gameController.EventBombClick += OnBomb;
 
-        CountShapesMax = CalkMaxShapes();
+        _dataGame.CalkMaxShapes();
         if (ModeStart == GameModeStart.GameNew)
             CountShapes = CountShapesMax;
     }
@@ -66,7 +55,7 @@ public class Game : MonoBehaviour
     public void Save(bool isSaveHard = true, Action<bool> callback = null)
     {
         _shapesManager.SaveShape();
-        _gameData.Save(isSaveHard, callback);
+        _dataGame.Save(isSaveHard, callback);
         _isSave = false;
     }
 
@@ -124,7 +113,7 @@ public class Game : MonoBehaviour
         }
         else
         {
-            _gameData.ResetData();
+            _dataGame.ResetData();
             _shapesManager.EventEndMoveDown -= OnBlockEndMoveDown;
             StopCoroutine(Rotate());
             StopCoroutine(Shift());
@@ -134,9 +123,7 @@ public class Game : MonoBehaviour
         #region Local Functions
         void LevelUp()
         {
-            Level++;
-            CountBombs++;
-            CountShapes = CountShapesMax = CalkMaxShapes();
+            _dataGame.LevelUp();
         }
         #endregion
     }
@@ -150,14 +137,7 @@ public class Game : MonoBehaviour
             CountBombs--;
     }
 
-
-    public void CalkScore(int digit, int countSeries, int countOne)
-    {
-        Score += digit * (2 * countSeries + countOne - digit);
-        _isSave = true;
-    }
-
-    private int CalkMaxShapes() => _startCountShapes + _shapesPerLevel * (Level - 1);
+    private void OnChangeScore(string str) => _isSave = true;
 
     private IEnumerator Rotate()
     {
@@ -175,5 +155,11 @@ public class Game : MonoBehaviour
             if (UnityEngine.Random.value > 0.5) _shapesManager.Left(); else _shapesManager.Right();
             yield return new WaitForSeconds(1.3f / Level);
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (DataGame.Instance != null)
+            _dataGame.EventChangeScore -= OnChangeScore;
     }
 }

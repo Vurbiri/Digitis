@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: 175614215}
   - component: {fileID: 175614216}
   m_Layer: 3
-  m_Name: Settings
+  m_Name: SettingsGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -266,21 +266,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 175614213}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdacae5729ab752469fe9c235800d3ec, type: 3}
+  m_Script: {fileID: 11500000, guid: 83c892a0a063ced449c805670aeab0f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
   _profileDesktop:
-    key: sttd
+    key: std
     idLang: 1
-    sensitivityButtons: 0.2
+    sensitivityButtons: 0.15
     volumes:
     - 1
     - 1
   _profileMobile:
-    key: sttm
+    key: stm
     idLang: 1
-    sensitivityButtons: 0.2
+    sensitivityButtons: 0.15
     volumes:
     - 1
     - 1
@@ -522,7 +522,7 @@ GameObject:
   - component: {fileID: 523976399}
   - component: {fileID: 523976398}
   m_Layer: 3
-  m_Name: GameData
+  m_Name: DataGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -541,11 +541,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
-  _countBombsStart: 3
-  _dataDigitis:
+  _startCountBombs: 3
+  _startCountShapes: 20
+  _shapesPerLevel: 3
+  _speeds:
+    _start: 0.5
+    _perLevel: 0.25
+    _down: 15
+    _fall: 20
+  _settings:
     _currentLevel: 1
     _shapeType: 2
-    _maxDigit: 3
+    _maxDigit: 7
 --- !u!4 &523976399
 Transform:
   m_ObjectHideFlags: 0
@@ -922,7 +929,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
   _path: Languages
-  _defaultLang: en
+  _defaultLang: ru
 --- !u!4 &2119322353
 Transform:
   m_ObjectHideFlags: 0

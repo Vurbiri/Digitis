@@ -7,19 +7,31 @@ public class LevelBoard : ABoard
     
     private void Start()
     {
-        SetValue(_game.Level.ToString());
-        _game.EventChangeLevel += SetValue;
+        SetValue(_dataGame.Level.ToString());
+        _dataGame.EventChangeLevel += SetValue;
 
-        SetMaxShapes(_game.CountShapesMax);
-        SetShapes(_game.CountShapes);
-        _game.EventChangeCountShapes += SetShapes;
-        _game.EventChangeCountShapesMax += SetMaxShapes;
+        SetMaxShapes(_dataGame.CountShapesMax);
+        SetShapes(_dataGame.CountShapes);
+        _dataGame.EventChangeCountShapes += SetShapes;
+        _dataGame.EventChangeCountShapesMax += SetMaxShapes;
 
-        void SetShapes(int count) => _shapesSlider.value = count;
-        void SetMaxShapes(int count)
+        
+    }
+
+    private void SetShapes(int count) => _shapesSlider.value = count;
+    private void SetMaxShapes(int count)
+    {
+        _shapesSlider.maxValue = count;
+        SetShapes(count);
+    }
+
+    private void OnDestroy()
+    {
+        if (DataGame.Instance != null)
         {
-            _shapesSlider.maxValue = count;
-            SetShapes(count);
+            _dataGame.EventChangeScore -= SetValue;
+            _dataGame.EventChangeCountShapes -= SetShapes;
+            _dataGame.EventChangeCountShapesMax -= SetMaxShapes;
         }
     }
 }

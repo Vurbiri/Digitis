@@ -1,26 +1,36 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CustomButtonTargetGraphic : MonoBehaviour
+public class CustomTargetGraphic : MonoBehaviour
 {
-    [SerializeField] private Image _targetIcon;
+    [SerializeField] private RectTransform _thisRectTransform;
+    [Space]
+    [SerializeField] private Image _icon;
+    [SerializeField] private Color _iconNormalColor = new(10, 222, 255, 255);
+    [SerializeField] private Color _iconDisabledColor = new(10, 222, 255, 100);
+    [SerializeField] private bool _isIconResize = false;
+    [Space]
     [SerializeField] private Image[] _targetImages;
     [SerializeField] private Animator[] _targetAnimators;
     [Space]
-    [SerializeField] private Vector2 _size;
-    [Space]
     [SerializeField] private StateBlock _stateBlock = StateBlock.defaultStateBlock;
 
-    private RectTransform _thisRectTransform;
+    private RectTransform _iconRectTransform;
+
+    private Vector2 _size;
+    private Vector2 _sizeIcon;
+
     private bool _isInteractable;
 
     public void Initialize(bool isInteractable)
     {
-        _thisRectTransform ??= GetComponent<RectTransform>();
         _size = _thisRectTransform.sizeDelta;
 
         _isInteractable = isInteractable;
-        _targetIcon.color = isInteractable ? _stateBlock.normal.color : _stateBlock.disabled.color;
+        _icon.color = isInteractable ? _iconNormalColor : _iconDisabledColor;
+
+        _iconRectTransform = _icon.rectTransform;
+        _sizeIcon = _iconRectTransform.sizeDelta;
     }
 
     public void SetNormalState()
@@ -52,11 +62,13 @@ public class CustomButtonTargetGraphic : MonoBehaviour
         SetColor(targetState.color);
         SetSpeed(targetState.speed);
         _thisRectTransform.sizeDelta = _size * targetState.scale;
-
-        if(_isInteractable != isInteractable)
+        
+        if(_isIconResize)
+            _iconRectTransform.sizeDelta = _sizeIcon * targetState.scale;
+        if (_isInteractable != isInteractable)
         {
             _isInteractable = isInteractable;
-            _targetIcon.color = isInteractable ? _stateBlock.normal.color : _stateBlock.disabled.color;
+            _icon.color = isInteractable ? _stateBlock.normal.color : _stateBlock.disabled.color;
         }
 
         #region Local Functions
@@ -88,7 +100,7 @@ public class CustomButtonTargetGraphic : MonoBehaviour
             defaultStateBlock = new StateBlock()
             {
                 normal = new(1f, new(10, 222, 255, 255), 1f),
-                highlighted = new(4f, new(60, 160, 255, 255), 1.125f),
+                highlighted = new(4f, new(60, 160, 255, 255), 1.1f),
                 pressed = new(0.5f, new(60, 160, 255, 122), 1.025f),
                 selected = new(2f, new(140, 140, 225, 255), 1.05f),
                 disabled = new(0f, new(10, 222, 255, 100), 1f),

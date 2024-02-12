@@ -9,16 +9,14 @@
   "SFX": "Sound",
   "Score": "Score",
   "Level": "Level",
+  "SensitivityButtons": "Press frequency (ms)",
 
   "ResetForAd": "Resetting researches for viewing Ad",
   "RepairForAd": "Repair the probe at 35% for viewing Ad",
   "AdReward": "Showing ad:",
   "Repair": "Repaired {0:N} structures",
 
-  "ExpPlus": "+Exp",
-  "ScorePlus": "+Score",
   "GameLevel": "Level {0}",
-  "LevelComplete": "Level {0}\ncomplete",
 
   "New": "New",
   "Continue": "Continue",

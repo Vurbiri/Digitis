@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class Settings : ASingleton<Settings>
+public class SettingsGame : ASingleton<SettingsGame>
 {
     [Space]
     [SerializeField] private Profile _profileDesktop = new();
@@ -119,7 +119,7 @@ public class Settings : ASingleton<Settings>
         public string key = "std";
         [JsonProperty("ilg")]
         public int idLang = 1;
-        [JsonProperty("ilg")]
+        [JsonProperty("sbt")]
         public float sensitivityButtons = 0.2f;
         [JsonProperty("vls")]
         public float[] volumes = { 1f, 1f };
