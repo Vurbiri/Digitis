@@ -13,7 +13,7 @@ public partial class YandexSDK : ASingleton<YandexSDK>
     public bool IsMobile => IsMobileJS();
 
     public string PlayerName => GetPlayerNameJS();
-    public UniTask<(bool result, Texture texture)> GetPlayerAvatar(AvatarSize size)
+    public UniTask<Return<Texture>> GetPlayerAvatar(AvatarSize size)
     {
         string url = GetPlayerAvatarURLJS(size.ToString().ToLower());
         return Storage.TryLoadTextureWeb(url);
@@ -46,12 +46,12 @@ public partial class YandexSDK : ASingleton<YandexSDK>
         taskEndInitLeaderboards = null;
         return result;
     }
-    public async UniTask<(bool result, LeaderboardResult lbResult)> GetPlayerResult(string lbName) 
+    public async UniTask<Return<LeaderboardResult>> GetPlayerResult(string lbName) 
     {
         string json = await WaitTask(ref taskEndGetPlayerResult, GetPlayerResultJS, lbName);
         taskEndGetPlayerResult = null;
         if (string.IsNullOrEmpty(json))
-            return (false, null);
+            return Return<LeaderboardResult>.Empty;
         else
             return Storage.Deserialize<LeaderboardResult>(json);
     }
@@ -61,7 +61,7 @@ public partial class YandexSDK : ASingleton<YandexSDK>
         taskEndSetScore = null;
         return result;
     }
-    public async UniTask<(bool result, Leaderboard table)> GetLeaderboard(string lbName, int quantityTop, bool includeUser = false, int quantityAround = 1, AvatarSize size = AvatarSize.Medium)
+    public async UniTask<Return<Leaderboard>> GetLeaderboard(string lbName, int quantityTop, bool includeUser = false, int quantityAround = 1, AvatarSize size = AvatarSize.Medium)
     {
         taskEndGetLeaderboard.TrySetResult(default);
         taskEndGetLeaderboard = new();

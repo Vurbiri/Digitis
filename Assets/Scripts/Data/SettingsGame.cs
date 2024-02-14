@@ -80,7 +80,7 @@ public class SettingsGame : ASingleton<SettingsGame>
     }
     private bool Load()
     {
-        ReturnValue<Profile> data = Storage.Load<Profile>(_profileCurrent.key);
+        Return<Profile> data = Storage.Load<Profile>(_profileCurrent.key);
         if (data.Result)
             _profileCurrent.Copy(data.Value);
 

@@ -10,7 +10,7 @@ public class SliderValue : MonoBehaviour
     private void Start()
     {
         TMP_Text thisText = GetComponent<TMP_Text>();
-        string format = _parentSlider.wholeNumbers ? "D" : "F";
+        string format = _parentSlider.wholeNumbers ? "N0" : "F";
 
         SetValue(_parentSlider.value);
         _parentSlider.onValueChanged.AddListener(SetValue);

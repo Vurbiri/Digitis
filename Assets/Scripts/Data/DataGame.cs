@@ -53,7 +53,7 @@ public class DataGame : ASingleton<DataGame>
 
     private bool Load()
     {
-        ReturnValue<GameSave> data = Storage.Load<GameSave>(KEY);
+        Return<GameSave> data = Storage.Load<GameSave>(KEY);
         if (data.Result)
             _data = data.Value;
 
@@ -74,6 +74,7 @@ public class DataGame : ASingleton<DataGame>
     public void ResetData()
     {
         _data.Reset(_startCountBombs);
+        CountShapes = CountShapesMax = CalkMaxShapes();
     }
 
     public void CalkScore(int digit, int countSeries, int countOne)

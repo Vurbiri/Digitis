@@ -11,12 +11,12 @@ public abstract class ASaveLoadJsonTo
 
     public abstract UniTask<bool> Initialize(string key);
 
-    public virtual ReturnValue<T> Load<T>(string key)
+    public virtual Return<T> Load<T>(string key) where T : class
     {
         if ( _saved.TryGetValue(key, out string json))
             return Deserialize<T>(json);
 
-        return new();
+        return Return<T>.Empty;
     }
 
     public abstract void Save(string key, object data, bool isSaveHard, Action<bool> callback);
@@ -42,6 +42,6 @@ public abstract class ASaveLoadJsonTo
     }
 
     protected string Serialize(object obj) => Storage.Serialize(obj);
-    protected ReturnValue<T> Deserialize<T>(string json) => Storage.Deserialize<T>(json);
+    protected Return<T> Deserialize<T>(string json) where T : class => Storage.Deserialize<T>(json);
 
 }

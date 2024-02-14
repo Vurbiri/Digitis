@@ -22,7 +22,7 @@ public partial class Localization : ASingleton<Localization>
 
     public bool LoadFromResources()
     {
-        ReturnValue<LanguageType[]> lt = StorageResources.LoadFromJson<LanguageType[]>(_path);
+        Return<LanguageType[]> lt = StorageResources.LoadFromJson<LanguageType[]>(_path);
         if (lt.Result)
         {
             Languages = lt.Value;
@@ -78,7 +78,7 @@ public partial class Localization : ASingleton<Localization>
 
     private bool SetLanguage(LanguageType type)
     {
-        ReturnValue<Dictionary<string, string>> d = StorageResources.LoadFromJson<Dictionary<string, string>>(type.File);
+        Return<Dictionary<string, string>> d = StorageResources.LoadFromJson<Dictionary<string, string>>(type.File);
         if (d.Result)
         {
             CurrentIdLang = type.Id;

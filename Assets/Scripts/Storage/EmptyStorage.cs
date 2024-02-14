@@ -10,6 +10,6 @@ public class EmptyStorage : ASaveLoadJsonTo
         await UniTask.Delay(0, true);
         return false;
     }
-    public override ReturnValue<T> Load<T>(string key) => new();
+    public override Return<T> Load<T>(string key) => Return<T>.Empty;
     public override void Save(string key, object data, bool isSaveHard, Action<bool> callback) => callback?.Invoke(false);
 }

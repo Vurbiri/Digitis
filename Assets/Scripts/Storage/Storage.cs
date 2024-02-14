@@ -47,11 +47,11 @@ public static class Storage
         service.Save(key, data, isSaveHard, (b) => taskSave.TrySetResult(b));
         return taskSave.Task;
     }
-    public static ReturnValue<T> Load<T>(string key) => service.Load<T>(key);
+    public static Return<T> Load<T>(string key) where T : class => service.Load<T>(key);
 
-    public static ReturnValue<T> Deserialize<T>(string json)
+    public static Return<T> Deserialize<T>(string json) where T : class
     {
-        ReturnValue<T> result = new();
+        Return<T> result = Return<T>.Empty;
         try
         {
             result = new(JsonConvert.DeserializeObject<T>(json));
@@ -65,16 +65,16 @@ public static class Storage
     }
     public static string Serialize(object obj) => JsonConvert.SerializeObject(obj);
 
-    public static async UniTask<ReturnValue<Texture>> TryLoadTextureWeb(string url)
+    public static async UniTask<Return<Texture>> TryLoadTextureWeb(string url)
     {
         if (string.IsNullOrEmpty(url))
-            return new();
+            return Return<Texture>.Empty;
 
         using var request = UnityWebRequestTexture.GetTexture(url);
         await request.SendWebRequest();
 
         if (request.result != Result.Success)
-            return new();
+            return Return<Texture>.Empty;
 
         return new(true, ((DownloadHandlerTexture)request.downloadHandler).texture);
     }

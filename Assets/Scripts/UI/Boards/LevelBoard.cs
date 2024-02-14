@@ -14,8 +14,6 @@ public class LevelBoard : ABoard
         SetShapes(_dataGame.CountShapes);
         _dataGame.EventChangeCountShapes += SetShapes;
         _dataGame.EventChangeCountShapesMax += SetMaxShapes;
-
-        
     }
 
     private void SetShapes(int count) => _shapesSlider.value = count;

@@ -1,22 +1,24 @@
 
-public class ReturnValue<T> 
+public class Return<T> where T : class
 {
     public bool Result { get; }
     public T Value { get; }
 
-    public ReturnValue()
+    public static Return<T> Empty { get; } = new();
+
+    private Return()
     {
         Result = false;
-        Value = default;
+        Value = null;
     }
 
-    public ReturnValue(T value)
+    public Return(T value)
     {
         Result = value != null;
         Value = value;
     }
 
-    public ReturnValue(bool result, T value)
+    public Return(bool result, T value)
     {
         Result = result;
         Value = value;

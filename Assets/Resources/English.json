@@ -7,6 +7,8 @@
   "Settings": "Settings",
   "Music": "Music",
   "SFX": "Sound",
+  "ShapeSize": "Size of shapes",
+  "MaxDigit": "Max digit",
   "Score": "Score",
   "Level": "Level",
   "SensitivityButtons": "Press frequency (ms)",

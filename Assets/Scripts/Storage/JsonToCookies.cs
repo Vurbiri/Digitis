@@ -27,7 +27,7 @@ public class JsonToCookies : ASaveLoadJsonTo
 
         if (!string.IsNullOrEmpty(json))
         {
-            ReturnValue<Dictionary<string, string>> d = Deserialize<Dictionary<string, string>>(json);
+            Return<Dictionary<string, string>> d = Deserialize<Dictionary<string, string>>(json);
 
             if (d.Result)
             {

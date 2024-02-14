@@ -33,9 +33,9 @@ public class PersonalPanel : MonoBehaviour
                 else
                     _name.text = _localization.GetText(_keyAnonymName);
 
-                var (result, texture) = await _ysdk.GetPlayerAvatar(AvatarSize.Medium);
-                if (result)
-                    _avatar.texture = texture;
+                var texture = await _ysdk.GetPlayerAvatar(AvatarSize.Medium);
+                if (texture.Result)
+                    _avatar.texture = texture.Value;
                 else
                     _avatar.texture = _avatarAnonym;
 

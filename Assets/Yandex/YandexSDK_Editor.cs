@@ -26,28 +26,50 @@ public partial class YandexSDK
         return true;
     }
     public UniTask<bool> InitLeaderboards() => UniTask.RunOnThreadPool(() => false);
-    public UniTask<(bool result, Texture texture)> GetPlayerAvatar(AvatarSize size) => UniTask.RunOnThreadPool<(bool result, Texture texture)>(() => (false, null));
+    public UniTask<Return<Texture>> GetPlayerAvatar(AvatarSize size) => UniTask.RunOnThreadPool<Return<Texture>>(() => Return<Texture>.Empty);
 
-    public UniTask<(bool result, LeaderboardResult lbResult)> GetPlayerResult(string lbName) => UniTask.RunOnThreadPool(() => (true, new LeaderboardResult(6, 1010)));
+    public UniTask<Return<LeaderboardResult>> GetPlayerResult(string lbName) => UniTask.RunOnThreadPool(() => new Return<LeaderboardResult>(new LeaderboardResult(6, 1010)));
     public UniTask<bool> SetScore(string lbName, int score) => UniTask.RunOnThreadPool(() => true);
-    public UniTask<(bool result, Leaderboard table)> GetLeaderboard(string lbName, int quantityTop, bool includeUser = false, int quantityAround = 0, AvatarSize size = AvatarSize.Small)
+    public UniTask<Return<Leaderboard>> GetLeaderboard(string lbName, int quantityTop, bool includeUser = false, int quantityAround = 0, AvatarSize size = AvatarSize.Small)
     {
-        List<LeaderboardRecord> list = new();
-        list.Add(new(1, 1100, "Седов Герман", ""));
-        list.Add(new(2, 1000, "Журавлев Тимофей", ""));
-        list.Add(new(3, 900, "Крылов Богдан", ""));
-        list.Add(new(4, 800, "Панов Фёдор", ""));
-        list.Add(new(5, 600, "Зайцев Илья", ""));
-        list.Add(new(6, 550, "Лебедева Алёна", ""));
-        list.Add(new(8, 500, "", ""));
-        list.Add(new(9, 400, "Муравьев Егор", ""));
-        list.Add(new(10, 300, "Казанцев Алексей", ""));
-        list.Add(new(11, 200, "Баженов Борис", ""));
-        list.Add(new(12, 100, "Крылова Таня", ""));
+        List<LeaderboardRecord> list = new()
+        {
+            new(1, 1100, "Седов Герман", ""),
+            new(2, 1000, "Журавлев Тимофей", ""),
+            new(3, 900, "Крылов Богдан", ""),
+            new(4, 800, "Панов Фёдор", ""),
+            new(5, 600, "Зайцев Илья", ""),
+            new(6, 550, "Лебедева Алёна", ""),
+            new(8, 500, "", ""),
+            new(9, 400, "Муравьев Егор", ""),
+            new(10, 300, "Казанцев Алексей", ""),
+            new(11, 200, "Баженов Борис", ""),
+            new(12, 100, "Крылова Таня", "")
+        };
 
         Leaderboard l = new(2, list.ToArray());
 
-        return UniTask.RunOnThreadPool(() => (true, l));
+        return UniTask.RunOnThreadPool(() => new Return<Leaderboard>(l));
+    }
+
+    public UniTask<Return<Leaderboard>> GetLeaderboardTest()
+    {
+        List<LeaderboardRecord> list = new()
+        {
+            new(1, 1100, "Седов Герман", ""),
+            new(2, 1000, "Журавлев Тимофей", ""),
+            new(3, 900, "Крылов Богдан", ""),
+            new(4, 800, "Панов Фёдор", ""),
+            new(5, 600, "Зайцев Илья", ""),
+            new(6, 550, "Лебедева Алёна", ""),
+            new(7, 500, "", ""),
+            new(9, 400, "Муравьев Егор", ""),
+            new(10, 300, "Казанцев Алексей", ""),
+        };
+
+        Leaderboard l = new(2, list.ToArray());
+
+        return UniTask.RunOnThreadPool(() => new Return<Leaderboard>(l));
     }
 
     public async UniTask<bool> Save(string key, string data)

@@ -7,6 +7,8 @@
 	"Settings": "Настройки",
 	"Music": "Музыка",
 	"SFX": "Звук",
+	"ShapeSize": "Размер фигур",
+	"MaxDigit": "Макс. цифра",
 	"Score": "Счет",
 	"Level": "Уровень",
 	"SensitivityButtons": "Частота нажатия (мс)",

@@ -6,11 +6,11 @@ using UnityEngine.UI;
 public class LoadingPreGame : MonoBehaviour
 {
     [Scene]
-    [SerializeField] protected int _nextSceneMobile = 1;
+    [SerializeField] private int _nextSceneMobile = 1;
     [Scene]
-    [SerializeField] protected int _nextSceneDesktop = 1;
+    [SerializeField] private int _nextSceneDesktop = 1;
     [Space]
-    [SerializeField] protected Slider _slider;
+    [SerializeField] private Slider _slider;
     //[SerializeField] private LogOnWindow _logOnWindow;
 
     private void Start() => Loading().Forget();
