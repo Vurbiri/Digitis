@@ -81,6 +81,7 @@ public class BlockParticleDigit : ABlockParticleSystemController
         Color = color;
         _particleRenderer.sharedMaterial = material;
         Clear();
+        Play();
     }
     public void SetupBomb(Material material, Color color) 
     {
@@ -96,6 +97,7 @@ public class BlockParticleDigit : ABlockParticleSystemController
         Color = color;
         _particleRenderer.sharedMaterial = material;
         Clear();
+        Play();
     }
 
     public async UniTask Remove()
@@ -135,5 +137,18 @@ public class BlockParticleDigit : ABlockParticleSystemController
         await UniTask.Delay(_timeExplodeNext);
     }
 
-    
+    public async UniTask ExplodeBomb()
+    {
+        _shapeModule.rotation = Vector3.zero;
+        _shapeModule.radiusThickness = _radiusThicknessForBlock;
+        EmissionTimeMultiplier = _emissionRemoveStart;
+        RadialSpeedMultiplier = _radialSpeedRemove;
+        SpeedMultiplier = _speedRemove;
+        SizeMultiplier = _sizeRemove;
+
+        await UniTask.Delay(_timeExplodeNext);
+
+        Stop();
+    }
+
 }

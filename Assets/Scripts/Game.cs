@@ -32,14 +32,14 @@ public class Game : MonoBehaviour
         _gameController.EventEndDown += _shapesManager.EndMoveDown;
         _gameController.EventRotationPress += _shapesManager.Rotate;
         _gameController.EventBombClick += OnBomb;
-
-        _dataGame.CalkMaxShapes();
-        if (ModeStart == GameModeStart.GameNew)
-            CountShapes = CountShapesMax;
     }
 
     private void Start()
     {
+        _dataGame.CalkMaxShapes();
+        if (ModeStart == GameModeStart.GameNew)
+            CountShapes = CountShapesMax;
+
         _shapesManager.Initialize();
         _shapesManager.EventEndMoveDown += OnBlockEndMoveDown;
 

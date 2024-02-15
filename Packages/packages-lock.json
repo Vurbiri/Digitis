@@ -1,7 +1,17 @@
 {
   "dependencies": {
+    "com.coffee.ui-particle": {
+      "version": "4.6.2",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.modules.particlesystem": "1.0.0"
+      },
+      "url": "https://package.openupm.com"
+    },
     "com.cysharp.unitask": {
-      "version": "2.5.0",
+      "version": "2.5.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -119,7 +129,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.7",
+      "version": "3.0.8",
       "depth": 0,
       "source": "registry",
       "dependencies": {

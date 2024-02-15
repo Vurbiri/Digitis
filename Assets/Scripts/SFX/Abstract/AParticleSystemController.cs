@@ -23,4 +23,10 @@ public abstract class AParticleSystemController : MonoBehaviour
     public void Stop() => _thisParticle.Stop();
     public void Clear() => _thisParticle.Clear();
 
+    public void ClearAndStop()
+    {
+        _thisParticle.Clear();
+        _thisParticle.Stop();
+    }
+
 }

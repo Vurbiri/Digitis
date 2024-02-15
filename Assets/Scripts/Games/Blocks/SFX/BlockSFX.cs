@@ -26,8 +26,7 @@ public class BlockSFX : MonoBehaviour
 
     public void Transfer()
     {
-        _particles.DigitClear();
-        _particles.DigitStop();
+        _particles.DigitClearAndStop();
     }
     public void StartFall(float speed)
     {

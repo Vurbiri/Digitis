@@ -20,10 +20,10 @@ public class BlockParticles : MonoBehaviour
         _particleTrail.SetupBomb(settings.ColorNumber);
     }
 
-    public async UniTask ExplodeBomb()
+    public UniTask ExplodeBomb()
     {
         _particleExplode.Play();
-        await UniTask.WaitUntil(() => _particleExplode.isStopped);
+        return UniTask.WhenAll(UniTask.WaitUntil(() => _particleExplode.isStopped), _particleDigit.ExplodeBomb());
     }
 
     public UniTask Explode()
@@ -40,7 +40,7 @@ public class BlockParticles : MonoBehaviour
 
     public void DigitPlay() => _particleDigit.Play();
     public void DigitStop() => _particleDigit.Stop();
-    public void DigitClear() => _particleDigit.Clear();
+    public void DigitClearAndStop() => _particleDigit.ClearAndStop();
 
     public void TrailPlay() => _particleTrail.Play();
     public void TrailStop() => _particleTrail.Stop();

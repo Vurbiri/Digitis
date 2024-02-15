@@ -17,8 +17,7 @@ public class BlockParticleTrail : ABlockParticleSystemController
         _shapeModule.arc = arc;
         _shapeModule.rotation = new(0f, 0f, rotationZ);
         Color = color;
-        Clear();
-        Stop();
+        ClearAndStop();
     }
 
     

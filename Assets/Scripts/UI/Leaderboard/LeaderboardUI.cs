@@ -16,25 +16,25 @@ public class LeaderboardUI : MonoBehaviour
     [Range(1, 10), SerializeField] private int _maxAround = 10;
     [SerializeField] private string _lbName = "lbDigitis";
 
-    private YandexSDK _ysdk;
+    private YandexSDK YSDK => YandexSDK.Instance;
+
     private readonly List<LeaderboardRecordUI> _records = new();
-    private GameObject _separator;
+    //private GameObject _separator;
 
     private const int TOP = 5;
 
     public void Start()
     {
-        _ysdk = YandexSDK.InstanceF;
         InitializeAsync().Forget();
     }
 
     public async UniTaskVoid InitializeAsync()
     {
-        if (!_ysdk.IsLeaderboard) return;
+        if (!YSDK.IsLeaderboard) return;
 
         int UserRank = 0;
         bool playerInTable = false;
-        var player = await _ysdk.GetPlayerResult(_lbName);
+        var player = await YSDK.GetPlayerResult(_lbName);
         if (player.Result)
         {
             UserRank = player.Value.Rank;
@@ -44,7 +44,7 @@ public class LeaderboardUI : MonoBehaviour
             if (UserRank <= (_maxTop - _maxAround))
                 playerInTable = false;
 
-        var leaderboard = await _ysdk.GetLeaderboard(_lbName, _maxTop, playerInTable, _maxAround);
+        var leaderboard = await YSDK.GetLeaderboard(_lbName, _maxTop, playerInTable, _maxAround);
         if (!leaderboard.Result)
             return;
         if (playerInTable)
@@ -64,7 +64,7 @@ public class LeaderboardUI : MonoBehaviour
             foreach (var record in leaderboard.Value.Table)
             {
                 if (record.Rank - preRank > 1)
-                    _separator = Instantiate(_recordSeparator, content);
+                    /*_separator = */Instantiate(_recordSeparator, content);
                 preRank = record.Rank;
                 isPlayer = record.Rank == UserRank;
 
@@ -104,15 +104,15 @@ public class LeaderboardUI : MonoBehaviour
     {
         if(points <= 0) 
             return false;
-        if (!_ysdk.IsLeaderboard) 
+        if (!YSDK.IsLeaderboard) 
             return false;
 
-        var player = await _ysdk.GetPlayerResult(_lbName);
+        var player = await YSDK.GetPlayerResult(_lbName);
         if (player.Result)
             if (player.Value.Score >= points) 
                 return false;
 
-        if (!await _ysdk.SetScore(_lbName, points)) 
+        if (!await YSDK.SetScore(_lbName, points)) 
             return false;
 
         await Reward();
@@ -123,7 +123,7 @@ public class LeaderboardUI : MonoBehaviour
         {
             await UniTask.Delay(250, true);
 
-            player = await _ysdk.GetPlayerResult(_lbName);
+            player = await YSDK.GetPlayerResult(_lbName);
             if (!player.Result) 
                 return;
             if (player.Value.Rank <= 0)

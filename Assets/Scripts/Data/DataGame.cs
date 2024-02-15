@@ -66,7 +66,7 @@ public class DataGame : ASingleton<DataGame>
     {
         Level++;
         CountBombs++;
-        CountShapes = CountShapesMax = CalkMaxShapes();
+        CountShapes = CalkMaxShapes();
 
         Save(true, null);
     }
@@ -74,7 +74,7 @@ public class DataGame : ASingleton<DataGame>
     public void ResetData()
     {
         _data.Reset(_startCountBombs);
-        CountShapes = CountShapesMax = CalkMaxShapes();
+        CountShapes = CalkMaxShapes();
     }
 
     public void CalkScore(int digit, int countSeries, int countOne)
@@ -82,7 +82,7 @@ public class DataGame : ASingleton<DataGame>
         Score += digit * (2 * countSeries + countOne - digit);
     }
 
-    public int CalkMaxShapes() => _startCountShapes + _shapesPerLevel * (Level - 1);
+    public int CalkMaxShapes() => CountShapesMax = _startCountShapes + _shapesPerLevel * (Level - 1);
 
     #region Nested Classe
     private class GameSave : GameSettings

@@ -9,18 +9,20 @@ public class MenuFirstSelect : MonoBehaviour
 
     protected virtual void OnEnable() => FirstSelect();
 
-    protected virtual void Update()
-    {
-        _currentSelectedGameObject = EventSystem.current.currentSelectedGameObject;
-        if (_currentSelectedGameObject == null || !_currentSelectedGameObject.activeSelf)
-            FirstSelect();
-    }
+    //protected virtual void Update()
+    //{
+    //        FirstSelect();
+    //}
 
     protected virtual void FirstSelect()
     {
         if (_firstSelected == null) return;
 
+        _currentSelectedGameObject = EventSystem.current.currentSelectedGameObject;
+        if (_currentSelectedGameObject == null || !_currentSelectedGameObject.activeSelf)
+            _firstSelected.Select();
+
         //EventSystem.current.SetSelectedGameObject(_firstSelected.gameObject);
-        _firstSelected.Select();
+
     }
 }

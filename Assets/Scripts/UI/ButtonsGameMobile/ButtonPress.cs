@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 
 public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
 {
+    [SerializeField] private float _ratioPress = 1f;
+    
     private WaitForSeconds _delay;
     private Coroutine _coroutine;
 
@@ -17,7 +19,7 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         settings.EventChangeSensitivityButtons += SetSensitivity;
     }
 
-    private void SetSensitivity(float sensitivity) => _delay = new(sensitivity);
+    private void SetSensitivity(float sensitivity) => _delay = new(sensitivity * _ratioPress);
 
     public void OnPointerDown(PointerEventData eventData)
     {

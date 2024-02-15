@@ -17,8 +17,8 @@ public class ParticleBackgroundMenu : AParticleBackground
         {
             while(true) 
             {
-                ReColorParticleSystem();
                 yield return pause;
+                ReColorParticleSystem();
             }
         }
     }

@@ -25,8 +25,7 @@ public abstract class AParticleBackground : AParticleSystemController
 
     protected void OnReSizeParticleSystem(Vector2 halfSize)
     {
-        Clear();
-        Stop();
+        ClearAndStop();
 
         _positionShape.y = halfSize.y;
         _shapeModule.position = _positionShape;
