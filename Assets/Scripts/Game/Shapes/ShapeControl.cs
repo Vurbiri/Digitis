@@ -22,11 +22,13 @@ public class ShapeControl
     private readonly BlocksArea area;
     private readonly Speeds speeds;
     private readonly Transform container;
+    private readonly Action<bool> actionPlayFixed;
 
-    public ShapeControl(BlocksArea area, Speeds speeds)
+    public ShapeControl(BlocksArea area, Speeds speeds, Action<bool> playFixed)
     {
         this.area = area;
         this.speeds = speeds;
+        this.actionPlayFixed = playFixed;
         container = area.Container;
         startPosition = new(area.Size.x / 2 - 1 , area.Size.y);
     }
@@ -101,31 +103,35 @@ public class ShapeControl
         _blocks.ForEach(block => block.MoveDown(_speed));
     }
 
-    public void TryShift(Vector2Int direct)
+    public bool TryShift(Vector2Int direct)
     {
         if (_isFixed || _isSpeedDown)
-            return;
+            return false; 
 
         if (!area.IsEmptyArea(_blocks, direct))
-            return;
+            return false;
 
         _offset += direct;
         for (int i = 0; i < _blocks.Count; i++)
             _blocks[i].MoveToDelta(direct);
+
+        return true;
     }
     
-    public void TryRotate()
+    public bool TryRotate()
     {
         if(_isFixed || _isSpeedDown)
-            return;
+            return false;
 
         if (!area.IsEmptyArea(_shape.CollisionRotation, _offset))
-            return;
+            return false;
 
         for (int i = 0; i < _blocks.Count; i++)
             _blocks[i].MoveToDelta(_shape.DeltaPositions[i]);
 
         _shape = _shape.NextSubShape; 
+
+        return true;
     }
 
     private void OnEventEndMoveDown(Block block)
@@ -176,6 +182,7 @@ public class ShapeControl
         {
             block.EventEndMoveDown -= OnEventEndMoveDown;
             block.Fixed();
+            actionPlayFixed.Invoke(block.IsBomb);
             area.Add(block);
             _blocks.Remove(block);
         }

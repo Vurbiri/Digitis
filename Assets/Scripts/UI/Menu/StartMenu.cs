@@ -44,9 +44,9 @@ public class StartMenu : MenuNavigation
 
         async UniTaskVoid OnStartAsync()
         {
-            if (!_toggleContinue.isOn && _data.ModeStart == GameModeStart.GameContinue)
+            if (!_toggleContinue.isOn)
             {
-                if (YandexSDK.Instance.IsLeaderboard)
+                if (_data.ModeStart == GameModeStart.GameContinue && YandexSDK.Instance.IsLeaderboard)
                     await _leaderboard.TrySetScoreAndReward(_data.Score);
                 _data.ResetData();
                 _data.ShapeType = Mathf.RoundToInt(_sliderSize.value).ToEnum<ShapeSize>();

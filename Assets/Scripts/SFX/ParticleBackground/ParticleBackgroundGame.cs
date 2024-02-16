@@ -12,6 +12,7 @@ public class ParticleBackgroundGame : AParticleBackground
 
     private void OnDestroy()
     {
-        DataGame.Instance.EventChangeLevel -= OnChangeLevel;
+        if(DataGame.Instance != null)
+            DataGame.Instance.EventChangeLevel -= OnChangeLevel;
     }
 }

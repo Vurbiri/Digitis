@@ -1,18 +1,21 @@
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class Game : MonoBehaviour
 {
+    
     [SerializeField] private ShapesManager _shapesManager;
     [SerializeField] private AGameController _gameController;
-    
+
     private Dictionary<int, int> _columns;
     private DataGame _dataGame;
-    
+
+    private const int TIME_COUNTDOWN = 5000;
+    private const int PAUSE_LEVELUP = 900;
+
     private bool _isSave = false;
 
     private GameModeStart ModeStart { get => _dataGame.ModeStart; set => _dataGame.ModeStart = value; }
@@ -20,6 +23,8 @@ public class Game : MonoBehaviour
     private int CountBombs { get => _dataGame.CountBombs; set => _dataGame.CountBombs = value; }
     private int CountShapes { get => _dataGame.CountShapes; set => _dataGame.CountShapes = value; }
     private int CountShapesMax { get => _dataGame.CountShapesMax; }
+
+    public event Action EventCountdown;
 
     private void Awake()
     {
@@ -32,10 +37,14 @@ public class Game : MonoBehaviour
         _gameController.EventEndDown += _shapesManager.EndMoveDown;
         _gameController.EventRotationPress += _shapesManager.Rotate;
         _gameController.EventBombClick += OnBomb;
+        _gameController.EventPause += OnPause;
+        _gameController.EventUnPause += OnUnPause;
     }
 
     private void Start()
     {
+        CountdownAsync().Forget();
+
         _dataGame.CalkMaxShapes();
         if (ModeStart == GameModeStart.GameNew)
             CountShapes = CountShapesMax;
@@ -43,13 +52,19 @@ public class Game : MonoBehaviour
         _shapesManager.Initialize();
         _shapesManager.EventEndMoveDown += OnBlockEndMoveDown;
 
-        ModeStart = GameModeStart.GameContinue;
-        _gameController.ControlEnable = true;
+        #region Local Functions
+        async UniTaskVoid CountdownAsync()
+        {
+            EventCountdown?.Invoke();
+           
+            await UniTask.Delay(TIME_COUNTDOWN, true);
 
-        StartMove();
+            ModeStart = GameModeStart.GameContinue;
+            _gameController.ControlEnable = true;
 
-        //StartCoroutine(Rotate());
-        //StartCoroutine(Shift());
+            StartMoveAsync().Forget();
+        }
+        #endregion
     }
 
     public void Save(bool isSaveHard = true, Action<bool> callback = null)
@@ -76,7 +91,7 @@ public class Game : MonoBehaviour
             if(_isSave)
                 Save();
 
-            StartMove();
+            StartMoveAsync().Forget();
         }
 
         bool FallColumns()
@@ -104,26 +119,24 @@ public class Game : MonoBehaviour
         #endregion
     }
 
-    private void StartMove()
+    private async UniTaskVoid StartMoveAsync()
     {
-        if (_shapesManager.StartMove(Level))
-        {
-            if (--CountShapes == 0)
-                LevelUp();
-        }
-        else
+        if (--CountShapes == 0)
+            await LevelUpAsync();
+
+        if (!_shapesManager.StartMove(Level))
         {
             _dataGame.ResetData();
             _shapesManager.EventEndMoveDown -= OnBlockEndMoveDown;
-            StopCoroutine(Rotate());
-            StopCoroutine(Shift());
             Debug.Log("Stop");
         }
 
         #region Local Functions
-        void LevelUp()
+        UniTask LevelUpAsync()
         {
             _dataGame.LevelUp();
+
+            return UniTask.Delay(PAUSE_LEVELUP);
         }
         #endregion
     }
@@ -139,27 +152,27 @@ public class Game : MonoBehaviour
 
     private void OnChangeScore(string str) => _isSave = true;
 
-    private IEnumerator Rotate()
+    private void OnPause()
     {
-        while(true) 
-        {
-            yield return new WaitForSeconds(3f / Level);
-            _shapesManager.Rotate();
-        }
+        Time.timeScale = 0.0000001f;
     }
-
-    private IEnumerator Shift()
+    private void OnUnPause()
     {
-        while (true)
-        {
-            if (UnityEngine.Random.value > 0.5) _shapesManager.Left(); else _shapesManager.Right();
-            yield return new WaitForSeconds(1.3f / Level);
-        }
+        Time.timeScale = 1f;
     }
 
     private void OnDestroy()
     {
         if (DataGame.Instance != null)
             _dataGame.EventChangeScore -= OnChangeScore;
+
+        _gameController.EventLeftPress -= _shapesManager.Left;
+        _gameController.EventRightPress -= _shapesManager.Right;
+        _gameController.EventStartDown -= _shapesManager.StartMoveDown;
+        _gameController.EventEndDown -= _shapesManager.EndMoveDown;
+        _gameController.EventRotationPress -= _shapesManager.Rotate;
+        _gameController.EventBombClick -= OnBomb;
+        _gameController.EventPause -= OnPause;
+        _gameController.EventUnPause -= OnUnPause;
     }
 }

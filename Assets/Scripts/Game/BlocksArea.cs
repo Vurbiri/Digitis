@@ -15,6 +15,7 @@ public class BlocksArea : MonoBehaviour
     private Block[,] _blocks;
     private readonly List<Block> _blocksAdd = new();
     private readonly List<Block> _bombsAdd = new();
+    private int _maxFillY = -1;
 
     private Block this[Vector2Int index]
     {
@@ -38,9 +39,10 @@ public class BlocksArea : MonoBehaviour
         Vector2Int position = Vector2Int.zero;
         int value;
         Block block;
+        _maxFillY = _dataGames.SaveArea.GetLength(1);
         for (int x = 0; x < _dataGames.SaveArea.GetLength(0); x++)
         {
-            for (int y = 0; y < _dataGames.SaveArea.GetLength(1); y++)
+            for (int y = 0; y < _maxFillY; y++)
             {
                 value = _dataGames.SaveArea[x, y];
                 if (value >= 0)
@@ -55,22 +57,22 @@ public class BlocksArea : MonoBehaviour
     }
     public void SaveArea()
     {
-        int maxY = MaxNotEmptyLine();
-        if(_dataGames.SaveArea.GetLength(1) != maxY)
-            _dataGames.SaveArea = new int[_size.x, maxY];
+        _maxFillY = MaxNotEmptyLine(_maxFillY - 1);
+        if(_dataGames.SaveArea.GetLength(1) != _maxFillY)
+            _dataGames.SaveArea = new int[_size.x, _maxFillY];
         Block block;
         for (int x = 0; x < _size.x; x++)
         {
-            for (int y = 0; y < maxY; y++)
+            for (int y = 0; y < _maxFillY; y++)
             {
                 block = _blocks[x, y];
                 _dataGames.SaveArea[x, y] = block == null ? -1 : block.Digit;
             }
         }
 
-        int MaxNotEmptyLine()
+        int MaxNotEmptyLine(int y)
         {
-            for (int y = _size.y - 1; y >= 0; y--)
+            for (; y >= 0; y--)
                 for (int x = 0; x < _size.x; x++)
                     if (_blocks[x, y] != null)
                         return y + 1;
@@ -130,9 +132,14 @@ public class BlocksArea : MonoBehaviour
         this[block.Position] = block;
         block.EventDeactivate += OnDeactivate;
         if (block.IsBomb)
+        {
             _bombsAdd.Add(block);
+        }
         else
+        {
             _blocksAdd.Add(block);
+            _maxFillY = Mathf.Max(block.Position.y + 1, _maxFillY);
+        }
     }
 
     private void OnDeactivate(Block block)

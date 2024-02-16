@@ -17,24 +17,16 @@ public static class Message
     }
     public static void BannerKeyFormat(string key, object value, MessageType type = MessageType.Normal, int time = 5000, bool isThrough = true)
     {
-        Banners.Instance.Message(string.Format(Localization.Instance.GetText(key), value), type, time, isThrough);
+        Banners.Instance.Message(Localization.Instance.GetTextFormat(key, value), type, time, isThrough);
     }
     public static void BannersClear() => Banners.Instance.Clear();
 
     public static void Saving(string goodMSG, bool isSaving)
     {
         if (isSaving)
-            BannerKey(goodMSG, time: 2500);
+            BannerKey(goodMSG, time: 2000);
         else
-            BannerKey("ErrorSave", MessageType.Error, 4500);
-    }
-
-    public static void Repair(object hp, bool msg = false, int time = 5000)
-    {
-        if (msg)
-            BannerKey("AdReward", time: time);
-
-        BannerKeyFormat("Repair", hp, time: time);
+            BannerKey("ErrorSave", MessageType.Error, 5500);
     }
 }
 

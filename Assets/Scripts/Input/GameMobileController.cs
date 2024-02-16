@@ -9,10 +9,14 @@ public class GameMobileController : AGameController
     [SerializeField] private ButtonPress _buttonRotation;
     [SerializeField] private ButtonClick _buttonBomb;
     [SerializeField] private ButtonClick _buttonPause;
+    [SerializeField] private PauseMenu _pauseMenu;
 
 
     private void Awake()
     {
+        ControlEnable = false;
+        _pauseMenu.SetActive(false);
+
         _buttonLeft.EventButtonPress += () => OnGameEvent(_eventLeftPress);
         _buttonRight.EventButtonPress += () => OnGameEvent(_eventRightPress);
 
@@ -23,7 +27,9 @@ public class GameMobileController : AGameController
 
         _buttonBomb.EventButtonClick += () => OnGameEvent(_eventBombClick);
 
-        _buttonPause.EventButtonClick += () => { if (ControlEnable) _eventPause?.Invoke(); else _eventUnPause?.Invoke(); };
+        _buttonPause.EventButtonClick += () => { if (ControlEnable) { _eventPause?.Invoke(); ControlEnable = false; _pauseMenu.SetActive(true); } };
+
+        _pauseMenu.EventClose += () => { if (!ControlEnable) { _eventUnPause?.Invoke(); ControlEnable = true; } };
 
         void OnGameEvent(Action action)
         {

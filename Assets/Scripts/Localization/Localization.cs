@@ -68,13 +68,18 @@ public partial class Localization : ASingleton<Localization>
         return false;
     }
 
-    public string GetText(string name)
+    public string GetText(string key)
     {
-        if (_language.TryGetValue(name, out string str))
+        if (_language.TryGetValue(key, out string str))
             return str;
 
         return "ERROR!";
     }
+
+    public string GetTextFormat(string key, params object[] args) => string.Format(GetText(key), args);
+    public string GetTextFormat(string key, object arg0, object arg1, object arg2) => string.Format(GetText(key), arg0, arg1, arg2);
+    public string GetTextFormat(string key, object arg0, object arg1) => string.Format(GetText(key), arg0, arg1);
+    public string GetTextFormat(string key, object arg0) => string.Format(GetText(key), arg0);
 
     private bool SetLanguage(LanguageType type)
     {

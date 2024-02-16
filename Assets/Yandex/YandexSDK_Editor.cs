@@ -12,7 +12,7 @@ public partial class YandexSDK
     public bool IsLeaderboard => true;
     public string PlayerName => "";
     public bool IsLogOn { set; get; } = true;
-    public string Lang => "en";
+    public string Lang => "ru";
 
     public bool IsDesktop => true;
 

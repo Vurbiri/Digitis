@@ -6,6 +6,7 @@ using UnityEngine;
 public class ShapesManager : MonoBehaviour
 {
     #region SerializeField
+    [SerializeField] private ShapesManagerSFX _SFX;
     [Header("Blocks area")]
     [SerializeField] private BlocksArea _area;
     [Header ("Pool Block Data")]
@@ -43,7 +44,7 @@ public class ShapesManager : MonoBehaviour
 
         _gameData = DataGame.InstanceF;
         _poolBlocks = new(_prefabBlock, _poolRepository, _sizePool);
-        _shapeControl = new ShapeControl(_area, _gameData.Speeds);
+        _shapeControl = new ShapeControl(_area, _gameData.Speeds, _SFX.PlayFixed);
         _shapeControl.EventEndMoveDown += () => EventEndMoveDown?.Invoke();
 
         foreach (var d in _domino)
@@ -116,7 +117,13 @@ public class ShapesManager : MonoBehaviour
         #endregion
     }
 
-    public bool ShapeToBomb() => _shape.ToBomb(_settingBomb);
+    public bool ShapeToBomb()
+    {
+        bool result;
+        if (result = _shape.ToBomb(_settingBomb))
+            _SFX.PlayToBomb();
+        return result;
+    }
 
     public bool StartMove(int level)
     {
@@ -137,13 +144,35 @@ public class ShapesManager : MonoBehaviour
         _shapeControl.StartMoveDown();
     }
 
-    public void Left() => _shapeControl.TryShift(Vector2Int.left);
-    public void Right() => _shapeControl.TryShift(Vector2Int.right);
+    public void Left()
+    {
+        if (_shapeControl.TryShift(Vector2Int.left))
+            _SFX.PlayMove();
+        else
+            _SFX.PlayError();
+    }
+    public void Right()
+    {
+        if(_shapeControl.TryShift(Vector2Int.right))
+            _SFX.PlayMove();
+        else
+            _SFX.PlayError();
+    }
 
-    public void StartMoveDown() => _shapeControl.SetSpeed(true);
+    public void StartMoveDown()
+    {
+        _shapeControl.SetSpeed(true);
+        _SFX.PlayDown();
+    }
     public void EndMoveDown() => _shapeControl.SetSpeed(false);
 
-    public void Rotate() => _shapeControl.TryRotate();
+    public void Rotate()
+    {
+        if(_shapeControl.TryRotate())
+            _SFX.PlayRotate();
+        else
+            _SFX.PlayError();
+    }
 
     public List<Block> GetBlocksInColumn(int x, int minY) => _area.GetBlocksInColumn(x, minY);
 

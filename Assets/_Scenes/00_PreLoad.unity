@@ -275,15 +275,15 @@ MonoBehaviour:
     idLang: 1
     sensitivityButtons: 0.15
     volumes:
-    - 1
-    - 1
+    - 0.75
+    - 0.75
   _profileMobile:
     key: stm
     idLang: 1
     sensitivityButtons: 0.15
     volumes:
-    - 1
-    - 1
+    - 0.75
+    - 0.75
   _audioMixer: {fileID: 24100000, guid: 9e32bed4354ee284785e950309e531f2, type: 2}
   _audioMinValue: 0.01
   _audioMaxValue: 1.5845
@@ -551,8 +551,8 @@ MonoBehaviour:
     _fall: 20
   _settings:
     _currentLevel: 1
-    _shapeType: 2
-    _maxDigit: 7
+    _shapeType: 4
+    _maxDigit: 4
 --- !u!4 &523976399
 Transform:
   m_ObjectHideFlags: 0
@@ -647,7 +647,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nextSceneMobile: 1
-  _nextSceneDesktop: 1
+  _nextSceneDesktop: 2
   _slider: {fileID: 475711538}
 --- !u!4 &1307781868
 Transform:

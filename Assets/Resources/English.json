@@ -18,8 +18,9 @@
   "AdReward": "Showing ad:",
   "Repair": "Repaired {0:N} structures",
 
-  "GameLevel": "Level {0}",
+  "LevelUp": "Level {0}",
 
+  "Start": "Start",
   "New": "New",
   "Continue": "Continue",
   "Authorization": "Authorization",

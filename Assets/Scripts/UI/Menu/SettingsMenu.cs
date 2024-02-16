@@ -15,7 +15,7 @@ public class SettingsMenu : MenuNavigation
         base.OnEnable();
         isSave = false;
     }
-    private void OnDisable() 
+    protected virtual void OnDisable() 
     {
         if (SettingsGame.Instance == null)
             return;
