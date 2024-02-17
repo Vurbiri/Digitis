@@ -8,6 +8,7 @@ public class DataGame : ASingleton<DataGame>
     
     [Space]
     [SerializeField] private int _startCountBombs = 3;
+    [SerializeField] private int _countLeveBomb = 3;
     [Space]
     [SerializeField] private int _startCountShapes = 20;
     [SerializeField] private int _shapesPerLevel = 3;
@@ -23,7 +24,7 @@ public class DataGame : ASingleton<DataGame>
     public int CountShapesMax { get => _countShapesMax; set { _countShapesMax = value; EventChangeCountShapesMax?.Invoke(value); } }
 
     public GameModeStart ModeStart { get => _data.ModeStart; set => _data.ModeStart = value; }
-    public int Level { get => _data.CurrentLevel; set { _data.CurrentLevel = value; EventChangeLevel?.Invoke(value.ToString()); } }
+    public int Level { get => _data.CurrentLevel; set { _data.CurrentLevel = value; EventChangeLevel?.Invoke(value); } }
     public int Score { get => _data.Score; private set { _data.Score = value; EventChangeScore?.Invoke(value.ToString()); } }
     public int CountShapes { get => _data.CountShapes; set { _data.CountShapes = value; EventChangeCountShapes?.Invoke(value); } }
     public ShapeSize ShapeType { get => _data.ShapeType; set => _data.ShapeType = value; }
@@ -33,7 +34,7 @@ public class DataGame : ASingleton<DataGame>
     public int[] NextBlocksShape { get => _data.NextBlocksShape; set => _data.NextBlocksShape = value; }
     public int[,] SaveArea { get => _data.Area; set => _data.Area = value; }
 
-    public event Action<string> EventChangeLevel;
+    public event Action<int> EventChangeLevel;
     public event Action<int> EventChangeCountShapes;
     public event Action<int> EventChangeCountShapesMax;
     public event Action<string> EventChangeScore;
@@ -65,10 +66,8 @@ public class DataGame : ASingleton<DataGame>
     public void LevelUp()
     {
         Level++;
-        CountBombs++;
+        CountBombs += Level % _countLeveBomb == 0 ? 1 : 0;
         CountShapes = CalkMaxShapes();
-
-        Save(true, null);
     }
 
     public void ResetData()

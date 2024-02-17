@@ -102,17 +102,7 @@ public class LeaderboardUI : MonoBehaviour
 
     public async UniTask<bool> TrySetScoreAndReward(int points)
     {
-        if(points <= 0) 
-            return false;
-        if (!YSDK.IsLeaderboard) 
-            return false;
-
-        var player = await YSDK.GetPlayerResult(_lbName);
-        if (player.Result)
-            if (player.Value.Score >= points) 
-                return false;
-
-        if (!await YSDK.SetScore(_lbName, points)) 
+        if (!await YSDK.TrySetScore(_lbName, points)) 
             return false;
 
         await Reward();
@@ -123,7 +113,7 @@ public class LeaderboardUI : MonoBehaviour
         {
             await UniTask.Delay(250, true);
 
-            player = await YSDK.GetPlayerResult(_lbName);
+            var player = await YSDK.GetPlayerResult(_lbName);
             if (!player.Result) 
                 return;
             if (player.Value.Rank <= 0)

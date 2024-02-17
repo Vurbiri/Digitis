@@ -9,14 +9,18 @@ public class Game : MonoBehaviour
     
     [SerializeField] private ShapesManager _shapesManager;
     [SerializeField] private AGameController _gameController;
+    [Space]
+    [SerializeField] private int _savePerShapes = 3;
 
     private Dictionary<int, int> _columns;
     private DataGame _dataGame;
 
-    private const int TIME_COUNTDOWN = 5000;
-    private const int PAUSE_LEVELUP = 900;
-
+    private int _countSave = 0;
     private bool _isSave = false;
+
+    private const int TIME_COUNTDOWN = 5100;
+    private const int PAUSE_LEVELUP = 1000;
+    private const int TIME_UNPAUSE = 300;
 
     private GameModeStart ModeStart { get => _dataGame.ModeStart; set => _dataGame.ModeStart = value; }
     private int Level { get => _dataGame.Level;}
@@ -25,6 +29,8 @@ public class Game : MonoBehaviour
     private int CountShapesMax { get => _dataGame.CountShapesMax; }
 
     public event Action EventCountdown;
+    public event Action EventStartGame;
+    public event Action EventGameOver;
 
     private void Awake()
     {
@@ -62,6 +68,8 @@ public class Game : MonoBehaviour
             ModeStart = GameModeStart.GameContinue;
             _gameController.ControlEnable = true;
 
+            EventStartGame?.Invoke();
+
             StartMoveAsync().Forget();
         }
         #endregion
@@ -71,6 +79,7 @@ public class Game : MonoBehaviour
     {
         _shapesManager.SaveShape();
         _dataGame.Save(isSaveHard, callback);
+        _countSave = 0;
         _isSave = false;
     }
 
@@ -121,22 +130,33 @@ public class Game : MonoBehaviour
 
     private async UniTaskVoid StartMoveAsync()
     {
-        if (--CountShapes == 0)
+        if (CountShapes == 0)
             await LevelUpAsync();
+        else if(++_countSave >= _savePerShapes)
+            _isSave = true;
 
-        if (!_shapesManager.StartMove(Level))
-        {
-            _dataGame.ResetData();
-            _shapesManager.EventEndMoveDown -= OnBlockEndMoveDown;
-            Debug.Log("Stop");
-        }
+        if (_shapesManager.StartMove(Level))
+            CountShapes--;
+        else
+            GameOver().Forget();
 
         #region Local Functions
         UniTask LevelUpAsync()
         {
             _dataGame.LevelUp();
-
+            Save();
             return UniTask.Delay(PAUSE_LEVELUP);
+        }
+        async UniTaskVoid GameOver()
+        {
+            int score = _dataGame.Score;
+            EventGameOver?.Invoke();
+            _gameController.ControlEnable = false;
+            _shapesManager.EventEndMoveDown -= OnBlockEndMoveDown;
+            _dataGame.ResetData();
+            Save();
+            Debug.Log("Stop");
+            await _shapesManager.RemoveAll();
         }
         #endregion
     }
@@ -154,11 +174,21 @@ public class Game : MonoBehaviour
 
     private void OnPause()
     {
-        Time.timeScale = 0.0000001f;
+        _gameController.ControlEnable = false;
+        Time.timeScale = 0.00000001f;
     }
     private void OnUnPause()
     {
-        Time.timeScale = 1f;
+        OnUnPauseAsync().Forget();
+
+        #region Local Functions
+        async UniTaskVoid OnUnPauseAsync()
+        {
+            await UniTask.Delay(TIME_UNPAUSE, true);
+            _gameController.ControlEnable = true;
+            Time.timeScale = 1f;
+        }
+        #endregion
     }
 
     private void OnDestroy()

@@ -1,5 +1,6 @@
 using System.Collections;
 using TMPro;
+using UnityEditor.Localization.Editor;
 using UnityEngine;
 
 [RequireComponent(typeof(TMP_Text))]
@@ -15,17 +16,23 @@ public class ScreenMessage : MonoBehaviour
 
     private TMP_Text _thisText;
 
+    private Localization _localization;
+
     private readonly WaitForSecondsRealtime pauseOneSecond = new(1f);
     private const string KEY_START = "Start";
     private const string KEY_LEVEL = "Level";
+    private const string KEY_GAMEOVER = "GameOver";
 
     private void Awake()
     {
+        _localization = Localization.Instance;
         _thisText = GetComponent<TMP_Text>();
         _thisText.text = string.Empty;
         SetActive(false);
 
         _game.EventCountdown += () => { SetActive(true); StartCoroutine(CountdownCoroutine()); };
+        _game.EventStartGame += () => { _thisText.text = string.Empty; SetActive(false); };
+        _game.EventGameOver += () => { _thisText.text = _localization.GetText(KEY_GAMEOVER); SetActive(true); };
         DataGame.Instance.EventChangeLevel += LevelUp;
 
         #region Local Functions
@@ -36,20 +43,16 @@ public class ScreenMessage : MonoBehaviour
             for (int i = _clipsCountdown.Length - 1; i >= 0; i--)
             {
                 _audioSource.PlayOneShot(_clipsCountdown[i]);
-                _thisText.text = i.ToString();
+                _thisText.text = (i + 1).ToString();
                 yield return pauseOneSecond;
             }
             _audioSource.PlayOneShot(_clipStart);
-            _thisText.text = Localization.Instance.GetText(KEY_START) + "!";
-
-            yield return pauseOneSecond;
-
-            SetActive(false);
+            _thisText.text = _localization.GetText(KEY_START) + "!";
         }
         #endregion
     }
 
-    private void LevelUp(string level)
+    private void LevelUp(int level)
     {
         SetActive(true); 
         StartCoroutine(LevelUpCoroutine());
@@ -58,7 +61,7 @@ public class ScreenMessage : MonoBehaviour
         IEnumerator LevelUpCoroutine()
         {
             _audioSource.PlayOneShot(_clipLevelUp);
-            _thisText.text = Localization.Instance.GetText(KEY_LEVEL) + " " + level;
+            _thisText.text = _localization.GetText(KEY_LEVEL) + " " + level.ToString();
             yield return pauseOneSecond;
 
             SetActive(false);

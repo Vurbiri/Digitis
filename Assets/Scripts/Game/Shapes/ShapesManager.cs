@@ -196,4 +196,6 @@ public class ShapesManager : MonoBehaviour
     }
 
     public UniTask<Dictionary<int, int>> CheckNewBlocksAsync() => _area.CheckNewBlocksAsync();
+
+    public UniTask RemoveAll() => _area.RemoveAll();
 }

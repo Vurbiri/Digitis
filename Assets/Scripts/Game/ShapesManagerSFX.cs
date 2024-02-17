@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
-public class ShapesManagerSFX : MonoBehaviour
+public class ShapesManagerSFX : AAudioSourceController
 {
     [SerializeField] private AudioClip _clipMove;
     [SerializeField] private float _volumeMove = 1f;
@@ -16,32 +16,17 @@ public class ShapesManagerSFX : MonoBehaviour
     [Space]
     [SerializeField] private AudioClip _clipFixed;
 
-    private AudioSource _thisAudio;
-    
-    private void Awake()
-    {
-        _thisAudio = GetComponent<AudioSource>();
-    }
 
-    public void PlayMove() => _thisAudio.PlayOneShot(_clipMove, _volumeMove);
-    public void PlayRotate() => _thisAudio.PlayOneShot(_clipRotate, _volumeRotate);
-    public void PlayDown() => _thisAudio.PlayOneShot(_clipDown, _volumeDown);
-    public void PlayError() => _thisAudio.PlayOneShot(_clipError, _volumeError);
-    public void PlayToBomb() => _thisAudio.PlayOneShot(_clipToBomb, _volumeToBomb);
+    public void PlayMove() => PlayOneShot(_clipMove, _volumeMove);
+    public void PlayRotate() => PlayOneShot(_clipRotate, _volumeRotate);
+    public void PlayDown() => PlayOneShot(_clipDown, _volumeDown);
+    public void PlayError() => PlayOneShot(_clipError, _volumeError);
+    public void PlayToBomb() => PlayOneShot(_clipToBomb, _volumeToBomb);
 
     public void PlayFixed(bool isBomb)
     {
-        if(!isBomb)
+        if (!isBomb)
             PlayClip(_clipFixed);
-
-        #region Local Functions
-        void PlayClip(AudioClip clip)
-        {
-            _thisAudio.Stop();
-            _thisAudio.clip = clip;
-            _thisAudio.Play();
-        }
-        #endregion
     }
 
 

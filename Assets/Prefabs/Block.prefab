@@ -10064,7 +10064,7 @@ MonoBehaviour:
   _clipRemove: {fileID: 8300000, guid: db20cae43fc37fc46a2610a806ab8ff5, type: 3}
   _volumeRemove: 1
   _clipExplosionBomb: {fileID: 8300000, guid: 64ac7d95ca91ef645aa4cfe79b7cd6cd, type: 3}
-  _volumeExplosionBomb: 0.9
+  _volumeExplosionBomb: 1
 --- !u!114 &5073039849074681645
 MonoBehaviour:
   m_ObjectHideFlags: 0

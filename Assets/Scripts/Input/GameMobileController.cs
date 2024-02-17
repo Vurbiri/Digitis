@@ -15,7 +15,6 @@ public class GameMobileController : AGameController
     private void Awake()
     {
         ControlEnable = false;
-        _pauseMenu.SetActive(false);
 
         _buttonLeft.EventButtonPress += () => OnGameEvent(_eventLeftPress);
         _buttonRight.EventButtonPress += () => OnGameEvent(_eventRightPress);
@@ -27,9 +26,9 @@ public class GameMobileController : AGameController
 
         _buttonBomb.EventButtonClick += () => OnGameEvent(_eventBombClick);
 
-        _buttonPause.EventButtonClick += () => { if (ControlEnable) { _eventPause?.Invoke(); ControlEnable = false; _pauseMenu.SetActive(true); } };
+        _buttonPause.EventButtonClick += () => { if (ControlEnable) _eventPause?.Invoke(); };
 
-        _pauseMenu.EventClose += () => { if (!ControlEnable) { _eventUnPause?.Invoke(); ControlEnable = true; } };
+        _pauseMenu.EventClose += () => { if (!ControlEnable) _eventUnPause?.Invoke(); };
 
         void OnGameEvent(Action action)
         {

@@ -7,7 +7,7 @@ public class LevelBoard : ABoard
     
     private void Start()
     {
-        SetValue(_dataGame.Level.ToString());
+        SetText(_dataGame.Level.ToString());
         _dataGame.EventChangeLevel += SetValue;
 
         SetMaxShapes(_dataGame.CountShapesMax);
@@ -16,6 +16,7 @@ public class LevelBoard : ABoard
         _dataGame.EventChangeCountShapesMax += SetMaxShapes;
     }
 
+    private void SetValue(int value) => SetText(value.ToString());
     private void SetShapes(int count) => _shapesSlider.value = count;
     private void SetMaxShapes(int count)
     {
@@ -27,7 +28,7 @@ public class LevelBoard : ABoard
     {
         if (DataGame.Instance != null)
         {
-            _dataGame.EventChangeScore -= SetValue;
+            _dataGame.EventChangeScore -= SetText;
             _dataGame.EventChangeCountShapes -= SetShapes;
             _dataGame.EventChangeCountShapesMax -= SetMaxShapes;
         }

@@ -7,4 +7,6 @@ public static class ExtensionsVector
 
     public static Vector3 ToVector3(this Vector2Int self) => new(self.x, self.y, 0f);
 
+    public static float RandomRange(this Vector2 self) => Random.Range(self.x, self.y);
+
 }

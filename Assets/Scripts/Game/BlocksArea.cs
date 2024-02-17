@@ -142,6 +142,23 @@ public class BlocksArea : MonoBehaviour
         }
     }
 
+    public async UniTask RemoveAll()
+    {
+        Block block;
+        for(int y = _size.y - 1; y >= 0; y--)
+        {
+            for(int x = 0; x < _size.x; x++)
+            {
+                block = _blocks[x, y];
+                if (block != null)
+                {
+                    block.Remove().Forget();
+                    await UniTask.Delay(_timePauseBombExploded);
+                }
+            }
+        }
+    }
+
     private void OnDeactivate(Block block)
     {
         block.EventDeactivate -= OnDeactivate;
@@ -272,6 +289,7 @@ public class BlocksArea : MonoBehaviour
         #endregion
     }
 
+    
     private bool TryGetBlock(Vector2Int index, out Block block)
     {
         block = null;

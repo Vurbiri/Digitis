@@ -110,7 +110,25 @@ public partial class YandexSDK : ASingleton<YandexSDK>
     }
 #endif
 
-private UniTask<T> WaitTask<T>(ref UniTaskCompletionSource<T> taskCompletion, Action action)
+    public async UniTask<bool> TrySetScore(string lbName, int points)
+    {
+        if (points <= 0)
+            return false;
+        if (!IsLeaderboard)
+            return false;
+
+        var player = await GetPlayerResult(lbName);
+        if (player.Result)
+            if (player.Value.Score >= points)
+                return false;
+
+        if (!await SetScore(lbName, points))
+            return false;
+
+        return true;
+    }
+
+    private UniTask<T> WaitTask<T>(ref UniTaskCompletionSource<T> taskCompletion, Action action)
     {
         taskCompletion?.TrySetResult(default);
         taskCompletion = new();

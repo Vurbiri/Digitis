@@ -4,13 +4,13 @@ public class ScoreBoard : ABoard
     {
         _dataGame = DataGame.InstanceF;
 
-        SetValue(_dataGame.Score.ToString());
-        _dataGame.EventChangeScore += SetValue;
+        SetText(_dataGame.Score.ToString());
+        _dataGame.EventChangeScore += SetText;
     }
 
     private void OnDestroy()
     {
         if (DataGame.Instance != null)
-            _dataGame.EventChangeScore -= SetValue;
+            _dataGame.EventChangeScore -= SetText;
     }
 }

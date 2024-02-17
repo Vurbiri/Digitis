@@ -547,7 +547,7 @@ MonoBehaviour:
   _speeds:
     _start: 0.5
     _perLevel: 0.25
-    _down: 15
+    _down: 17
     _fall: 20
   _settings:
     _currentLevel: 1
