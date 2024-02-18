@@ -11,7 +11,11 @@ public class PauseMenu : MenuNavigation
     [Space]
     [SerializeField] private GameObject _pauseUI;
     [SerializeField] private GameObject _panelPause;
-    [SerializeField] private GameObject _panelGameOver;
+    [Space]
+    [SerializeField] private GameObject _panelLeaderboard;
+    [SerializeField] private LeaderboardUI _leaderboardUI;
+    [SerializeField] private GameObject _area;
+    [SerializeField] private GameObject _next;
     [Scene, Space]
     [SerializeField] private int _sceneMenu = 1;
 
@@ -25,12 +29,23 @@ public class PauseMenu : MenuNavigation
         _settings = SettingsGame.InstanceF;
 
         _gameController.EventPause += () => gameObject.SetActive(true);
+        _game.EventLeaderboard += OnLeaderboard;
 
         _pauseUI.SetActive(true);
         _panelPause.SetActive(true);
-        _panelGameOver.SetActive(false);
+        _panelLeaderboard.SetActive(false);
 
         gameObject.SetActive(false);
+
+        void OnLeaderboard()
+        {
+            _panelPause.SetActive(false);
+            _area.SetActive(false);
+            _next.SetActive(false);
+            _panelLeaderboard.SetActive(true); 
+            _leaderboardUI.TryReward().Forget(); 
+            gameObject.SetActive(true);
+        }
     }
 
     public void OnOk()

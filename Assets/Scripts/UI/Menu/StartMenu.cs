@@ -47,7 +47,8 @@ public class StartMenu : MenuNavigation
             if (!_toggleContinue.isOn)
             {
                 if (_data.ModeStart == GameModeStart.GameContinue && YandexSDK.Instance.IsLeaderboard)
-                    await _leaderboard.TrySetScoreAndReward(_data.Score);
+                    if(await YandexSDK.Instance.TrySetScore(_data.Score))
+                        _leaderboard.TryReward().Forget();
                 _data.ResetData();
                 _data.ShapeType = Mathf.RoundToInt(_sliderSize.value).ToEnum<ShapeSize>();
                 _data.MaxDigit = Mathf.RoundToInt(_sliderMax.value);

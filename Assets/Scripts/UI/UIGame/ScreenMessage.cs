@@ -1,6 +1,5 @@
 using System.Collections;
 using TMPro;
-using UnityEditor.Localization.Editor;
 using UnityEngine;
 
 [RequireComponent(typeof(TMP_Text))]
@@ -13,6 +12,7 @@ public class ScreenMessage : MonoBehaviour
     [SerializeField] private AudioClip[] _clipsCountdown;
     [SerializeField] private AudioClip _clipStart;
     [SerializeField] private AudioClip _clipLevelUp;
+    [SerializeField] private AudioClip _gameOver;
 
     private TMP_Text _thisText;
 
@@ -28,11 +28,11 @@ public class ScreenMessage : MonoBehaviour
         _localization = Localization.Instance;
         _thisText = GetComponent<TMP_Text>();
         _thisText.text = string.Empty;
-        SetActive(false);
+        gameObject.SetActive(false);
 
-        _game.EventCountdown += () => { SetActive(true); StartCoroutine(CountdownCoroutine()); };
-        _game.EventStartGame += () => { _thisText.text = string.Empty; SetActive(false); };
-        _game.EventGameOver += () => { _thisText.text = _localization.GetText(KEY_GAMEOVER); SetActive(true); };
+        _game.EventCountdown += () => { gameObject.SetActive(true); StartCoroutine(CountdownCoroutine()); };
+        _game.EventStartGame += () => { _thisText.text = string.Empty; gameObject.SetActive(false); };
+        _game.EventGameOver += OnGameOver;
         DataGame.Instance.EventChangeLevel += LevelUp;
 
         #region Local Functions
@@ -49,27 +49,30 @@ public class ScreenMessage : MonoBehaviour
             _audioSource.PlayOneShot(_clipStart);
             _thisText.text = _localization.GetText(KEY_START) + "!";
         }
+
+        void OnGameOver()
+        {
+            StopCoroutine(LevelUpCoroutine(0));
+            _thisText.text = _localization.GetText(KEY_GAMEOVER);
+            gameObject.SetActive(true); 
+            _audioSource.PlayOneShot(_gameOver);
+        }
         #endregion
     }
 
     private void LevelUp(int level)
     {
-        SetActive(true); 
-        StartCoroutine(LevelUpCoroutine());
-
-        #region Local Functions
-        IEnumerator LevelUpCoroutine()
-        {
-            _audioSource.PlayOneShot(_clipLevelUp);
-            _thisText.text = _localization.GetText(KEY_LEVEL) + " " + level.ToString();
-            yield return pauseOneSecond;
-
-            SetActive(false);
-        }
-        #endregion
+        gameObject.SetActive(true); 
+        StartCoroutine(LevelUpCoroutine(level));
     }
+    IEnumerator LevelUpCoroutine(int level)
+    {
+        _audioSource.PlayOneShot(_clipLevelUp);
+        _thisText.text = _localization.GetText(KEY_LEVEL) + " " + level.ToString();
+        yield return pauseOneSecond;
 
-    private void SetActive(bool value) => gameObject.SetActive(value);
+        gameObject.SetActive(false);
+    }
 
     private void OnDestroy()
     {

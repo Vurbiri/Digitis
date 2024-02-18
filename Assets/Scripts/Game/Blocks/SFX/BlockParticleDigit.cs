@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
+using System.Threading;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 
@@ -117,6 +118,29 @@ public class BlockParticleDigit : ABlockParticleSystemController
         EmissionTimeMultiplier = _emissionRemoveEnd;
 
         await UniTask.Delay(_timeRemoveNext);
+    }
+
+    public async UniTask Remove(CancellationToken cancellationToken)
+    {
+        EmissionTimeMultiplier = _emissionRemoveStart;
+        RadialSpeedMultiplier = _radialSpeedRemove;
+        SpeedMultiplier = _speedRemove;
+        SizeMultiplier = _sizeRemove;
+
+        await UniTask.Delay(_timeRemoveStart, cancellationToken: cancellationToken);
+        if (cancellationToken.IsCancellationRequested)
+            return;
+
+        EmissionTimeMultiplier = _emissionRemoveMiddle;
+        _mainModule.gravityModifier = 1f;
+
+        await UniTask.Delay(_timeRemoveNext, cancellationToken: cancellationToken);
+        if (cancellationToken.IsCancellationRequested)
+            return;
+
+        EmissionTimeMultiplier = _emissionRemoveEnd;
+
+        await UniTask.Delay(_timeRemoveNext, cancellationToken: cancellationToken);
     }
 
     public async UniTask Explode()

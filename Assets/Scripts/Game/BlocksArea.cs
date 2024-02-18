@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class BlocksArea : MonoBehaviour
@@ -16,6 +17,8 @@ public class BlocksArea : MonoBehaviour
     private readonly List<Block> _blocksAdd = new();
     private readonly List<Block> _bombsAdd = new();
     private int _maxFillY = -1;
+
+    private CancellationTokenSource _exitToken;
 
     private Block this[Vector2Int index]
     {
@@ -144,16 +147,21 @@ public class BlocksArea : MonoBehaviour
 
     public async UniTask RemoveAll()
     {
+        _exitToken = new();
+
         Block block;
         for(int y = _size.y - 1; y >= 0; y--)
         {
             for(int x = 0; x < _size.x; x++)
             {
+                if (_exitToken.IsCancellationRequested)
+                    return;
+                
                 block = _blocks[x, y];
                 if (block != null)
                 {
-                    block.Remove().Forget();
-                    await UniTask.Delay(_timePauseBombExploded);
+                    block.Remove(_exitToken.Token).Forget();
+                    await UniTask.Delay(_timePauseBombExploded, cancellationToken: _exitToken.Token);
                 }
             }
         }
@@ -195,6 +203,7 @@ public class BlocksArea : MonoBehaviour
         List<UniTask> tasks = new(blocksRemove.Count);
         Vector2Int index;
 
+        _exitToken = new();
         foreach (var block in blocksRemove)
         {
             index = block.Position;
@@ -303,4 +312,10 @@ public class BlocksArea : MonoBehaviour
     private bool IsCorrectIndex(Vector2Int index) => IsCorrectIndexX(index.x)  && IsCorrectIndexY(index.y);
     private bool IsCorrectIndexX(int x) => x >= 0 && x < _size.x;
     private bool IsCorrectIndexY(int y) => y >= 0 && y < (_size.y + ADD_VIRTUAL_Y_SIZE);
+
+    private void OnDisable()
+    {
+        _exitToken?.Cancel();
+        _exitToken?.Dispose();
+    }
 }

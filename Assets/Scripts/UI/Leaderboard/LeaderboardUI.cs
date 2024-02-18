@@ -14,7 +14,6 @@ public class LeaderboardUI : MonoBehaviour
     [Space]
     [Range(1, 20), SerializeField] private int _maxTop = 20;
     [Range(1, 10), SerializeField] private int _maxAround = 10;
-    [SerializeField] private string _lbName = "lbDigitis";
 
     private YandexSDK YSDK => YandexSDK.Instance;
 
@@ -34,7 +33,7 @@ public class LeaderboardUI : MonoBehaviour
 
         int UserRank = 0;
         bool playerInTable = false;
-        var player = await YSDK.GetPlayerResult(_lbName);
+        var player = await YSDK.GetPlayerResult();
         if (player.Result)
         {
             UserRank = player.Value.Rank;
@@ -44,7 +43,7 @@ public class LeaderboardUI : MonoBehaviour
             if (UserRank <= (_maxTop - _maxAround))
                 playerInTable = false;
 
-        var leaderboard = await YSDK.GetLeaderboard(_lbName, _maxTop, playerInTable, _maxAround);
+        var leaderboard = await YSDK.GetLeaderboard(_maxTop, playerInTable, _maxAround);
         if (!leaderboard.Result)
             return;
         if (playerInTable)
@@ -100,30 +99,20 @@ public class LeaderboardUI : MonoBehaviour
         #endregion
     }
 
-    public async UniTask<bool> TrySetScoreAndReward(int points)
+    public async UniTaskVoid TryReward()
     {
-        if (!await YSDK.TrySetScore(_lbName, points)) 
-            return false;
+        await UniTask.Delay(150, true);
 
-        await Reward();
+        var player = await YSDK.GetPlayerResult();
+        if (!player.Result) 
+            return;
+        if (player.Value.Rank <= 0)
+            return;
 
-        return true;
-
-        async UniTask Reward()
-        {
-            await UniTask.Delay(250, true);
-
-            var player = await YSDK.GetPlayerResult(_lbName);
-            if (!player.Result) 
-                return;
-            if (player.Value.Rank <= 0)
-                return;
-
-            if (player.Value.Rank > TOP)
-                Message.BannerKey("PersonalRecord");
-            else
-                Message.BannerKey("Top");
-        }
+        if (player.Value.Rank > TOP)
+            Message.BannerKey("PersonalRecord");
+        else
+            Message.BannerKey("Top");
     }
 
     /*

@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
+using System.Threading;
 using UnityEngine;
 
 [RequireComponent(typeof(BlockSFX))]
@@ -132,6 +133,16 @@ public class Block : APooledObject<Block>
     public async UniTask Remove()
     {
         await _blockSFX.Remove();
+
+        base.Deactivate();
+    }
+
+    public async UniTask Remove(CancellationToken cancellationToken)
+    {
+        await _blockSFX.Remove(cancellationToken);
+
+        if (cancellationToken.IsCancellationRequested)
+            return;
 
         base.Deactivate();
     }

@@ -28,10 +28,12 @@ public partial class YandexSDK
     public UniTask<bool> InitLeaderboards() => UniTask.RunOnThreadPool(() => false);
     public UniTask<Return<Texture>> GetPlayerAvatar(AvatarSize size) => UniTask.RunOnThreadPool<Return<Texture>>(() => Return<Texture>.Empty);
 
-    public UniTask<Return<LeaderboardResult>> GetPlayerResult(string lbName) => UniTask.RunOnThreadPool(() => new Return<LeaderboardResult>(new LeaderboardResult(6, 1010)));
-    public UniTask<bool> SetScore(string lbName, int score) => UniTask.RunOnThreadPool(() => true);
-    public UniTask<Return<Leaderboard>> GetLeaderboard(string lbName, int quantityTop, bool includeUser = false, int quantityAround = 0, AvatarSize size = AvatarSize.Small)
+    public UniTask<Return<LeaderboardResult>> GetPlayerResult() => UniTask.RunOnThreadPool(() => new Return<LeaderboardResult>(new LeaderboardResult(6, 1)));
+    private UniTask<bool> SetScore(int score) => UniTask.RunOnThreadPool(() => true);
+    public UniTask<Return<Leaderboard>> GetLeaderboard(int quantityTop, bool includeUser = false, int quantityAround = 0, AvatarSize size = AvatarSize.Small)
     {
+        Debug.Log(_lbName);
+
         List<LeaderboardRecord> list = new()
         {
             new(1, 1100, "Седов Герман", ""),

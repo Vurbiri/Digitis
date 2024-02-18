@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 
 [RequireComponent(typeof(BlockSprites))]
@@ -66,6 +67,13 @@ public class BlockSFX : MonoBehaviour
         _audioSource.PlayOneShot(_clipRemove, _volumeRemove);
         _blockVisual.Off();
         await _particles.Remove();
+    }
+
+    public async UniTask Remove(CancellationToken cancellationToken)
+    {
+        _audioSource.PlayOneShot(_clipRemove, _volumeRemove);
+        _blockVisual.Off();
+        await _particles.Remove(cancellationToken);
     }
 
     public void SetTrailEmissionTimeMultiplier(float rate) => _particles.TrailEmissionTimeMultiplier = rate;

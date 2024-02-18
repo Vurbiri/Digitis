@@ -19,8 +19,9 @@ public class Game : MonoBehaviour
     private bool _isSave = false;
 
     private const int TIME_COUNTDOWN = 5100;
-    private const int PAUSE_LEVELUP = 1000;
-    private const int TIME_UNPAUSE = 300;
+    private const int PAUSE_LEVELUP = 1150;
+    private const int TIME_UNPAUSE = 250;
+    private const int PAUSE_GAMEOVER = 1500;
 
     private GameModeStart ModeStart { get => _dataGame.ModeStart; set => _dataGame.ModeStart = value; }
     private int Level { get => _dataGame.Level;}
@@ -28,9 +29,13 @@ public class Game : MonoBehaviour
     private int CountShapes { get => _dataGame.CountShapes; set => _dataGame.CountShapes = value; }
     private int CountShapesMax { get => _dataGame.CountShapesMax; }
 
+    public float PauseGameOver => PAUSE_GAMEOVER / 1000f;
+
+
     public event Action EventCountdown;
     public event Action EventStartGame;
     public event Action EventGameOver;
+    public event Action EventLeaderboard;
 
     private void Awake()
     {
@@ -149,14 +154,19 @@ public class Game : MonoBehaviour
         }
         async UniTaskVoid GameOver()
         {
-            int score = _dataGame.Score;
-            EventGameOver?.Invoke();
-            _gameController.ControlEnable = false;
             _shapesManager.EventEndMoveDown -= OnBlockEndMoveDown;
+            _gameController.ControlEnable = false;
+
+            bool isLeaderboard = await YandexSDK.Instance.TrySetScore(_dataGame.Score);
             _dataGame.ResetData();
             Save();
-            Debug.Log("Stop");
+            EventGameOver?.Invoke();
+
+            await UniTask.Delay(PAUSE_GAMEOVER);
             await _shapesManager.RemoveAll();
+
+            if(isLeaderboard)
+                EventLeaderboard?.Invoke();
         }
         #endregion
     }

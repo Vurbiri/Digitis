@@ -11,6 +11,16 @@ public class ParticleBackgroundGame : AParticleBackground
     {
         base.Awake();
         DataGame.Instance.EventChangeLevel += OnChangeLevel;
+        _game.EventGameOver += OnGameOver;
+
+        void OnGameOver()
+        {
+            ClearAndStop();
+            _mainModule.startColor = _colorGameOver;
+            _shapeModule.radiusMode = ParticleSystemShapeMultiModeValue.Random;
+            _emissionModule.rateOverTimeMultiplier  *= 2f;
+            Play();
+        }
     }
 
     private void OnChangeLevel(int value) => ReColorParticleSystem();

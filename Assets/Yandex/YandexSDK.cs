@@ -4,6 +4,8 @@ using UnityEngine;
 
 public partial class YandexSDK : ASingleton<YandexSDK>
 {
+    [SerializeField] private string _lbName = "lbDigitis";
+
 #if !UNITY_EDITOR
     public bool IsInitialize => IsInitializeJS();
     public bool IsPlayer => IsPlayerJS();
@@ -46,26 +48,26 @@ public partial class YandexSDK : ASingleton<YandexSDK>
         taskEndInitLeaderboards = null;
         return result;
     }
-    public async UniTask<Return<LeaderboardResult>> GetPlayerResult(string lbName) 
+    public async UniTask<Return<LeaderboardResult>> GetPlayerResult() 
     {
-        string json = await WaitTask(ref taskEndGetPlayerResult, GetPlayerResultJS, lbName);
+        string json = await WaitTask(ref taskEndGetPlayerResult, GetPlayerResultJS, _lbName);
         taskEndGetPlayerResult = null;
         if (string.IsNullOrEmpty(json))
             return Return<LeaderboardResult>.Empty;
         else
             return Storage.Deserialize<LeaderboardResult>(json);
     }
-    public async UniTask<bool> SetScore(string lbName, int score)
+    private async UniTask<bool> SetScore(int score)
     {
-        bool result = await WaitTask(ref taskEndSetScore, SetScoreJS, lbName, score);
+        bool result = await WaitTask(ref taskEndSetScore, SetScoreJS, _lbName, score);
         taskEndSetScore = null;
         return result;
     }
-    public async UniTask<Return<Leaderboard>> GetLeaderboard(string lbName, int quantityTop, bool includeUser = false, int quantityAround = 1, AvatarSize size = AvatarSize.Medium)
+    public async UniTask<Return<Leaderboard>> GetLeaderboard(int quantityTop, bool includeUser = false, int quantityAround = 1, AvatarSize size = AvatarSize.Medium)
     {
         taskEndGetLeaderboard.TrySetResult(default);
         taskEndGetLeaderboard = new();
-        GetLeaderboardJS(lbName, quantityTop, includeUser, quantityAround, size.ToString().ToLower());
+        GetLeaderboardJS(_lbName, quantityTop, includeUser, quantityAround, size.ToString().ToLower());
         string json = await taskEndGetLeaderboard.Task;
         taskEndGetLeaderboard = null;
         return Storage.Deserialize<Leaderboard>(json);
@@ -110,19 +112,19 @@ public partial class YandexSDK : ASingleton<YandexSDK>
     }
 #endif
 
-    public async UniTask<bool> TrySetScore(string lbName, int points)
+    public async UniTask<bool> TrySetScore(int points)
     {
         if (points <= 0)
             return false;
         if (!IsLeaderboard)
             return false;
 
-        var player = await GetPlayerResult(lbName);
+        var player = await GetPlayerResult();
         if (player.Result)
             if (player.Value.Score >= points)
                 return false;
 
-        if (!await SetScore(lbName, points))
+        if (!await SetScore(points))
             return false;
 
         return true;

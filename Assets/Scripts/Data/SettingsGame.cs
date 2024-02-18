@@ -122,7 +122,7 @@ public class SettingsGame : ASingleton<SettingsGame>
         [JsonProperty("sbt")]
         public float sensitivityButtons = 0.2f;
         [JsonProperty("vls")]
-        public float[] volumes = { 1f, 1f };
+        public float[] volumes = { 0.75f, 0.75f };
 
         [JsonConstructor]
         public Profile(int idLang, float sensitivityButtons, float[] volumes)

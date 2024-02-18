@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 
 public class BlockParticles : MonoBehaviour
@@ -36,6 +37,11 @@ public class BlockParticles : MonoBehaviour
     {
         TrailStop();
         return _particleDigit.Remove();
+    }
+
+    public UniTask Remove(CancellationToken cancellationToken)
+    {
+        return _particleDigit.Remove(cancellationToken);
     }
 
     public void DigitPlay() => _particleDigit.Play();
