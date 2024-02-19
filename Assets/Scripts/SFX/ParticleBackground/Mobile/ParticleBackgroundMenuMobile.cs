@@ -1,23 +1,19 @@
 using System.Collections;
 using UnityEngine;
 
-public class ParticleBackgroundMenu : AParticleBackground
+public class ParticleBackgroundMenuMobile : AParticleBackgroundMobile
 {
-    [Space]
-    [SerializeField] private float _timeUpdateReColor = 300f;
-
     protected override void Awake()
     {
         base.Awake();
 
-        WaitForSecondsRealtime pause = new(_timeUpdateReColor);
         StartCoroutine(ReColorParticleSystemCoroutine());
 
         IEnumerator ReColorParticleSystemCoroutine()
         {
             while(true) 
             {
-                yield return pause;
+                yield return new WaitForSecondsRealtime(_mainModule.startLifetimeMultiplier);
                 ReColorParticleSystem();
             }
         }

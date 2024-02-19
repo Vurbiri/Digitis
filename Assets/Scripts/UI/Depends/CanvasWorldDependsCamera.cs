@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Canvas))]
 public class CanvasWorldDependsCamera : MonoBehaviour
 {
-    [SerializeField] private CameraSize _cameraSize;
+    [SerializeField] private CameraReSize _cameraSize;
 
     private void Start()
     {

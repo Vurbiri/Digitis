@@ -10,4 +10,5 @@ public abstract class ABoard : MonoBehaviour
     protected virtual void Awake() => _dataGame = DataGame.InstanceF;
 
     protected void SetText(string value) => _textScore.text = value;
+    protected void SetValue(int value) => SetText(value.ToString());
 }

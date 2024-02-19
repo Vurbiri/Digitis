@@ -1,9 +1,9 @@
-public class ScoreBoard : ABoard
+public class BombBoard : ABoard
 {
     private void Start()
     {
-        SetText(_dataGame.Score.ToString());
-        _dataGame.EventChangeScore += SetText;
+        SetValue(_dataGame.CountBombs);
+        _dataGame.EventChangeCountBombs += SetValue;
     }
 
     private void OnDestroy()

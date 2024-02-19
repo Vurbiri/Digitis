@@ -420,6 +420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
+  _lbName: lbDigitis
 --- !u!4 &470621065
 Transform:
   m_ObjectHideFlags: 0
@@ -793,7 +794,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nextSceneMobile: 1
-  _nextSceneDesktop: 1
+  _nextSceneDesktop: 4
   _slider: {fileID: 475711538}
 --- !u!4 &1307781868
 Transform:

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ParticleBackgroundGame : AParticleBackground
+public class ParticleBackgroundGameDesktop : AParticleBackgroundDesktop
 {
     [Space]
     [SerializeField] private Game _game;
@@ -17,8 +17,7 @@ public class ParticleBackgroundGame : AParticleBackground
         {
             ClearAndStop();
             _mainModule.startColor = _colorGameOver;
-            _shapeModule.radiusMode = ParticleSystemShapeMultiModeValue.Random;
-            _emissionModule.rateOverTimeMultiplier  *= 2f;
+            _emissionModule.rateOverTimeMultiplier *= 2f;
             Play();
         }
     }
@@ -27,7 +26,7 @@ public class ParticleBackgroundGame : AParticleBackground
 
     private void OnDestroy()
     {
-        if(DataGame.Instance != null)
+        if (DataGame.Instance != null)
             DataGame.Instance.EventChangeLevel -= OnChangeLevel;
     }
 }

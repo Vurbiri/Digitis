@@ -25,6 +25,7 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         _coroutine ??= StartCoroutine(StartPressCoroutine());
 
+        #region Local Functions
         IEnumerator StartPressCoroutine()
         {
             while (true)
@@ -33,6 +34,7 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 yield return _delay;
             }
         }
+        #endregion
     }
 
     public void OnPointerUp(PointerEventData eventData)

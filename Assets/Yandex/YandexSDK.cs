@@ -114,20 +114,17 @@ public partial class YandexSDK : ASingleton<YandexSDK>
 
     public async UniTask<bool> TrySetScore(int points)
     {
-        if (points <= 0)
-            return false;
-        if (!IsLeaderboard)
+        if (!IsLeaderboard || points <= 0)
             return false;
 
         var player = await GetPlayerResult();
-        if (player.Result)
-            if (player.Value.Score >= points)
-                return false;
-
-        if (!await SetScore(points))
+        if (!player.Result)
             return false;
 
-        return true;
+        if (player.Value.Score >= points)
+            return false;
+
+        return await SetScore(points);
     }
 
     private UniTask<T> WaitTask<T>(ref UniTaskCompletionSource<T> taskCompletion, Action action)

@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Outline))]
+[RequireComponent(typeof(Image))]
 public class LeaderboardRecordUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text _rankText;
@@ -72,10 +72,10 @@ public class LeaderboardRecordUI : MonoBehaviour
 
         void SetRecord(TypeRecord type)
         {
-            Outline thisOutline = GetComponent<Outline>();
+            Image thisImage = GetComponent<Image>();
 
-            thisOutline.effectColor = type.Color;
-            thisOutline.effectDistance = Vector2.one * type.OffsetDistance;
+            thisImage.color = type.Color;
+            thisImage.rectTransform.sizeDelta = _fonImage.rectTransform.sizeDelta + Vector2.one * type.OffsetDistance;
         }
         #endregion
     }

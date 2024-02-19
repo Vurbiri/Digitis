@@ -200,10 +200,9 @@ public class BlocksArea : MonoBehaviour
             return null;
 
         Dictionary<int, int> columns = new(_size.x);
-        List<UniTask> tasks = new(blocksRemove.Count);
+        UniTask task = default;
         Vector2Int index;
 
-        _exitToken = new();
         foreach (var block in blocksRemove)
         {
             index = block.Position;
@@ -213,11 +212,10 @@ public class BlocksArea : MonoBehaviour
                 value = index.y;
             columns[index.x] = value;
 
-            tasks.Add(block.Remove());
+            task = block.Remove();
             await UniTask.Delay(_timePauseBlocksRemoved);
         }
-
-        await UniTask.WhenAll(tasks);
+        await task;
 
         return columns;
 
@@ -282,7 +280,6 @@ public class BlocksArea : MonoBehaviour
             if(blockExplode.IsBomb)
                 await UniTask.Delay(_timePauseBombExploded);
         }
-
         await UniTask.WhenAll(tasks);
 
         return columns;
