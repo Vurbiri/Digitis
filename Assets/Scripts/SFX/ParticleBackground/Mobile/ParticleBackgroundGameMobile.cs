@@ -10,23 +10,16 @@ public class ParticleBackgroundGameMobile : AParticleBackgroundMobile
     protected override void Awake()
     {
         base.Awake();
-        DataGame.Instance.EventChangeLevel += OnChangeLevel;
         _game.EventGameOver += OnGameOver;
 
         void OnGameOver()
         {
+            StopCoroutine(ReColorParticlesCoroutine());
             ClearAndStop();
             _mainModule.startColor = _colorGameOver;
+            _emissionPerRadius *= 2f;
             _emissionModule.rateOverTimeMultiplier  *= 2f;
             Play();
         }
-    }
-
-    private void OnChangeLevel(int value) => ReColorParticleSystem();
-
-    private void OnDestroy()
-    {
-        if(DataGame.Instance != null)
-            DataGame.Instance.EventChangeLevel -= OnChangeLevel;
     }
 }

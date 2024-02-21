@@ -8,7 +8,7 @@ public class Game : MonoBehaviour
 {
     
     [SerializeField] private ShapesManager _shapesManager;
-    [SerializeField] private AGameController _gameController;
+    [SerializeField] private AInputController _inputController;
     [Space]
     [SerializeField] private int _savePerShapes = 3;
 
@@ -42,14 +42,14 @@ public class Game : MonoBehaviour
         _dataGame = DataGame.InstanceF;
         _dataGame.EventChangeScore += OnChangeScore;
 
-        _gameController.EventLeftPress += _shapesManager.Left;
-        _gameController.EventRightPress += _shapesManager.Right;
-        _gameController.EventStartDown += _shapesManager.StartMoveDown;
-        _gameController.EventEndDown += _shapesManager.EndMoveDown;
-        _gameController.EventRotationPress += _shapesManager.Rotate;
-        _gameController.EventBombClick += OnBomb;
-        _gameController.EventPause += OnPause;
-        _gameController.EventUnPause += OnUnPause;
+        _inputController.EventLeftPress += _shapesManager.Left;
+        _inputController.EventRightPress += _shapesManager.Right;
+        _inputController.EventStartDown += _shapesManager.StartMoveDown;
+        _inputController.EventEndDown += _shapesManager.EndMoveDown;
+        _inputController.EventRotationPress += _shapesManager.Rotate;
+        _inputController.EventBombClick += OnBomb;
+        _inputController.EventPause += OnPause;
+        _inputController.EventUnPause += OnUnPause;
     }
 
     private void Start()
@@ -71,7 +71,7 @@ public class Game : MonoBehaviour
             await UniTask.Delay(TIME_COUNTDOWN, true);
 
             ModeStart = GameModeStart.GameContinue;
-            _gameController.ControlEnable = true;
+            _inputController.ControlEnable = true;
 
             EventStartGame?.Invoke();
 
@@ -155,7 +155,7 @@ public class Game : MonoBehaviour
         async UniTaskVoid GameOver()
         {
             _shapesManager.EventEndMoveDown -= OnBlockEndMoveDown;
-            _gameController.ControlEnable = false;
+            _inputController.ControlEnable = false;
 
             bool isLeaderboard = await YandexSDK.Instance.TrySetScore(_dataGame.Score);
             _dataGame.ResetData();
@@ -184,7 +184,7 @@ public class Game : MonoBehaviour
 
     private void OnPause()
     {
-        _gameController.ControlEnable = false;
+        _inputController.ControlEnable = false;
         Time.timeScale = 0.00000001f;
     }
     private void OnUnPause()
@@ -195,7 +195,7 @@ public class Game : MonoBehaviour
         async UniTaskVoid OnUnPauseAsync()
         {
             await UniTask.Delay(TIME_UNPAUSE, true);
-            _gameController.ControlEnable = true;
+            _inputController.ControlEnable = true;
             Time.timeScale = 1f;
         }
         #endregion
@@ -206,13 +206,13 @@ public class Game : MonoBehaviour
         if (DataGame.Instance != null)
             _dataGame.EventChangeScore -= OnChangeScore;
 
-        _gameController.EventLeftPress -= _shapesManager.Left;
-        _gameController.EventRightPress -= _shapesManager.Right;
-        _gameController.EventStartDown -= _shapesManager.StartMoveDown;
-        _gameController.EventEndDown -= _shapesManager.EndMoveDown;
-        _gameController.EventRotationPress -= _shapesManager.Rotate;
-        _gameController.EventBombClick -= OnBomb;
-        _gameController.EventPause -= OnPause;
-        _gameController.EventUnPause -= OnUnPause;
+        _inputController.EventLeftPress -= _shapesManager.Left;
+        _inputController.EventRightPress -= _shapesManager.Right;
+        _inputController.EventStartDown -= _shapesManager.StartMoveDown;
+        _inputController.EventEndDown -= _shapesManager.EndMoveDown;
+        _inputController.EventRotationPress -= _shapesManager.Rotate;
+        _inputController.EventBombClick -= OnBomb;
+        _inputController.EventPause -= OnPause;
+        _inputController.EventUnPause -= OnUnPause;
     }
 }

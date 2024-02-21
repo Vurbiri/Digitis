@@ -13,7 +13,7 @@ EditorBuildSettings:
     guid: 504da945a4defbb43828a495b8a6b3bf
   - enabled: 1
     path: Assets/_Scenes/02_MainMenuDesktop.unity
-    guid: 8714e31e16d7b9346a4f76e675b949d6
+    guid: 0d5089ffa2d361c418a6c36334ce5bc1
   - enabled: 1
     path: Assets/_Scenes/03_GameMobile.unity
     guid: 99c9720ab356a0642a771bea13969a05

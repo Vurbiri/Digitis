@@ -545,16 +545,16 @@ MonoBehaviour:
   _startCountBombs: 3
   _countLeveBomb: 3
   _startCountShapes: 20
-  _shapesPerLevel: 3
+  _shapesPerLevel: 2
   _speeds:
     _start: 0.5
-    _perLevel: 0.25
+    _perLevel: 0.15
     _down: 17
     _fall: 20
   _settings:
-    _currentLevel: 10
-    _shapeType: 4
-    _maxDigit: 5
+    _currentLevel: 1
+    _shapeType: 2
+    _maxDigit: 7
 --- !u!4 &523976399
 Transform:
   m_ObjectHideFlags: 0
@@ -794,7 +794,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nextSceneMobile: 1
-  _nextSceneDesktop: 4
+  _nextSceneDesktop: 2
   _slider: {fileID: 475711538}
 --- !u!4 &1307781868
 Transform:

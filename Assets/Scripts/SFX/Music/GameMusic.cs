@@ -4,7 +4,7 @@ using UnityEngine;
 public class GameMusic : MonoBehaviour
 {
     [SerializeField] private Game _game;
-    [SerializeField] private AGameController _gameController;
+    [SerializeField] private AInputController _inputController;
     [Space]
     [SerializeField] private float _pitchStart = 0.85f;
     [SerializeField] private float _pitchPerLevel = 0.0085f;
@@ -24,22 +24,20 @@ public class GameMusic : MonoBehaviour
 
         _dataGame.EventChangeLevel += SetPitch;
 
-        _gameController.EventPause += _music.MenuPlay;
-        _gameController.EventUnPause += PlayGameMusic;
+        _inputController.EventPause += _music.MenuPlay;
+        _inputController.EventUnPause += PlayGameMusic;
 
         _music.Stop();
     }
 
     private void SetPitch(int level)
     {
-        float pitch = _pitchStart + level * _pitchPerLevel;
-        _music.Pitch = pitch < _pitchMax ? pitch : _pitchMax;
+        _music.Pitch = Mathf.Clamp(_pitchStart + level * _pitchPerLevel, _pitchStart, _pitchMax);
     }
 
     private void PlayGameMusic()
     {
-        float pitch = _pitchStart + _dataGame.Level * _pitchPerLevel;
-        _music.GamePlay(pitch < _pitchMax ? pitch : _pitchMax);
+        _music.GamePlay(Mathf.Clamp(_pitchStart + _dataGame.Level * _pitchPerLevel, _pitchStart, _pitchMax));
     }
 
     private void OnGameOver()
@@ -65,8 +63,8 @@ public class GameMusic : MonoBehaviour
 
         _game.EventStartGame += PlayGameMusic;
         _game.EventGameOver += OnGameOver;
-        _gameController.EventUnPause += PlayGameMusic;
-        _gameController.EventPause += _music.MenuPlay;
+        _inputController.EventUnPause += PlayGameMusic;
+        _inputController.EventPause += _music.MenuPlay;
 
         
         

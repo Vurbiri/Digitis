@@ -11,7 +11,7 @@ public class DataGame : ASingleton<DataGame>
     [SerializeField] private int _countLeveBomb = 3;
     [Space]
     [SerializeField] private int _startCountShapes = 20;
-    [SerializeField] private int _shapesPerLevel = 3;
+    [SerializeField] private int _shapesPerLevel = 2;
     [Space]
     [SerializeField] private Speeds _speeds;
     [Space]
@@ -101,8 +101,7 @@ public class DataGame : ASingleton<DataGame>
         public int[] NextBlocksShape { get; set; } = new int[2];
         [JsonProperty("are")]
         public int[,] Area { get; set; } = new int[0, 0];
-
-        public GameSave(GameSettings gameSettings, int countBombs) : base(gameSettings) => Reset(countBombs);
+               
         [JsonConstructor]
         public GameSave(GameModeStart modeStart, int currentLevel, ShapeSize shapeType, int maxDigit, int score, int countShapes, int countBombs, ShapeType nextShape, int[] nextBlocksShape, int[,] area) 
             : base(currentLevel, shapeType, maxDigit)
@@ -115,14 +114,20 @@ public class DataGame : ASingleton<DataGame>
             NextBlocksShape = nextBlocksShape;
             Area = area;
         }
+        public GameSave(GameSettings gameSettings, int countBombs) : base(gameSettings) => Initialize(countBombs);
 
-        public void Reset(int countBomb)
+        public void Reset(int countBombs)
+        {
+            Initialize(countBombs);
+            CurrentLevel = 1;
+        }
+
+        private void Initialize(int countBombs)
         {
             ModeStart = GameModeStart.GameNew;
-            CurrentLevel = 1;
             Score = 0;
             Area = new int[0, 0];
-            CountBombs = countBomb;
+            CountBombs = countBombs;
             NextBlocksShape = new int[0];
         }
     }

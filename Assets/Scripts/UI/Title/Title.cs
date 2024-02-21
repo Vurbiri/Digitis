@@ -8,6 +8,7 @@ public class Title : MonoBehaviour
     [Space]
     [SerializeField] private float _size = 2;
     [SerializeField] private float _scaleContainer = 1.05f;
+    [SerializeField] private bool _isX = true;
     [Space]
     [SerializeField] private BlockSettings[] _settingsBlocks;
 
@@ -28,7 +29,10 @@ public class Title : MonoBehaviour
         int childCount = _title.Count;
 
         Vector2 sizeContainer = _container.sizeDelta;
-        sizeContainer.x = _size * count * _scaleContainer;
+        if(_isX)
+            sizeContainer.x = _size * count * _scaleContainer;
+        else
+            sizeContainer.y = _size * count * _scaleContainer;
         _container.sizeDelta = sizeContainer;
 
         HashSet<BlockSettings> settings = new(count);

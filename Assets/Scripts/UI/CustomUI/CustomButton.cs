@@ -4,42 +4,42 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CustomTargetGraphic))]
 public class CustomButton : Button
 {
-    private CustomTargetGraphic _targetGraphic;
+    private CustomTargetGraphic _thisTargetGraphic;
 
     protected override void Awake()
     {
         base.Awake();
 
-        _targetGraphic = GetComponent<CustomTargetGraphic>();
-        _targetGraphic.Initialize(interactable);
+        _thisTargetGraphic = GetComponent<CustomTargetGraphic>();
+        _thisTargetGraphic.Initialize(interactable);
 
         transition = Transition.None;
     }
 
     protected override void DoStateTransition(SelectionState state, bool instant)
     {
-        if (!gameObject.activeInHierarchy || _targetGraphic == null)
+        if (!gameObject.activeInHierarchy || _thisTargetGraphic == null)
             return;
 
         switch (state)
         {
             case SelectionState.Normal:
-                _targetGraphic.SetNormalState();
+                _thisTargetGraphic.SetNormalState();
                 break;
             case SelectionState.Highlighted:
-                _targetGraphic.SetHighlightedState();
+                _thisTargetGraphic.SetHighlightedState();
                 break;
             case SelectionState.Pressed:
-                _targetGraphic.SetPressedState();
+                _thisTargetGraphic.SetPressedState();
                 break;
             case SelectionState.Selected:
-                _targetGraphic.SetSelectedState();
+                _thisTargetGraphic.SetSelectedState();
                 break;
             case SelectionState.Disabled:
-                _targetGraphic.SetDisabledState();
+                _thisTargetGraphic.SetDisabledState();
                 break;
             default:
-                _targetGraphic.SetDisabledState();
+                _thisTargetGraphic.SetDisabledState();
                 break;
         }
     }

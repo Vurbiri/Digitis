@@ -7,7 +7,7 @@ public class PauseMenu : MenuNavigation
 {
     [Space]
     [SerializeField] private Game _game;
-    [SerializeField] private AGameController _gameController;
+    [SerializeField] private AInputController _inputController;
     [Space]
     [SerializeField] private GameObject _pauseUI;
     [SerializeField] private GameObject _panelPause;
@@ -28,7 +28,7 @@ public class PauseMenu : MenuNavigation
         base.Awake();
         _settings = SettingsGame.InstanceF;
 
-        _gameController.EventPause += () => gameObject.SetActive(true);
+        _inputController.EventPause += () => gameObject.SetActive(true);
         _game.EventLeaderboard += OnLeaderboard;
 
         _pauseUI.SetActive(true);

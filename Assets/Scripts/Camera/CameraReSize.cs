@@ -10,6 +10,9 @@ public class CameraReSize : MonoBehaviour
 
     protected Camera _thisCamera;
 
+    private Vector2 _size = Vector2.zero;
+    public Vector2 Size => _size;
+
     public event Action<Vector2> EventReSize;
     
     private void Start()
@@ -51,6 +54,7 @@ public class CameraReSize : MonoBehaviour
 
     protected virtual void OnReSize(float horizontalHalfSize, float verticalHalfSize, float aspectRatio)
     {
+        _size.x = 2 * horizontalHalfSize; _size.y = 2 * verticalHalfSize;
         EventReSize?.Invoke(new(horizontalHalfSize, verticalHalfSize));
     }
 }

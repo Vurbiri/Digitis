@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class CustomTargetGraphic : MonoBehaviour
 {
@@ -20,17 +21,19 @@ public class CustomTargetGraphic : MonoBehaviour
     private Vector2 _size;
     private Vector2 _sizeIcon;
 
-    private bool _isInteractable;
+    private bool _isInteractable = true;
 
     public void Initialize(bool isInteractable)
     {
         _size = _thisRectTransform.sizeDelta;
 
-        _isInteractable = isInteractable;
-        _icon.color = isInteractable ? _iconNormalColor : _iconDisabledColor;
-
         _iconRectTransform = _icon.rectTransform;
         _sizeIcon = _iconRectTransform.sizeDelta;
+
+        if (isInteractable)
+            SetNormalState();
+        else
+            SetDisabledState();
     }
 
     public void SetNormalState()
@@ -62,13 +65,13 @@ public class CustomTargetGraphic : MonoBehaviour
         SetColor(targetState.color);
         SetSpeed(targetState.speed);
         _thisRectTransform.sizeDelta = _size * targetState.scale;
-        
         if(_isIconResize)
             _iconRectTransform.sizeDelta = _sizeIcon * targetState.scale;
+
         if (_isInteractable != isInteractable)
         {
             _isInteractable = isInteractable;
-            _icon.color = isInteractable ? _stateBlock.normal.color : _stateBlock.disabled.color;
+            _icon.color = isInteractable ? _iconNormalColor : _iconDisabledColor;
         }
 
         #region Local Functions
