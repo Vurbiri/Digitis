@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ParticleBackgroundGameMobile : AParticleBackgroundMobile
+public class ParticleBackgroundGameMobile : ParticleBackgroundMenuMobile
 {
     [Space]
     [SerializeField] private Game _game;

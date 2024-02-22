@@ -185,7 +185,7 @@ public class Game : MonoBehaviour
     private void OnPause()
     {
         _inputController.ControlEnable = false;
-        Time.timeScale = 0.00000001f;
+        Time.timeScale = 0.0000001f;
     }
     private void OnUnPause()
     {

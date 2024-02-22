@@ -270,6 +270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
+  _qualityDesktop: 1
   _profileDesktop:
     key: std
     idLang: 1
@@ -277,6 +278,7 @@ MonoBehaviour:
     volumes:
     - 0.75
     - 0.75
+  _qualityMobile: 0
   _profileMobile:
     key: stm
     idLang: 1
@@ -542,10 +544,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
-  _startCountBombs: 3
-  _countLeveBomb: 3
+  _startCountBombs: 2
   _startCountShapes: 20
-  _shapesPerLevel: 2
+  _shapesPerLevel: 1
   _speeds:
     _start: 0.5
     _perLevel: 0.15
@@ -555,6 +556,7 @@ MonoBehaviour:
     _currentLevel: 1
     _shapeType: 2
     _maxDigit: 7
+  _minDigit: 5
 --- !u!4 &523976399
 Transform:
   m_ObjectHideFlags: 0

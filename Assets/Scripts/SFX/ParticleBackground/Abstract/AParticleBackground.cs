@@ -6,7 +6,7 @@ public abstract class AParticleBackground : AParticleSystemController
     [SerializeField] protected CameraReSize _cameraSize;
     [Space]
     [SerializeField] protected float _timeRecolor = 7f;
-    [SerializeField] protected Vector3 _minColor = Vector3.one * 0.1f;
+    [SerializeField] protected float _spreadColor = 0.2f;
     [Space]
     [SerializeField] protected float _emissionPerRadius = 0.22f;
 
@@ -21,6 +21,8 @@ public abstract class AParticleBackground : AParticleSystemController
         StartCoroutine(ReColorParticlesCoroutine());
 
         _cameraSize.EventReSize += OnReSizeParticleSystem;
+
+        Play();
     }
 
     protected abstract void OnReSizeParticleSystem(Vector2 halfSize);
@@ -29,10 +31,7 @@ public abstract class AParticleBackground : AParticleSystemController
     {
         while (true)
         {
-            _color.r = Random.Range(_minColor.x, 1f);
-            _color.g = Random.Range(_minColor.y, 1f);
-            _color.b = Random.Range(_minColor.z, 1f);
-
+            _color.Random();
             _mainModule.startColor = _color;
 
             yield return _delay;

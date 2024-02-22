@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ParticleBackgroundGameDesktop : AParticleBackgroundDesktop
+public class ParticleBackgroundGameDesktop : ParticleBackgroundMenuDesktop
 {
     [Space]
     [SerializeField] private float _speedMin = 0.275f;
@@ -18,8 +18,6 @@ public class ParticleBackgroundGameDesktop : AParticleBackgroundDesktop
 
         base.Awake();
         SetSpeed(Mathf.Clamp(_speedMin + _speedPerLevel * dataGame.Level, _speedMin, _speedMax));
-        _mainModule.duration = _mainModule.startLifetimeMultiplier * _timeRecolor;
-        Play();
 
         dataGame.EventChangeLevel += OnChangeLevel;
         _game.EventGameOver += OnGameOver;
@@ -38,9 +36,7 @@ public class ParticleBackgroundGameDesktop : AParticleBackgroundDesktop
 
     private void OnChangeLevel(int level)
     {
-        ClearAndStop();
         SetSpeed(Mathf.Clamp(_speedMin + _speedPerLevel * level, _speedMin, _speedMax));
-        Play();
     }
 
     private void SetSpeed(float speed)
@@ -48,7 +44,6 @@ public class ParticleBackgroundGameDesktop : AParticleBackgroundDesktop
         _mainModule.startSpeedMultiplier = speed;
         _emissionModule.rateOverTimeMultiplier = _cameraSize.Size.x * _emissionPerRadius * speed / 2f;
         _mainModule.startLifetimeMultiplier = Mathf.Ceil(_cameraSize.Size.y / speed);
-        _mainModule.duration = _mainModule.startLifetimeMultiplier * _timeRecolor;
     }
 
     private void OnDestroy()

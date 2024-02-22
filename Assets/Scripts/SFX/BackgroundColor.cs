@@ -18,24 +18,20 @@ public class BackgroundColor : MonoBehaviour
 
     private void Start()
     {
-        ReColor(_colorStart);
+        SetColor(_colorStart);
         DataGame.Instance.EventChangeLevel += OnChangeLevel;
-        _game.EventGameOver += () => ReColor(_colorGameOver);
+        _game.EventGameOver += () => SetColor(_colorGameOver);
     }
 
     private void OnChangeLevel(int level)
     {
-        Color color = _colorStart;
-        color.r *= _rangeR.RandomRange();
-        color.g *= _rangeG.RandomRange();
-        color.b *= _rangeB.RandomRange();
-        ReColor(color);
+        SetColor(_colorStart.RandomRecolor(_rangeR, _rangeG, _rangeB));
     }
 
-    private void ReColor(Color color)
+    private void SetColor(Color color)
     {
         _tile.color = color;
-        color *= _brightnessBack; color.a = 1f;
+        color.SetBrightness(_brightnessBack);
         _back.color = color;
     }
 

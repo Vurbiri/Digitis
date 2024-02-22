@@ -12,6 +12,7 @@ public class LeaderboardUI : MonoBehaviour
     [Space]
     [SerializeField] private ScrollRect _rect;
     [Space]
+    [SerializeField] private AvatarSize _avatarSize = AvatarSize.Medium;
     [Range(1, 20), SerializeField] private int _maxTop = 20;
     [Range(1, 10), SerializeField] private int _maxAround = 10;
 
@@ -43,7 +44,7 @@ public class LeaderboardUI : MonoBehaviour
             if (UserRank <= (_maxTop - _maxAround))
                 playerInTable = false;
 
-        var leaderboard = await YSDK.GetLeaderboard(_maxTop, playerInTable, _maxAround);
+        var leaderboard = await YSDK.GetLeaderboard(_maxTop, playerInTable, _maxAround, _avatarSize);
         if (!leaderboard.Result)
             return;
         if (playerInTable)

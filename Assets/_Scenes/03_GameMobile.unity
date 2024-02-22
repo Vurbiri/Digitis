@@ -3911,6 +3911,7 @@ MonoBehaviour:
   _recordSeparator: {fileID: 8234492426460427051, guid: 48e8471e5392b274098a8e557c7e78df,
     type: 3}
   _rect: {fileID: 1103067150}
+  _avatarSize: 0
   _maxTop: 20
   _maxAround: 10
 --- !u!1 &1110344579
@@ -7350,7 +7351,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 517678252942556085}
   serializedVersion: 8
-  lengthInSec: 150
+  lengthInSec: 600
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -7478,7 +7479,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.6
+      scalar: 0.5
       minScalar: 0.3
       maxCurve:
         serializedVersion: 2
@@ -12404,7 +12405,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cameraSize: {fileID: 330585548}
   _timeRecolor: 7
-  _minColor: {x: 0.2, y: 0.2, z: 0.2}
+  _spreadColor: 0.2
   _emissionPerRadius: 0.22
   _game: {fileID: 64705094}
   _colorGameOver: {r: 1, g: 0.3137255, b: 0, a: 1}

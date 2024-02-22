@@ -32,6 +32,7 @@ public class StartMenu : MenuNavigation
         _sliderMax = _max.ThisSelectable as Slider;
 
         _sliderSize.value = _data.ShapeType.ToInt();
+        _sliderMax.minValue = _data.MinDigit;
         _sliderMax.value = _data.MaxDigit;
 
         _size.Interactable = _max.Interactable = !(_toggleContinue.isOn = _continue.Interactable = _data.ModeStart == GameModeStart.GameContinue);

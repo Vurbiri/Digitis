@@ -217,7 +217,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 2
 --- !u!114 &8814119226255713928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,7 +236,7 @@ MonoBehaviour:
   - {r: 0.78039217, g: 0.68235296, b: 0.003921569, a: 1}
   - {r: 0.7607843, g: 0, b: 0, a: 1}
   - {r: 1, g: 0.18431373, b: 0, a: 1}
-  _fontSizeDesktop: 16.5
+  _fontSizeDesktop: 16.25
   _fontSizeMobile: 15.5
 --- !u!114 &2287419498602539687
 MonoBehaviour:
@@ -290,6 +290,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.07450981, g: 0.105882354, b: 0.2509804, a: 1}
-  m_EffectDistance: {x: 6, y: 6}
+  m_EffectColor: {r: 0.08627451, g: 0.078431375, b: 0.16470589, a: 1}
+  m_EffectDistance: {x: 5, y: 5}
   m_UseGraphicAlpha: 0

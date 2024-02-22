@@ -61,10 +61,10 @@ public class GameMusic : MonoBehaviour
 
         _music.Stop();
 
-        _game.EventStartGame += PlayGameMusic;
-        _game.EventGameOver += OnGameOver;
-        _inputController.EventUnPause += PlayGameMusic;
-        _inputController.EventPause += _music.MenuPlay;
+        _game.EventStartGame -= PlayGameMusic;
+        _game.EventGameOver -= OnGameOver;
+        _inputController.EventUnPause -= PlayGameMusic;
+        _inputController.EventPause -= _music.MenuPlay;
 
         
         

@@ -7,8 +7,10 @@ public class PersonalPanel : MonoBehaviour
 {
     [SerializeField] private string _keyGuestName = "Guest";
     [SerializeField] private string _keyAnonymName = "Anonym";
+    [Space]
     [SerializeField] private Texture _avatarGuest;
     [SerializeField] private Texture _avatarAnonym;
+    [SerializeField] private AvatarSize _avatarSize = AvatarSize.Medium;
     [Space]
     [SerializeField] private RawImage _avatar;
     [SerializeField] private TMP_Text _name;
@@ -33,7 +35,7 @@ public class PersonalPanel : MonoBehaviour
                 else
                     _name.text = _localization.GetText(_keyAnonymName);
 
-                var texture = await _ysdk.GetPlayerAvatar(AvatarSize.Medium);
+                var texture = await _ysdk.GetPlayerAvatar(_avatarSize);
                 if (texture.Result)
                     _avatar.texture = texture.Value;
                 else

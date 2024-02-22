@@ -9160,7 +9160,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 513566564}
   serializedVersion: 8
-  lengthInSec: 150
+  lengthInSec: 300
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -9288,7 +9288,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.6
+      scalar: 0.5
       minScalar: 0.3
       maxCurve:
         serializedVersion: 2
@@ -13963,7 +13963,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cameraSize: {fileID: 60218404}
   _timeRecolor: 5
-  _minColor: {x: 0.2, y: 0.2, z: 0.2}
+  _spreadColor: 0.2
   _emissionPerRadius: 0.22
 --- !u!1001 &516218353
 PrefabInstance:
@@ -16198,6 +16198,7 @@ MonoBehaviour:
   _keyAnonymName: Anonym
   _avatarGuest: {fileID: 2800000, guid: 4dc7588d8c059ad4fbb962369d53654c, type: 3}
   _avatarAnonym: {fileID: 2800000, guid: 77b1ed2461573c84caa8d61e26e2b0aa, type: 3}
+  _avatarSize: 1
   _avatar: {fileID: 1655431225}
   _name: {fileID: 1396677558}
 --- !u!114 &777031042
@@ -20277,7 +20278,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0416\u0443\u0440\u0430\u0432\u043B\u0435\u0432 \u0422\u0438\u043C\u043E\u0444\u0435\u0439"
+  m_text: Guest
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 28eb44f311d79d8449477a34c109e9d9, type: 2}
   m_sharedMaterial: {fileID: -4430357540152708083, guid: 28eb44f311d79d8449477a34c109e9d9,
@@ -20305,7 +20306,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.1
+  m_fontSize: 1.2
   m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -22828,7 +22829,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 4dc7588d8c059ad4fbb962369d53654c, type: 3}
+  m_Texture: {fileID: 2800000, guid: 77b1ed2461573c84caa8d61e26e2b0aa, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -28273,7 +28274,6 @@ MonoBehaviour:
   _scaleContainer: 1.05
   _isX: 1
   _settingsBlocks:
-  - {fileID: 11400000, guid: 1b9223f8127ca434e9f3e4e1f89805b6, type: 2}
   - {fileID: 11400000, guid: bcfb9b487e098ed4aac85b86113cb9ea, type: 2}
   - {fileID: 11400000, guid: 7cae4a7e422a7a646a159d034a5baa37, type: 2}
   - {fileID: 11400000, guid: b48869e07452ce04da734bdf4658d19a, type: 2}
@@ -30260,6 +30260,7 @@ MonoBehaviour:
   _recordSeparator: {fileID: 8234492426460427051, guid: 48e8471e5392b274098a8e557c7e78df,
     type: 3}
   _rect: {fileID: 2049575804}
+  _avatarSize: 0
   _maxTop: 20
   _maxAround: 10
 --- !u!1001 &2052714007

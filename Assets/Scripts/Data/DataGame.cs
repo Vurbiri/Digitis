@@ -7,8 +7,7 @@ public class DataGame : ASingleton<DataGame>
     private const string KEY = "gmd";
     
     [Space]
-    [SerializeField] private int _startCountBombs = 3;
-    [SerializeField] private int _countLeveBomb = 3;
+    [SerializeField] private int _startCountBombs = 2;
     [Space]
     [SerializeField] private int _startCountShapes = 20;
     [SerializeField] private int _shapesPerLevel = 2;
@@ -16,9 +15,12 @@ public class DataGame : ASingleton<DataGame>
     [SerializeField] private Speeds _speeds;
     [Space]
     [SerializeField] private GameSettings _settings;
+    [SerializeField, Range(3, 8)] private int _minDigit = 5;
 
     private GameSave _data;
     private int _countShapesMax;
+
+    private const int LEVEL_BOMB_MOD = 14;
 
     public Speeds Speeds => _speeds;
     public int CountShapesMax { get => _countShapesMax; set { _countShapesMax = value; EventChangeCountShapesMax?.Invoke(value); } }
@@ -28,6 +30,7 @@ public class DataGame : ASingleton<DataGame>
     public int Score { get => _data.Score; private set { _data.Score = value; EventChangeScore?.Invoke(value.ToString()); } }
     public int CountShapes { get => _data.CountShapes; set { _data.CountShapes = value; EventChangeCountShapes?.Invoke(value); } }
     public ShapeSize ShapeType { get => _data.ShapeType; set => _data.ShapeType = value; }
+    public int MinDigit => _minDigit;
     public int MaxDigit { get => _data.MaxDigit; set => _data.MaxDigit = value; }
     public int CountBombs { get => _data.CountBombs; set { _data.CountBombs = value; EventChangeCountBombs?.Invoke(value); } }
     public ShapeType NextShape { get => _data.NextShape; set => _data.NextShape = value; }
@@ -66,7 +69,7 @@ public class DataGame : ASingleton<DataGame>
     public void LevelUp()
     {
         Level++;
-        CountBombs += Level % _countLeveBomb == 0 ? 1 : 0;
+        CountBombs += Level % (LEVEL_BOMB_MOD - ShapeType.ToInt() - MaxDigit) == 0 ? 1 : 0;
         CountShapes = CalkMaxShapes();
     }
 
@@ -139,7 +142,7 @@ public class DataGame : ASingleton<DataGame>
         private int _currentLevel = 1;
         [JsonProperty("shp"), SerializeField]
         private ShapeSize _shapeType = ShapeSize.Domino;
-        [JsonProperty("mdg"), SerializeField, Range(3, 9)]
+        [JsonProperty("mdg"), SerializeField, Range(4, 9)]
         private int _maxDigit = 7;
 
         [JsonIgnore]

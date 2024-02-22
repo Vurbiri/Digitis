@@ -6,7 +6,10 @@ using UnityEngine.Audio;
 public class SettingsGame : ASingleton<SettingsGame>
 {
     [Space]
+    [SerializeField] private int _qualityDesktop = 1;
     [SerializeField] private Profile _profileDesktop = new();
+    [Space]
+    [SerializeField] private int _qualityMobile = 0;
     [SerializeField] private Profile _profileMobile = new();
     [Space]
     [SerializeField] private AudioMixer _audioMixer;
@@ -34,6 +37,7 @@ public class SettingsGame : ASingleton<SettingsGame>
         _localization = Localization.InstanceF;
 
         IsDesktop = isDesktop;
+        QualitySettings.SetQualityLevel(isDesktop ? _qualityDesktop : _qualityMobile);
 
         bool result = false;
 
