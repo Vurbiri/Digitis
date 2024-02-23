@@ -15,6 +15,9 @@ public class PersonalPanel : MonoBehaviour
     [SerializeField] private RawImage _avatar;
     [SerializeField] private TMP_Text _name;
 
+    public Texture Avatar => _avatar.texture;
+    public string Name => _name.text;
+
     private YandexSDK _ysdk;
     private Localization _localization;
 

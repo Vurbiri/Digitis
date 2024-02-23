@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -6,31 +7,75 @@ public class MusicSingleton : ASingleton<MusicSingleton>
     [Space]
     [SerializeField] private AudioClip _musicMenu;
     [SerializeField] private AudioClip _musicGame;
+    [Space]
+    [SerializeField] private float _volume = 1f;
+    [Space]
+    [SerializeField] private float _timeSwitching = 0.25f;
 
     public float Pitch { get => _thisAudio.pitch; set => _thisAudio.pitch = value; }
 
-    protected AudioSource _thisAudio;
+    private AudioSource _thisAudio;
+    private Coroutine _coroutine;
 
-    protected override void Awake()
+    private void Start()
     {
-        base.Awake();
-
         _thisAudio = GetComponent<AudioSource>();
+        _thisAudio.volume = _volume;
 
         _musicMenu.LoadAudioData();
         _musicGame.LoadAudioData();
     }
 
-    public void MenuPlay() => PlayClip(_musicMenu);
-    public void GamePlay(float pitch) => PlayClip(_musicGame, pitch);
-
-    public void Stop() => _thisAudio.Stop();
-
-    protected void PlayClip(AudioClip clip, float pitch = 1f)
+    public void Switch(Music music, float pitch = 1f)
     {
-        _thisAudio.Stop();
-        _thisAudio.clip = clip;
+        if (_coroutine != null)
+            StopCoroutine(_coroutine);
+        _coroutine = StartCoroutine(SwitchCoroutine());
+
+        #region Local Function
+        IEnumerator SwitchCoroutine()
+        {
+            float volume = _thisAudio.volume;
+            float speed = volume / _timeSwitching;
+
+            while (_thisAudio.volume > 0) 
+            { 
+                yield return null;
+                _thisAudio.volume -= speed * Time.unscaledDeltaTime;
+            }
+            _thisAudio.volume = 0f;
+
+            speed = _volume / _timeSwitching;
+            Play(music, pitch);
+
+            while (_thisAudio.volume < _volume)
+            {
+                yield return null;
+                _thisAudio.volume += speed * Time.unscaledDeltaTime;
+            }
+            _thisAudio.volume = _volume;
+
+            _coroutine = null;
+        }
+        #endregion
+    }
+
+    public void Play(Music music, float pitch = 1f)
+    {
+        Stop();
+        _thisAudio.clip = music switch { Music.Game => _musicGame, Music.Menu => _musicMenu, _=> null };
         _thisAudio.pitch = pitch;
         _thisAudio.Play();
+    }
+
+    public void Stop()
+    {
+        if (_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+            _coroutine = null;
+            _thisAudio.volume = _volume;
+        }
+        _thisAudio.Stop();
     }
 }

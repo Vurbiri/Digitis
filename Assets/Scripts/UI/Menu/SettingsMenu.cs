@@ -3,7 +3,6 @@ public class SettingsMenu : MenuNavigation
     private SettingsGame _settings;
     private bool isSave;
 
-
     protected override void Awake()
     {
         base.Awake();

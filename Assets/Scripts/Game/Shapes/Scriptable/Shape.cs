@@ -13,7 +13,6 @@ public class Shape : ScriptableObject, IRandomizeObject
     [SerializeField] private int _randomWeight = 1;
 
     public ShapeType Type => _type;
-    public int ID {get; private set;}
     public Vector2Int StartOffset => _offsetForArea;
     public Vector2Int[] BlocksPositions => _startBlocksPositions;
     public SubShape SubShape { get; private set; }
@@ -28,7 +27,6 @@ public class Shape : ScriptableObject, IRandomizeObject
     public void Initialize()
     {
         SubShape = new(_startBlocksPositions, _sizeBound - 1, COUNT_SUBSHAPE);
-        ID = _type.ToInt();
     }
 
     public void CreateBlock(List<Block> blocks, BlockSettings[] settings)

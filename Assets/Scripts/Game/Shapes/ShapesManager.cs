@@ -40,7 +40,10 @@ public class ShapesManager : MonoBehaviour
 
     private void Awake()
     {
-        Array.Sort(_settingsBlocks, (a,b) => a.Digit.CompareTo(b.Digit));
+        // ???
+        Array.Sort(_settingsBlocks, (a, b) => a.Digit.CompareTo(b.Digit));
+        Array.Sort(_tromino, (a, b) => a.Type.CompareTo(b.Type));
+        Array.Sort(_tetromino, (a, b) => a.Type.CompareTo(b.Type));
 
         _gameData = DataGame.InstanceF;
         _poolBlocks = new(_prefabBlock, _poolRepository, _sizePool);
@@ -53,9 +56,13 @@ public class ShapesManager : MonoBehaviour
             t.Initialize();
         foreach(var t in _tetromino)
             t.Initialize();
+    }
 
-        Array.Sort(_tromino, (a, b) => a.ID.CompareTo(b.ID));
-        Array.Sort(_tetromino, (a, b) => a.ID.CompareTo(b.ID));
+    private void OnValidate()
+    {
+        Array.Sort(_settingsBlocks, (a, b) => a.Digit.CompareTo(b.Digit));
+        Array.Sort(_tromino, (a, b) => a.Type.CompareTo(b.Type));
+        Array.Sort(_tetromino, (a, b) => a.Type.CompareTo(b.Type));
     }
 
     public void Initialize()

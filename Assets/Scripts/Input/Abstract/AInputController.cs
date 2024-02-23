@@ -1,25 +1,64 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class AInputController : MonoBehaviour
 {
-    protected Action _eventLeftPress;
-    protected Action _eventRightPress;
-    protected Action _eventStartDown;
-    protected Action _eventEndDown;
-    protected Action _eventRotationPress;
-    protected Action _eventBombClick;
-    protected Action _eventPause;
-    protected Action _eventUnPause;
+    [SerializeField] protected ButtonPress _buttonLeft;
+    [SerializeField] protected ButtonPress _buttonRight;
+    [SerializeField] protected ButtonHold _buttonDown;
+    [SerializeField] protected ButtonPress _buttonRotation;
+    [SerializeField] protected ButtonClick _buttonBomb;
+    [SerializeField] protected ButtonClick _buttonPause;
+    [Space]
+    [SerializeField] private MonoBehaviour[] _buttonsUnPause;
+
+    public event Action EventLeftPress;
+    public event Action EventRightPress;
+    public event Action EventStartDown;
+    public event Action EventEndDown;
+    public event Action EventRotationPress;
+    public event Action EventBombClick;
+    public event Action EventPause;
+    public event Action EventUnPause;
 
     public virtual bool ControlEnable { get; set; } = false;
     
-    public event Action EventLeftPress { add { _eventLeftPress += value; }  remove { _eventLeftPress -= value; }  }
-    public event Action EventRightPress { add { _eventRightPress += value; } remove { _eventRightPress -= value; } }
-    public event Action EventStartDown { add { _eventStartDown += value; } remove { _eventStartDown -= value; } }
-    public event Action EventEndDown { add { _eventEndDown += value; } remove { _eventEndDown -= value; } }
-    public event Action EventRotationPress { add { _eventRotationPress += value; } remove { _eventRotationPress -= value; } }
-    public event Action EventBombClick { add { _eventBombClick += value; } remove { _eventBombClick -= value; } }
-    public event Action EventPause { add { _eventPause += value; } remove { _eventPause -= value; } }
-    public event Action EventUnPause { add { _eventUnPause += value; } remove { _eventUnPause -= value; } }
+    protected virtual void Awake()
+    {
+        ControlEnable = false;
+
+        _buttonLeft.EventButtonPress += () => OnGameEvent(EventLeftPress);
+        _buttonRight.EventButtonPress += () => OnGameEvent(EventRightPress);
+        _buttonDown.EventButtonStartHold += () => OnGameEvent(EventStartDown);
+        _buttonDown.EventButtonEndHold += () => OnGameEvent(EventEndDown);
+        _buttonRotation.EventButtonPress += () => OnGameEvent(EventRotationPress);
+        _buttonBomb.EventButtonClick += () => OnGameEvent(EventBombClick);
+        _buttonPause.EventButtonClick += () => { if (ControlEnable) EventPause?.Invoke(); };
+
+        foreach (var button in _buttonsUnPause)
+            (button as IEventUnPause).EventUnPause += () => { if (!ControlEnable) EventUnPause?.Invoke(); };
+
+        void OnGameEvent(Action action)
+        {
+            if (ControlEnable)
+                action?.Invoke();
+        }
+    }
+
+    private void OnValidate()
+    {
+        if (_buttonsUnPause == null)
+            return;
+
+
+        for (int i = 0; i < _buttonsUnPause.Length; i++)
+        {
+            if (_buttonsUnPause[i] is IEventUnPause)
+                continue;
+
+            Debug.LogWarning(_buttonsUnPause[i].name + " не IEventUnPause");
+            _buttonsUnPause[i] = null;
+        }
+    }
 }

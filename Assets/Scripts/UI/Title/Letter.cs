@@ -5,20 +5,13 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class Letter : MonoBehaviour
 {
+    [SerializeField] private RectTransform _thisRectTransform;
+    [SerializeField] private Image _thisImage;
     [SerializeField] private TMP_Text _text;
     [Space]
     [SerializeField] private float _scaleText = 0.85f;
     
-    private RectTransform _thisRectTransform;
-    private Image _thisImage;
-
     private const string NAME = "Letter_";
-
-    private void Awake()
-    {
-        _thisRectTransform = GetComponent<RectTransform>();
-        _thisImage = GetComponent<Image>();
-    }
 
     public void Setup(BlockSettings setting, float size, char letter)
     {

@@ -19,96 +19,35 @@ public class LeaderboardUI : MonoBehaviour
     private YandexSDK YSDK => YandexSDK.Instance;
 
     private readonly List<LeaderboardRecordUI> _records = new();
-    //private GameObject _separator;
+    private GameObject _separator;
+    RectTransform _recordTransform = null;
 
     private const int TOP = 5;
 
-    public void Start()
+    private void OnEnable()
+    {
+        ScrollToPlayer();
+    }
+
+    private void Start()
     {
         InitializeAsync().Forget();
     }
 
-    public async UniTaskVoid InitializeAsync()
+    public async UniTask TryReward(bool reInitialize = false)
     {
         if (!YSDK.IsLeaderboard) return;
 
-        int UserRank = 0;
-        bool playerInTable = false;
-        var player = await YSDK.GetPlayerResult();
-        if (player.Result)
-        {
-            UserRank = player.Value.Rank;
-            playerInTable = UserRank > 0;
-        }
-        if (playerInTable)
-            if (UserRank <= (_maxTop - _maxAround))
-                playerInTable = false;
-
-        var leaderboard = await YSDK.GetLeaderboard(_maxTop, playerInTable, _maxAround, _avatarSize);
-        if (!leaderboard.Result)
-            return;
-        if (playerInTable)
-            UserRank = leaderboard.Value.UserRank;
-
-        RectTransform content = _rect.content;
-        ScrollToPlayer(CreateTable());
-
-        #region Local Functions
-        RectTransform CreateTable()
-        {
-            int preRank = 0;
-            bool isPlayer;
-            RectTransform recordTransform = null;
-            LeaderboardRecordUI recordUI;
-
-            foreach (var record in leaderboard.Value.Table)
-            {
-                if (record.Rank - preRank > 1)
-                    /*_separator = */Instantiate(_recordSeparator, content);
-                preRank = record.Rank;
-                isPlayer = record.Rank == UserRank;
-
-                recordUI = Instantiate(_record, content);
-                recordUI.Setup(record, isPlayer);
-                _records.Add(recordUI);
-                if (isPlayer)
-                    recordTransform = recordUI.GetComponent<RectTransform>();
-            }
-
-            return recordTransform;
-        }
-
-        void ScrollToPlayer(RectTransform recordTransform)
-        {
-            gameObject.SetActive(true);
-
-            if (recordTransform != null)
-            {
-                RectTransform viewport = _rect.viewport;
-                Canvas.ForceUpdateCanvases();
-
-                float maxOffset = content.rect.height - viewport.rect.height;
-                float offset = -viewport.rect.height / 2f - recordTransform.localPosition.y;
-
-                if (offset < 0) offset = 0;
-                else if (offset > maxOffset) offset = maxOffset;
-
-                content.localPosition = new Vector2(0, offset);
-            }
-        }
-
-        #endregion
-    }
-
-    public async UniTaskVoid TryReward()
-    {
         await UniTask.Delay(150, true);
 
         var player = await YSDK.GetPlayerResult();
-        if (!player.Result) 
+        if (!player.Result)
             return;
         if (player.Value.Rank <= 0)
             return;
+
+        if (reInitialize)
+            await ReInitializeAsync(player.Value.Rank);
 
         if (player.Value.Rank > TOP)
             Message.BannerKey("PersonalRecord");
@@ -116,41 +55,87 @@ public class LeaderboardUI : MonoBehaviour
             Message.BannerKey("Top");
     }
 
-    /*
-    public async UniTaskVoid ReInitializeAsync()
+    private async UniTask InitializeAsync(int userRank = 0)
     {
-        if (!_ysdk.IsLeaderboard) return;
+        if (!YSDK.IsLeaderboard) return;
 
-        int UserRank = 0;
-        bool playerInTable = false;
-        var player = await _ysdk.GetPlayerResult(_lbName);
-        if (player.Result)
+        bool playerInTable = userRank > 0;
+        if (!playerInTable)
         {
-            UserRank = player.Value.Rank;
-            playerInTable = UserRank > 0;
+            var player = await YSDK.GetPlayerResult();
+            if (player.Result)
+            {
+                userRank = player.Value.Rank;
+                playerInTable = userRank > 0;
+            }
         }
         if (playerInTable)
-            if (UserRank <= (_maxTop - _maxAround))
+            if (userRank <= (_maxTop - _maxAround))
                 playerInTable = false;
 
-        var leaderboard = await _ysdk.GetLeaderboard(_lbName, _maxTop, playerInTable, _maxAround);
+        var leaderboard = await YSDK.GetLeaderboard(_maxTop, playerInTable, _maxAround, _avatarSize);
         if (!leaderboard.Result)
             return;
         if (playerInTable)
-            UserRank = leaderboard.Value.UserRank;
+            userRank = leaderboard.Value.UserRank;
 
-        RectTransform content = _rect.content;
-        ScrollToPlayer(CreateTable());
+        CreateTable();
+        ScrollToPlayer();
 
         #region Local Functions
         RectTransform CreateTable()
         {
             int preRank = 0;
             bool isPlayer;
-            RectTransform recordTransform = null;
+            RectTransform content = _rect.content;
+            LeaderboardRecordUI recordUI;
+            _recordTransform = null;
+
+            foreach (var record in leaderboard.Value.Table)
+            {
+                if (record.Rank - preRank > 1)
+                    _separator = Instantiate(_recordSeparator, content);
+                preRank = record.Rank;
+                isPlayer = record.Rank == userRank;
+
+                recordUI = Instantiate(_record, content);
+                recordUI.Setup(record, isPlayer);
+                _records.Add(recordUI);
+                if (isPlayer)
+                    _recordTransform = recordUI.GetComponent<RectTransform>();
+            }
+
+            return _recordTransform;
+        }
+        #endregion
+    }
+
+    private async UniTask ReInitializeAsync(int userRank)
+    {
+        if (_rect.content.childCount == 0)
+        {
+            await InitializeAsync(userRank);
+            return;
+        }
+
+        Debug.Log("ReInitializeAsync");
+        var leaderboard = await YSDK.GetLeaderboard(_maxTop, userRank > (_maxTop - _maxAround), _maxAround, _avatarSize);
+        if (!leaderboard.Result)
+            return;
+
+        CreateTable();
+        ScrollToPlayer();
+
+        #region Local Functions
+        void CreateTable()
+        {
+            int preRank = 0;
+            bool isPlayer;
+            RectTransform content = _rect.content;
             LeaderboardRecordUI recordUI;
             int childCount = _records.Count;
             int i = 0;
+            _recordTransform = null;
 
             if (_separator != null)
             {
@@ -160,7 +145,7 @@ public class LeaderboardUI : MonoBehaviour
 
             foreach (var record in leaderboard.Value.Table)
             {
-                isPlayer = record.Rank == UserRank;
+                isPlayer = record.Rank == userRank;
 
                 if (i < childCount)
                 {
@@ -173,7 +158,7 @@ public class LeaderboardUI : MonoBehaviour
                 }
                 recordUI.Setup(record, isPlayer);
                 if (isPlayer)
-                    recordTransform = recordUI.GetComponent<RectTransform>();
+                    _recordTransform = recordUI.GetComponent<RectTransform>();
 
                 if (record.Rank - preRank > 1)
                 {
@@ -188,30 +173,28 @@ public class LeaderboardUI : MonoBehaviour
 
             for (; i < childCount; i++)
                 _records[i].gameObject.SetActive(false);
-
-            return recordTransform;
         }
-
-        void ScrollToPlayer(RectTransform recordTransform)
-        {
-            gameObject.SetActive(true);
-
-            if (recordTransform != null)
-            {
-                RectTransform viewport = _rect.viewport;
-                Canvas.ForceUpdateCanvases();
-
-                float maxOffset = content.rect.height - viewport.rect.height;
-                float offset = -viewport.rect.height / 2f - recordTransform.localPosition.y;
-
-                if (offset < 0) offset = 0;
-                else if (offset > maxOffset) offset = maxOffset;
-
-                content.localPosition = new Vector2(0, offset);
-            }
-        }
-
         #endregion
     }
-    */
+
+    private void ScrollToPlayer()
+    {
+        if (_recordTransform == null || !gameObject.activeInHierarchy)
+            return;
+
+        Canvas.ForceUpdateCanvases();
+
+        RectTransform content = _rect.content;
+        RectTransform viewport = _rect.viewport;
+        float maxOffset = content.rect.height - viewport.rect.height;
+        float offset = -viewport.rect.height / 2f - _recordTransform.localPosition.y;
+
+        if (offset < 0) offset = 0;
+        else if (offset > maxOffset) offset = maxOffset;
+
+        content.localPosition = new Vector2(0, offset);
+
+       
+    }
+
 }

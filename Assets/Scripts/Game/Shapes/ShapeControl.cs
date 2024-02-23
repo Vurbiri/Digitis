@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,13 +21,13 @@ public class ShapeControl
     private readonly BlocksArea area;
     private readonly Speeds speeds;
     private readonly Transform container;
-    private readonly Action<bool> actionPlayFixed;
+    private readonly Action<bool> actionPlaySoundFixed;
 
-    public ShapeControl(BlocksArea area, Speeds speeds, Action<bool> playFixed)
+    public ShapeControl(BlocksArea area, Speeds speeds, Action<bool> playSoundFixed)
     {
         this.area = area;
         this.speeds = speeds;
-        this.actionPlayFixed = playFixed;
+        this.actionPlaySoundFixed = playSoundFixed;
         container = area.Container;
         startPosition = new(area.Size.x / 2 - 1 , area.Size.y);
     }
@@ -182,7 +181,7 @@ public class ShapeControl
         {
             block.EventEndMoveDown -= OnEventEndMoveDown;
             block.Fixed();
-            actionPlayFixed.Invoke(block.IsBomb);
+            actionPlaySoundFixed.Invoke(block.IsBomb);
             area.Add(block);
             _blocks.Remove(block);
         }

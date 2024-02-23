@@ -7,38 +7,20 @@ public class ButtonClickHotkey : ButtonClick, IButtonInteractable, IPointerDownH
 {
     [Space]
     [SerializeField, InputAxis] private string _key;
-    [Space]
-    [SerializeField] private bool _isActive = true;
 
-    private bool _isInteractable;
-    private CustomTargetGraphic _thisTargetGraphic;
+    protected bool _isInteractable;
+    protected CustomTargetGraphic _thisTargetGraphic;
 
-    public bool IsActive
-    {
-        get => _isActive;
-        set
-        {
-            _isActive = value;
-
-            if (_thisTargetGraphic == null)
-                return;
-
-            if (IsInteractable)
-                _thisTargetGraphic.SetNormalState();
-            else
-                _thisTargetGraphic.SetDisabledState();
-        }
-    }
-    public bool IsInteractable 
+    public virtual bool IsInteractable 
     { 
-        get => _isInteractable && _isActive;  
+        get => _isInteractable;  
         set
         {
             if (_isInteractable == value) 
                 return;
             
             _isInteractable = value;
-            if(IsInteractable)
+            if(value)
                 _thisTargetGraphic.SetNormalState();
             else
                 _thisTargetGraphic.SetDisabledState();

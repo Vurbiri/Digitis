@@ -4,7 +4,7 @@ public class MenuMusic : MonoBehaviour
 {
     private void Start()
     {
-        MusicSingleton.Instance.MenuPlay();
+        MusicSingleton.Instance.Play(Music.Menu);
     }
 
     private void OnDestroy()

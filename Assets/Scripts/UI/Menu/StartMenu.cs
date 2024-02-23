@@ -53,6 +53,7 @@ public class StartMenu : MenuNavigation
                 _data.ResetData();
                 _data.ShapeType = Mathf.RoundToInt(_sliderSize.value).ToEnum<ShapeSize>();
                 _data.MaxDigit = Mathf.RoundToInt(_sliderMax.value);
+                _data.Save(true, null);
             }
 
             await SceneManager.LoadSceneAsync(_sceneGame);

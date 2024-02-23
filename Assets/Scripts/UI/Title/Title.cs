@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Title : MonoBehaviour
 {
+    [SerializeField] private string _key = "Digitis";
+    [Space]
     [SerializeField] private Letter _prefabLetter;
     [SerializeField] private RectTransform _container;
     [Space]
@@ -14,7 +16,7 @@ public class Title : MonoBehaviour
 
     private readonly List<Letter> _title = new(7);
 
-    private const string KEY = "Digitis";
+    public string Key { get => _key; set { _key = value; SetTitle(); } }
 
     private void Start()
     {
@@ -24,7 +26,7 @@ public class Title : MonoBehaviour
 
     private void SetTitle()
     {
-        string title = Localization.Instance.GetText(KEY).ToUpper();
+        string title = Localization.Instance.GetText(_key).ToUpper();
         int count = title.Length;
         int childCount = _title.Count;
 

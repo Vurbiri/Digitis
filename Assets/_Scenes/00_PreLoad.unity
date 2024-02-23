@@ -702,6 +702,7 @@ MonoBehaviour:
   _isNotDestroying: 1
   _musicMenu: {fileID: 8300000, guid: 6e555f95a27b58a47bc115a4cd66331e, type: 3}
   _musicGame: {fileID: 8300000, guid: 77cc0df8d3711b846897ae1427622532, type: 3}
+  _timeSwitching: 0.4
 --- !u!4 &907229201
 Transform:
   m_ObjectHideFlags: 0
@@ -796,7 +797,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nextSceneMobile: 1
-  _nextSceneDesktop: 2
+  _nextSceneDesktop: 4
   _slider: {fileID: 475711538}
 --- !u!4 &1307781868
 Transform:

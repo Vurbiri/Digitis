@@ -5,7 +5,7 @@ public class ButtonBombDesktopInteractable : AButtonBombInteractable
 {
     protected override void SetStatus(int countBomb)
     {
-        ButtonClickHotkey thisButton = _thisButtonClick as ButtonClickHotkey;
+        ButtonClickHotkeyBomb thisButton = _thisButtonClick as ButtonClickHotkeyBomb;
 
         if (countBomb <= 0)
         {

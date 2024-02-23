@@ -8,7 +8,7 @@ public class MainMenu : MenuNavigation
     [SerializeField] private Button _leaderboard;
     [SerializeField] private Button _review;
 
-    private YandexSDK _ysdk;
+    protected YandexSDK _ysdk;
 
     private void Start()
     {

@@ -167,6 +167,7 @@ MonoBehaviour:
   _container: {fileID: 1283615504286081999}
   _timePauseBlocksRemoved: 225
   _timePauseBombExploded: 175
+  _timePauseRemovedGameOver: 125
 --- !u!1 &3466994580516527267
 GameObject:
   m_ObjectHideFlags: 0

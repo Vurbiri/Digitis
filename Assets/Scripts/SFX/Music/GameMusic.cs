@@ -19,25 +19,29 @@ public class GameMusic : MonoBehaviour
         _dataGame = DataGame.Instance;
         _music = MusicSingleton.Instance;
 
-        _game.EventStartGame += PlayGameMusic;
+        _game.EventStartGame += () => _music.Play(Music.Game, CalkPitch(_dataGame.Level));
         _game.EventGameOver += OnGameOver;
 
         _dataGame.EventChangeLevel += SetPitch;
 
-        _inputController.EventPause += _music.MenuPlay;
-        _inputController.EventUnPause += PlayGameMusic;
+        _inputController.EventPause += SwitchToMenuMusic;
+        _inputController.EventUnPause += SwitchToGameMusic;
 
         _music.Stop();
     }
 
     private void SetPitch(int level)
     {
-        _music.Pitch = Mathf.Clamp(_pitchStart + level * _pitchPerLevel, _pitchStart, _pitchMax);
+        _music.Pitch = CalkPitch(level);
     }
 
-    private void PlayGameMusic()
+    private void SwitchToGameMusic()
     {
-        _music.GamePlay(Mathf.Clamp(_pitchStart + _dataGame.Level * _pitchPerLevel, _pitchStart, _pitchMax));
+        _music.Switch(Music.Game, CalkPitch(_dataGame.Level));
+    }
+    private void SwitchToMenuMusic()
+    {
+        _music.Switch(Music.Menu);
     }
 
     private void OnGameOver()
@@ -47,26 +51,18 @@ public class GameMusic : MonoBehaviour
         IEnumerator GameOverCoroutine()
         {
             yield return new WaitForSecondsRealtime(_game.PauseGameOver);
-            _music.MenuPlay();
+            SwitchToMenuMusic();
         }
     }
+
+    private float CalkPitch(int level) => Mathf.Clamp(_pitchStart + level * _pitchPerLevel, _pitchStart, _pitchMax);
 
     private void OnDestroy()
     {
         if (DataGame.Instance != null)
             _dataGame.EventChangeLevel -= SetPitch;
 
-        if (MusicSingleton.Instance == null)
-            return;
-
-        _music.Stop();
-
-        _game.EventStartGame -= PlayGameMusic;
-        _game.EventGameOver -= OnGameOver;
-        _inputController.EventUnPause -= PlayGameMusic;
-        _inputController.EventPause -= _music.MenuPlay;
-
-        
-        
+        if (MusicSingleton.Instance != null)
+            _music.Stop();
     }
 }

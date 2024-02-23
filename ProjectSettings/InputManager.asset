@@ -10,7 +10,7 @@ InputManager:
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: left shift
+    positiveButton: right ctrl
     altNegativeButton: 
     altPositiveButton: left ctrl
     gravity: 1000
@@ -26,9 +26,9 @@ InputManager:
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: right shift
+    positiveButton: joystick button 4
     altNegativeButton: 
-    altPositiveButton: right ctrl
+    altPositiveButton: joystick button 5
     gravity: 1000
     dead: 0.001
     sensitivity: 1000
@@ -42,25 +42,9 @@ InputManager:
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: joystick button 8
+    positiveButton: q
     altNegativeButton: 
-    altPositiveButton: joystick button 9
-    gravity: 1000
-    dead: 0.001
-    sensitivity: 1000
-    snap: 0
-    invert: 0
-    type: 0
-    axis: 0
-    joyNum: 0
-  - serializedVersion: 3
-    m_Name: Bomb
-    descriptiveName: 
-    descriptiveNegativeName: 
-    negativeButton: 
-    positiveButton: joystick button 6
-    altNegativeButton: 
-    altPositiveButton: q
+    altPositiveButton: 
     gravity: 1000
     dead: 0.001
     sensitivity: 1000
@@ -96,7 +80,7 @@ InputManager:
     gravity: 1000
     dead: 0.001
     sensitivity: 1000
-    snap: 0
+    snap: 1
     invert: 0
     type: 0
     axis: 0
@@ -144,10 +128,10 @@ InputManager:
     gravity: 1000
     dead: 0.001
     sensitivity: 1000
-    snap: 1
+    snap: 0
     invert: 0
     type: 2
-    axis: 5
+    axis: 0
     joyNum: 0
   - serializedVersion: 3
     m_Name: LeftRight
@@ -157,13 +141,13 @@ InputManager:
     positiveButton: 
     altNegativeButton: 
     altPositiveButton: 
-    gravity: 0
-    dead: 0.22
-    sensitivity: 1
-    snap: 0
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 1
     invert: 0
     type: 2
-    axis: 0
+    axis: 5
     joyNum: 0
   - serializedVersion: 3
     m_Name: DownRotation
@@ -208,10 +192,10 @@ InputManager:
     gravity: 1000
     dead: 0.001
     sensitivity: 1000
-    snap: 1
-    invert: 0
+    snap: 0
+    invert: 1
     type: 2
-    axis: 6
+    axis: 1
     joyNum: 0
   - serializedVersion: 3
     m_Name: DownRotation
@@ -221,13 +205,13 @@ InputManager:
     positiveButton: 
     altNegativeButton: 
     altPositiveButton: 
-    gravity: 0
-    dead: 0.22
-    sensitivity: 1
-    snap: 0
-    invert: 1
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 1
+    invert: 0
     type: 2
-    axis: 1
+    axis: 6
     joyNum: 0
   - serializedVersion: 3
     m_Name: Horizontal

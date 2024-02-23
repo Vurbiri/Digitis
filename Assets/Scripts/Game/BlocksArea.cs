@@ -9,8 +9,9 @@ public class BlocksArea : MonoBehaviour
     [SerializeField] private Vector2Int _size = new(10, 20);
     [SerializeField] private Transform _container;
     [Space]
-    [SerializeField] private int _timePauseBlocksRemoved = 200;
-    [SerializeField] private int _timePauseBombExploded = 150;
+    [SerializeField] private int _timePauseBlocksRemoved = 225;
+    [SerializeField] private int _timePauseBombExploded = 175;
+    [SerializeField] private int _timePauseRemovedGameOver = 125;
 
     private DataGame _dataGames;
     private Block[,] _blocks;
@@ -161,7 +162,7 @@ public class BlocksArea : MonoBehaviour
                 if (block != null)
                 {
                     block.Remove(_exitToken.Token).Forget();
-                    await UniTask.Delay(_timePauseBombExploded, cancellationToken: _exitToken.Token);
+                    await UniTask.Delay(_timePauseRemovedGameOver, cancellationToken: _exitToken.Token);
                 }
             }
         }

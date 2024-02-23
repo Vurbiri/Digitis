@@ -27,6 +27,12 @@ public enum MixerGroup : byte
     SFX,
 }
 
+public enum Music : byte
+{
+    Menu,
+    Game,
+}
+
 public enum AvatarSize : byte
 {
     Small,
