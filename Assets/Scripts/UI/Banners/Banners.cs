@@ -9,7 +9,7 @@ public class Banners : ASingleton<Banners>
 
     private Pool<Banner> _banners;
 
-    private void Start()
+    public void Initialize()
     {
         _banners = new(_prefab, _repository, _sizePool);
     }

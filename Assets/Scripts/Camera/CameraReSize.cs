@@ -1,14 +1,10 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 public class CameraReSize : MonoBehaviour
 {
-    [SerializeField] private float _timeRateUpdateMin = 0.5f;
-    [SerializeField] private float _timeRateUpdateMax = 5;
-    [SerializeField] private float _timeRateUpdateSteep = 0.25f;
-
     protected Camera _thisCamera;
+    private float aspectRatioOld = 0f;
 
     private Vector2 _size = Vector2.zero;
     public Vector2 Size => _size;
@@ -18,38 +14,15 @@ public class CameraReSize : MonoBehaviour
     private void Start()
     {
         _thisCamera = GetComponent<Camera>();
-
-        StartCoroutine(RatioUpdate());
     }
 
-    private IEnumerator RatioUpdate()
+    private void FixedUpdate()
     {
-        float timeRateUpdate = _timeRateUpdateMin;
-        float aspectRatio;
-        float aspectRatioOld = 0f;
-        WaitForSecondsRealtime delay = new(timeRateUpdate);
+        if (aspectRatioOld == _thisCamera.aspect)
+            return;
 
-        while (true)
-        {
-            yield return delay;
-
-            aspectRatio = _thisCamera.aspect;
-
-            if (aspectRatio != aspectRatioOld)
-            {
-                aspectRatioOld = aspectRatio;
-                timeRateUpdate = _timeRateUpdateMin;
-
-                OnReSize(_thisCamera.orthographicSize * aspectRatio, _thisCamera.orthographicSize, aspectRatio);
-            }
-            else
-            {
-                if (timeRateUpdate < _timeRateUpdateMax)
-                    timeRateUpdate += _timeRateUpdateSteep;
-            }
-
-            delay = new(timeRateUpdate);
-        }
+        aspectRatioOld = _thisCamera.aspect;
+        OnReSize(_thisCamera.orthographicSize * aspectRatioOld, _thisCamera.orthographicSize, aspectRatioOld);
     }
 
     protected virtual void OnReSize(float horizontalHalfSize, float verticalHalfSize, float aspectRatio)

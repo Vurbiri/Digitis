@@ -76,7 +76,7 @@ public class DataGame : ASingleton<DataGame>
     public void ResetData()
     {
         _data.Reset(_startCountBombs);
-        CountShapes = CalkMaxShapes();
+        _countShapesMax = _data.CountShapes = _startCountShapes;
     }
 
     public void CalkScore(int digit, int countSeries, int countOne)

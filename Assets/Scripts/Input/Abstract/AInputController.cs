@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class AInputController : MonoBehaviour
@@ -11,7 +10,7 @@ public abstract class AInputController : MonoBehaviour
     [SerializeField] protected ButtonClick _buttonBomb;
     [SerializeField] protected ButtonClick _buttonPause;
     [Space]
-    [SerializeField] private MonoBehaviour[] _buttonsUnPause;
+    [SerializeField] private ButtonUnPause[] _buttonsUnPause;
 
     public event Action EventLeftPress;
     public event Action EventRightPress;
@@ -37,28 +36,12 @@ public abstract class AInputController : MonoBehaviour
         _buttonPause.EventButtonClick += () => { if (ControlEnable) EventPause?.Invoke(); };
 
         foreach (var button in _buttonsUnPause)
-            (button as IEventUnPause).EventUnPause += () => { if (!ControlEnable) EventUnPause?.Invoke(); };
+            button.EventUnPause += () => { if (!ControlEnable) EventUnPause?.Invoke(); };
 
         void OnGameEvent(Action action)
         {
             if (ControlEnable)
                 action?.Invoke();
-        }
-    }
-
-    private void OnValidate()
-    {
-        if (_buttonsUnPause == null)
-            return;
-
-
-        for (int i = 0; i < _buttonsUnPause.Length; i++)
-        {
-            if (_buttonsUnPause[i] is IEventUnPause)
-                continue;
-
-            Debug.LogWarning(_buttonsUnPause[i].name + " не IEventUnPause");
-            _buttonsUnPause[i] = null;
         }
     }
 }

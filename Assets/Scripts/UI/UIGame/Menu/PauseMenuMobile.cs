@@ -34,8 +34,10 @@ public class PauseMenuMobile : MenuNavigation
 
         gameObject.SetActive(false);
 
-        void OnLeaderboard()
+        void OnLeaderboard(bool isLeaderboard)
         {
+            if (!isLeaderboard) return;
+            
             _leaderboardUI.TryReward().Forget();
 
             _title.Key = _key;
@@ -58,6 +60,5 @@ public class PauseMenuMobile : MenuNavigation
     public void OnToMenu()
     {
         SceneManager.LoadSceneAsync(_sceneMenu);
-        Time.timeScale = 1.0f;
     }
 }

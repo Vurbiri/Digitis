@@ -4,6 +4,7 @@ using UnityEngine;
 
 public partial class YandexSDK : ASingleton<YandexSDK>
 {
+    [Space]
     [SerializeField] private string _lbName = "lbDigitis";
 
 #if !UNITY_EDITOR

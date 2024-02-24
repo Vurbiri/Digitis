@@ -33,6 +33,12 @@ public enum Music : byte
     Game,
 }
 
+public enum Device : byte
+{
+    MouseKeyboard,
+    Gamepad
+}
+
 public enum AvatarSize : byte
 {
     Small,

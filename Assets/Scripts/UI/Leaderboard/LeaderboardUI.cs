@@ -193,8 +193,6 @@ public class LeaderboardUI : MonoBehaviour
         else if (offset > maxOffset) offset = maxOffset;
 
         content.localPosition = new Vector2(0, offset);
-
-       
     }
 
 }

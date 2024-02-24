@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
 
 public class CustomTargetGraphic : MonoBehaviour
 {
@@ -25,6 +24,9 @@ public class CustomTargetGraphic : MonoBehaviour
 
     public void Initialize(bool isInteractable)
     {
+        if (_thisRectTransform == null)
+            _thisRectTransform = GetComponent<RectTransform>();
+
         _size = _thisRectTransform.sizeDelta;
 
         _iconRectTransform = _icon.rectTransform;

@@ -13965,6 +13965,8 @@ MonoBehaviour:
   _timeRecolor: 5
   _spreadColor: 0.2
   _emissionPerRadius: 0.22
+  _colorGameOver: {r: 0, g: 0, b: 1, a: 1}
+  _speedGameOver: 0.6
 --- !u!1001 &516218353
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28267,6 +28269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3d6ba51270beac44a3a41f27ca9a629, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _key: Digitis
   _prefabLetter: {fileID: 4144280395301255541, guid: 098228974746f734da1aa0ac28631d9c,
     type: 3}
   _container: {fileID: 2004084460}

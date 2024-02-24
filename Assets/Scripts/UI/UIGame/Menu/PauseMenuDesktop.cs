@@ -1,8 +1,4 @@
 using Cysharp.Threading.Tasks;
-using NaughtyAttributes;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,8 +23,6 @@ public class PauseMenuDesktop : MonoBehaviour
     [Space]
     [SerializeField] private GameObject _buttonPlay;
     [SerializeField] private GameObject _buttonToMenu;
-    
-
 
     private void Awake()
     {
@@ -37,7 +31,7 @@ public class PauseMenuDesktop : MonoBehaviour
 
         _inputController.EventPause += () => SetPause(true);
         _inputController.EventUnPause += () => SetPause(false);
-        _game.EventLeaderboard += () => OnLeaderboardAsync().Forget();
+        _game.EventLeaderboard += (b) => OnLeaderboardAsync(b).Forget();
 
 
         void SetPause(bool pause)
@@ -46,8 +40,10 @@ public class PauseMenuDesktop : MonoBehaviour
             _pauseUI.SetActive(pause);
         }
 
-        async UniTaskVoid OnLeaderboardAsync()
+        async UniTaskVoid OnLeaderboardAsync(bool isLeaderboard)
         {
+            if (!isLeaderboard) return;
+
             _title.Key = _key;
             await _leaderboardUI.TryReward(true);
 

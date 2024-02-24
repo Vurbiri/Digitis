@@ -35,7 +35,6 @@ public class Banner : APooledObject<Banner>
         layoutGroup.padding.right = iSize;
         layoutGroup.padding.top = iSize;
         layoutGroup.padding.bottom = iSize;
-
     }
 
     public void Setup(string message, MessageType messageType, int time, bool isThrough)

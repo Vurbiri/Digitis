@@ -9,16 +9,20 @@ public abstract class AParticleBackground : AParticleSystemController
     [SerializeField] protected float _spreadColor = 0.2f;
     [Space]
     [SerializeField] protected float _emissionPerRadius = 0.22f;
+    [Space]
+    [SerializeField] private Color _colorGameOver;
+    [SerializeField] private float _speedGameOver = 0.6f;
 
     private Color _color = Color.white;
     private WaitForSecondsRealtime _delay;
+    private Coroutine _coroutine;
 
     protected override void Awake()
     {
         base.Awake();
 
         _delay = new(_timeRecolor);
-        StartCoroutine(ReColorParticlesCoroutine());
+        StartReColorParticlesCoroutine();
 
         _cameraSize.EventReSize += OnReSizeParticleSystem;
 
@@ -27,14 +31,47 @@ public abstract class AParticleBackground : AParticleSystemController
 
     protected abstract void OnReSizeParticleSystem(Vector2 halfSize);
 
-    protected IEnumerator ReColorParticlesCoroutine()
+    protected void StartReColorParticlesCoroutine()
     {
-        while (true)
-        {
-            _color.Random();
-            _mainModule.startColor = _color;
+        StopReColorParticlesCoroutine();
+        _coroutine = StartCoroutine(ReColorParticlesCoroutine());
 
-            yield return _delay;
+        IEnumerator ReColorParticlesCoroutine()
+        {
+            while (true)
+            {
+                _color.Random();
+                _mainModule.startColor = _color;
+
+                yield return _delay;
+            }
         }
+    }
+
+    protected void StopReColorParticlesCoroutine()
+    {
+        if (_coroutine == null)
+            return;
+
+        StopCoroutine(_coroutine);
+        _coroutine = null;
+    }
+
+    protected void OnGameOver()
+    {
+        StopReColorParticlesCoroutine();
+        ClearAndStop();
+        SetSpeed(_speedGameOver);
+        _mainModule.startColor = _colorGameOver;
+        _emissionPerRadius *= 2f;
+        _emissionModule.rateOverTimeMultiplier *= 2f;
+        Play();
+    }
+
+    protected void SetSpeed(float speed)
+    {
+        _mainModule.startSpeedMultiplier = speed;
+        _emissionModule.rateOverTimeMultiplier = _cameraSize.Size.x * _emissionPerRadius * speed / 2f;
+        _mainModule.startLifetimeMultiplier = Mathf.Ceil(_cameraSize.Size.y / speed);
     }
 }

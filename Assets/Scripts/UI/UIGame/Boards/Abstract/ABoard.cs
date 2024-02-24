@@ -5,6 +5,8 @@ public abstract class ABoard : MonoBehaviour
 {
     [SerializeField] protected TMP_Text _textScore;
 
+    public string Value => _textScore.text;
+
     protected DataGame _dataGame;
 
     protected virtual void Awake() => _dataGame = DataGame.InstanceF;

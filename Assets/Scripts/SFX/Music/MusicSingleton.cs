@@ -16,6 +16,7 @@ public class MusicSingleton : ASingleton<MusicSingleton>
 
     private AudioSource _thisAudio;
     private Coroutine _coroutine;
+    float _speedSwitch;
 
     private void Start()
     {
@@ -35,23 +36,22 @@ public class MusicSingleton : ASingleton<MusicSingleton>
         #region Local Function
         IEnumerator SwitchCoroutine()
         {
-            float volume = _thisAudio.volume;
-            float speed = volume / _timeSwitching;
+            _speedSwitch = _volume / _timeSwitching;
 
             while (_thisAudio.volume > 0) 
             { 
                 yield return null;
-                _thisAudio.volume -= speed * Time.unscaledDeltaTime;
+                _thisAudio.volume -= _speedSwitch * Time.unscaledDeltaTime;
             }
             _thisAudio.volume = 0f;
 
-            speed = _volume / _timeSwitching;
+            _speedSwitch = _volume / _timeSwitching;
             Play(music, pitch);
 
             while (_thisAudio.volume < _volume)
             {
                 yield return null;
-                _thisAudio.volume += speed * Time.unscaledDeltaTime;
+                _thisAudio.volume += _speedSwitch * Time.unscaledDeltaTime;
             }
             _thisAudio.volume = _volume;
 

@@ -3,17 +3,18 @@ using UnityEngine;
 
 public class LogOnWindow : MonoBehaviour
 {
-    [SerializeField] private GameObject _languagePanel;
-
     private UniTaskCompletionSource<bool> _taskLogOn;
     YandexSDK _ysdk;
 
     public async UniTask<bool> TryLogOn()
     {
+        MusicSingleton music = MusicSingleton.InstanceF;
         _ysdk = YandexSDK.InstanceF;
+        
+        music.Play(Music.Game);
 
         _taskLogOn = new();
-        SetActive(true);
+        gameObject.SetActive(true);
 
         while (await _taskLogOn.Task)
         {
@@ -23,17 +24,13 @@ public class LogOnWindow : MonoBehaviour
             _taskLogOn = new();
             Message.BannerKey("ErrorLogon", MessageType.Error);
         }
-
-        SetActive(false);
+        
+        music.Stop();
+        gameObject.SetActive(false);
 
         return _ysdk.IsLogOn;
 
         #region Local Functions
-        void SetActive(bool active)
-        {
-            gameObject.SetActive(active);
-            _languagePanel.SetActive(active);
-        }
 
         async UniTask<bool> Authorization()
         {

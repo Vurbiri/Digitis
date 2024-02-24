@@ -43,4 +43,12 @@ public class CustomButton : Button
                 break;
         }
     }
+
+    protected override void OnValidate()
+    {
+        base.OnValidate();
+
+        _thisTargetGraphic = GetComponent<CustomTargetGraphic>();
+        _thisTargetGraphic.Initialize(interactable);
+    }
 }

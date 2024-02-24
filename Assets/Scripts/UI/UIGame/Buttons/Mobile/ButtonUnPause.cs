@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class ButtonUnPause : MonoBehaviour, IEventUnPause
+public class ButtonUnPause : MonoBehaviour
 {
     protected Button _thisButton;
     

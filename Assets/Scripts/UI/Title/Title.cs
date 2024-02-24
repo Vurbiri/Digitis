@@ -65,4 +65,10 @@ public class Title : MonoBehaviour
             _title[i].gameObject.SetActive(false);
 
     }
+
+    private void OnDestroy()
+    {
+        if (Localization.Instance != null)
+            Localization.Instance.EventSwitchLanguage -= SetTitle;
+    }
 }

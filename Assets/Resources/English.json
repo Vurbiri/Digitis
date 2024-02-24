@@ -13,7 +13,6 @@
   "Level": "Level",
   "SensitivityButtons": "Press frequency (ms)",
 
-  "ResetForAd": "Resetting researches for viewing Ad",
   "RepairForAd": "Repair the probe at 35% for viewing Ad",
   "AdReward": "Showing ad:",
   "Repair": "Repaired {0:N} structures",
@@ -31,7 +30,6 @@
   "Guest": "Guest",
   "Anonym": "Anonym",
 
-  "Save": "Save",
   "ToMenu": "To menu",
   "Pause": "Pause",
   "GameOver": "Game over",
@@ -45,7 +43,6 @@
   "ErrorSave": "Save error!",
   "GoodSave": "Game is saved",
   "GoodSaveSettings": "Settings is saved",
-  "GoodSaveStates": "Researches is saved",
   "WarningAuthorization": "Cloud save, personalization and leaderboard are not available without authorization",
 
   "Leaderboard": "Leaders",
@@ -56,12 +53,6 @@
   "Control": "Control",
   "Keyboard": "Keyboard",
   "Gamepad": "Gamepad",
-  "Rotation": "Rotation",
-  "Down": "Down",
-  "Left": "Left",
-  "Right": "Right",
-  "Bomb": "Bomb",
-  "GameMenu": "Pause | Menu",
   "GameRules": "Game rules",
   "Enjoy": "Have fun playing!",
   "GameRulesPart1": "  The goal of the game is to arrange blocks of digits into clusters according to their value. The cluster contains blocks that are adjacent in a straight line (top, left, bottom, right). To remove a group of 2s, you only need two blocks, a group of 3s - three blocks, and so on up to 9s - there must be at least nine of them.",

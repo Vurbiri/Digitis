@@ -35,7 +35,7 @@ public class Game : MonoBehaviour
     public event Action EventCountdown;
     public event Action EventStartGame;
     public event Action EventGameOver;
-    public event Action EventLeaderboard;
+    public event Action<bool> EventLeaderboard;
 
     private void Awake()
     {
@@ -165,8 +165,7 @@ public class Game : MonoBehaviour
             await UniTask.Delay(PAUSE_GAMEOVER);
             await _shapesManager.RemoveAll();
 
-            if(isLeaderboard)
-                EventLeaderboard?.Invoke();
+            EventLeaderboard?.Invoke(isLeaderboard);
         }
         #endregion
     }

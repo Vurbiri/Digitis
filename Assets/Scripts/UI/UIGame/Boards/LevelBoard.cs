@@ -4,6 +4,8 @@ using UnityEngine.UI;
 public class LevelBoard : ABoard
 {
     [SerializeField] private Slider _shapesSlider;
+
+    public Slider ShapesSlider => _shapesSlider;
     
     private void Start()
     {

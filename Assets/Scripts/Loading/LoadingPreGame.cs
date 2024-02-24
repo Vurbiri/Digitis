@@ -11,7 +11,7 @@ public class LoadingPreGame : MonoBehaviour
     [SerializeField] private int _nextSceneDesktop = 1;
     [Space]
     [SerializeField] private Slider _slider;
-    //[SerializeField] private LogOnWindow _logOnWindow;
+    [SerializeField] private LogOnWindow _logOnWindow;
 
     private void Start() => Loading().Forget();
 
@@ -25,10 +25,7 @@ public class LoadingPreGame : MonoBehaviour
         Localization localization = Localization.InstanceF;
 
         if (!localization.Initialize())
-        {
-            Message.Banner("Error loading Localization!", MessageType.FatalError);
-            return;
-        }
+            Message.Error("Error loading Localization!");
 
         ProgressLoad(0.1f);
 
@@ -39,18 +36,20 @@ public class LoadingPreGame : MonoBehaviour
 
         bool isDesktop;
         StartLoadScene();
-
-        ProgressLoad(0.3f);
+      
+        ProgressLoad(0.28f);
 
         await CreateStorages();
 
-        //if (!ysdk.IsLogOn)
-        //{
-        //    _slider.gameObject.SetActive(false);
-        //    if (await _logOnWindow.TryLogOn())
-        //        await CreateStorages();
-        //    _slider.gameObject.SetActive(true);
-        //}
+        ProgressLoad(0.35f);
+
+        Banners.InstanceF.Initialize();
+
+        if (!ysdk.IsLogOn)
+        {
+            if (await _logOnWindow.TryLogOn())
+                await CreateStorages();
+        }
 
         ProgressLoad(0.5f);
 

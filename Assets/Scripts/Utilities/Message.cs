@@ -2,10 +2,8 @@ using UnityEngine;
 
 public static class Message
 {
-    public static void Log(string msg)
-    {
-        UtilityJS.Log(msg);
-    }
+    public static void Log(string msg)=> UtilityJS.Log(msg);
+    public static void Error(string msg) => UtilityJS.Error(msg);
 
     public static void Banner(string message, MessageType type = MessageType.Normal, int time = 5000, bool isThrough = true)
     {

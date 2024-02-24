@@ -370,12 +370,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.75
+  m_fontSize: 1.7
   m_fontSizeBase: 1.8
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 1
-  m_fontSizeMax: 1.8
+  m_fontSizeMax: 1.7
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -2485,8 +2485,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.2
-  m_fontSizeBase: 1.2
+  m_fontSize: 1.175
+  m_fontSizeBase: 1.175
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0.5
@@ -4506,7 +4506,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Pause
+  m_text: Settings
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d5d3b78081a1d2c408ab4e60ee58f39e, type: 2}
   m_sharedMaterial: {fileID: 764521181611793953, guid: d5d3b78081a1d2c408ab4e60ee58f39e,
@@ -5269,8 +5269,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 1.25}
-  m_SizeDelta: {x: 0, y: 1.5}
+  m_AnchoredPosition: {x: 0.049999952, y: 1.25}
+  m_SizeDelta: {x: -0.1, y: 1.5}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1770423744
 MonoBehaviour:
@@ -5320,8 +5320,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.2
-  m_fontSizeBase: 1.2
+  m_fontSize: 1.175
+  m_fontSizeBase: 1.175
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0.5
@@ -5574,8 +5574,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.15000014}
-  m_SizeDelta: {x: -0.099999905, y: -0.39999974}
+  m_AnchoredPosition: {x: 0, y: -0.125}
+  m_SizeDelta: {x: -0.099999905, y: -0.45000002}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1783977945
 MonoBehaviour:
@@ -5625,8 +5625,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 2
-  m_fontSizeBase: 2
+  m_fontSize: 1.8
+  m_fontSizeBase: 1.8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0.5
@@ -6660,7 +6660,6 @@ MonoBehaviour:
   _scaleContainer: 1.05
   _isX: 1
   _settingsBlocks:
-  - {fileID: 11400000, guid: 1b9223f8127ca434e9f3e4e1f89805b6, type: 2}
   - {fileID: 11400000, guid: bcfb9b487e098ed4aac85b86113cb9ea, type: 2}
   - {fileID: 11400000, guid: 7cae4a7e422a7a646a159d034a5baa37, type: 2}
   - {fileID: 11400000, guid: b48869e07452ce04da734bdf4658d19a, type: 2}
@@ -12477,8 +12476,9 @@ MonoBehaviour:
   _timeRecolor: 7
   _spreadColor: 0.2
   _emissionPerRadius: 0.22
-  _game: {fileID: 64705094}
   _colorGameOver: {r: 1, g: 0.3137255, b: 0, a: 1}
+  _speedGameOver: 0.6
+  _game: {fileID: 64705094}
 --- !u!1 &4783084125520840266
 GameObject:
   m_ObjectHideFlags: 0

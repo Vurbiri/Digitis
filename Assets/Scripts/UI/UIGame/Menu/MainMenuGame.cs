@@ -10,6 +10,5 @@ public class MainMenuGame : MainMenu
     public void OnToMenu()
     {
         SceneManager.LoadSceneAsync(_sceneMenu);
-        Time.timeScale = 1.0f;
     }
 }

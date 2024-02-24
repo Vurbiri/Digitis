@@ -1,20 +1,38 @@
 #if UNITY_EDITOR
 
 using Cysharp.Threading.Tasks;
+using NaughtyAttributes;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 public partial class YandexSDK
 {
-    public bool IsInitialize => true;
-    public bool IsPlayer => true;
-    public bool IsLeaderboard => true;
-    public string PlayerName => "";
-    public bool IsLogOn { set; get; } = true;
-    public string Lang => "ru";
+    [Space]
+    public bool _isDesktop = true;
+    public bool _isLogOn = true;
+    [Dropdown("GetLangValues")] public string _lang = "ru";
+    public bool _isInitialize = true;
+    public bool _isLeaderboard = true;
+    public bool _isPlayer = true;
 
-    public bool IsDesktop => true;
+    private DropdownList<string> GetLangValues()
+    {
+        return new DropdownList<string>()
+        {
+            { "Русский",  "ru" },
+            { "English",  "en" }
+        };
+    }
+
+    public bool IsDesktop => _isDesktop;
+
+    public bool IsInitialize => _isInitialize;
+    public bool IsPlayer => _isPlayer;
+    public bool IsLeaderboard => _isLeaderboard;
+    public string PlayerName => "";
+    public bool IsLogOn => _isLogOn;
+    public string Lang => _lang;
 
     public UniTask<bool> InitYsdk() => UniTask.RunOnThreadPool(() => true);
     public void LoadingAPI_Ready() { }
@@ -22,7 +40,7 @@ public partial class YandexSDK
     public async UniTask<bool> LogOn()
     {
         await UniTask.Delay(1000, true);
-        IsLogOn = true;
+        _isLogOn = true;
         return true;
     }
     public UniTask<bool> InitLeaderboards() => UniTask.RunOnThreadPool(() => false);
