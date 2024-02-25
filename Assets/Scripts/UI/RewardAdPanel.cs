@@ -1,28 +1,22 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RewardAdPanel : MonoBehaviour
 {
-    [SerializeField] private ToggleFullInteractable _toggle;
+    [SerializeField] private TextFormatLocalization _label;
+    [SerializeField] private Toggle _toggle;
 
-    public bool IsOn => _toggle.IsOn && _isShow; 
+    public bool IsOn => _toggle.isOn && _isShow; 
     
-    public bool Interactable
-    { 
-        set
-        {
-            if (!_isShow) return;
-
-            gameObject.SetActive(value);
-            _toggle.Interactable = value;
-            //_toggle.IsOn = value ? _toggle.IsOn : false;
-        }
-    }
+    public bool Show { set { if (_isShow) gameObject.SetActive(value && _isShow); } }
+    
     private bool _isShow = false;
 
     public void Initialize()
     {
         _isShow = DataGame.Instance.CountBonusBombs == 0;
-        _toggle.IsOn = false;
+        _label.Setup(YMoney.Instance.BombsRewardedAd);
+        _toggle.isOn = false;
         gameObject.SetActive(_isShow);
     }
 }

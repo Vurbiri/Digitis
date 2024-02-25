@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class StartMenu : MenuNavigation
 {
@@ -12,9 +13,10 @@ public class StartMenu : MenuNavigation
     [Space]
     [SerializeField] private ToggleFullInteractable _toggleContinue;
     [Space]
-    [SerializeField] private SliderFullInteractable _sliderSize;
-    [SerializeField] private SliderFullInteractable _sliderMax;
+    [SerializeField] private Slider _sliderSize;
+    [SerializeField] private Slider _sliderMax;
     [Space]
+    [SerializeField] private GameObject _settingsPanel;
     [SerializeField] private RewardAdPanel _rewardAdPanel;
 
     private DataGame _dataGame;
@@ -27,31 +29,26 @@ public class StartMenu : MenuNavigation
 
         _rewardAdPanel.Initialize();
 
-        //_toggleContinue = _continue.Slider as Toggle;
-        //_sliderSize = _sliderSize.Slider as Slider;
-        //_sliderMax = _sliderMax.Slider as Slider;
-
-        _sliderSize.Value = _dataGame.ShapeType.ToInt();
-        _sliderMax.MinValue = _dataGame.MinDigit;
-        _sliderMax.Value = _dataGame.MaxDigit;
+        _sliderSize.value = _dataGame.ShapeType.ToInt();
+        _sliderMax.minValue = _dataGame.MinDigit;
+        _sliderMax.value = _dataGame.MaxDigit;
 
         SetStartInteractable(_dataGame.ModeStart == GameModeStart.GameContinue);
-        _toggleContinue.OnValueChanged.AddListener(SetInvertInteractable);
+        _toggleContinue.OnValueChanged.AddListener(SetInvertShow);
 
         #region Local Functions
         void SetStartInteractable(bool value)
         {
             _toggleContinue.Interactable = value;
             _toggleContinue.IsOn = value;
-            SetInvertInteractable(value);
+            SetInvertShow(value);
         }
-        void SetInvertInteractable(bool value)
+        void SetInvertShow(bool value)
         {
             value = !value;
 
-            _sliderSize.Interactable = value;
-            _sliderMax.Interactable = value;
-            _rewardAdPanel.Interactable = value;
+            _settingsPanel.SetActive(value);
+            _rewardAdPanel.Show = value;
         }
         #endregion
     }
@@ -70,9 +67,10 @@ public class StartMenu : MenuNavigation
                 if (_dataGame.ModeStart == GameModeStart.GameContinue && YandexSDK.Instance.IsLeaderboard)
                     if(await YandexSDK.Instance.TrySetScore(_dataGame.Score))
                         _leaderboard.TryReward().Forget();
+
                 _dataGame.ResetData();
-                _dataGame.ShapeType = Mathf.RoundToInt(_sliderSize.Value).ToEnum<ShapeSize>();
-                _dataGame.MaxDigit = Mathf.RoundToInt(_sliderMax.Value);
+                _dataGame.ShapeType = Mathf.RoundToInt(_sliderSize.value).ToEnum<ShapeSize>();
+                _dataGame.MaxDigit = Mathf.RoundToInt(_sliderMax.value);
 
                 bool result = _rewardAdPanel.IsOn;
                 if (result)
@@ -95,7 +93,7 @@ public class StartMenu : MenuNavigation
                 await _money.AwaitCloseRewardedVideo();
                 if (result)
                 {
-                    Message.BannerKey("BombsAdd");
+                    Message.BannerKeyFormat("BombsAdd", _money.BombsRewardedAd, time: 4000);
                     await UniTask.Delay(1000, true);
                 }
             }

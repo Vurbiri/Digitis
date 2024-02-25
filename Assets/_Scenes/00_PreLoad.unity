@@ -721,7 +721,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
   _lbName: lbDigitis
-  _isDesktop: 1
+  _isDesktop: 0
   _isLogOn: 1
   _lang: ru
   _isInitialize: 1

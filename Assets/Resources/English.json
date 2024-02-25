@@ -13,8 +13,8 @@
   "Level": "Level",
   "SensitivityButtons": "Press frequency (ms)",
 
-  "BombsForAd": "+3 'Zero-Bombs' by watching an Ad",
-  "BombsAdd": "+3 'Zero-Bombs'",
+  "BombsForAd": "+{0} 'Zero-Bombs' by watching an Ad",
+  "BombsAdd": "+{0} 'Zero-Bombs'",
 
   "LevelUp": "Level {0}",
 
