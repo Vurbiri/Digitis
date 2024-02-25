@@ -68,6 +68,9 @@ public class MusicSingleton : ASingleton<MusicSingleton>
         _thisAudio.Play();
     }
 
+    public void Pause() => _thisAudio.Pause();
+    public void UnPause() => _thisAudio.UnPause();
+
     public void Stop()
     {
         if (_coroutine != null)

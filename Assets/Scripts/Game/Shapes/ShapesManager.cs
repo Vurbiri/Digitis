@@ -33,7 +33,7 @@ public class ShapesManager : MonoBehaviour
     private RandomObjects<BlockSettings> _randomBlockSettings;
     private int _countBlocks;
 
-    private const int BASE_WEIGHT_ONE = 3;
+    private const int BASE_WEIGHT = 5;
     #endregion
 
     public event Action EventEndMoveDown;
@@ -81,8 +81,7 @@ public class ShapesManager : MonoBehaviour
         #region Local Functions
         Shape[] Initialize(int maxDigit, ShapeSize shape)
         {
-            _settingsBlocks[0].Weight = 100 + BASE_WEIGHT_ONE * maxDigit;
-            _settingsBlocks[0].MaxCount = shape.ToInt() - 1;
+            InitializeOneRandomValue();
             _randomBlockSettings = new(_settingsBlocks, maxDigit);
             Shape[] shapes = shape switch
             {
@@ -95,6 +94,12 @@ public class ShapesManager : MonoBehaviour
             _countBlocks = shape.ToInt();
 
             return shapes;
+
+            void InitializeOneRandomValue()
+            {
+                _settingsBlocks[0].Weight = 100 + BASE_WEIGHT * (maxDigit - 2);
+                _settingsBlocks[0].MaxCount = shape.ToInt() - 1;
+            }
         }
         void CreateShapeContinue(ShapeType nextShape, int[] nextBlocksShape)
         {

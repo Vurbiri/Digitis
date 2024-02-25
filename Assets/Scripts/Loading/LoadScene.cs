@@ -29,10 +29,10 @@ public class LoadScene
         _isAddProgress = isAddProgress;
     }
 
-    public void Start()
+    public void Start(bool allowSceneActivation = false)
     {
         _asyncOperation = SceneManager.LoadSceneAsync(_nextScene);
-        _asyncOperation.allowSceneActivation = false;
+        _asyncOperation.allowSceneActivation = allowSceneActivation;
         if (_slider != null)
             ProgressAsync().Forget();
 
@@ -46,10 +46,20 @@ public class LoadScene
         }
     }
 
-    public void End() => _asyncOperation.allowSceneActivation = true;
+    public void End()
+    {
+        if (_asyncOperation == null)
+            return;
+
+        SetProgress(0.5f);
+        _asyncOperation.allowSceneActivation = true;
+    }
 
     public void SetProgress(float progress)
     {
+        if (!_isAddProgress || _asyncOperation == null || _slider == null)
+            return;
+
         _addProgress = progress;
         _slider.value = Progress;
     }

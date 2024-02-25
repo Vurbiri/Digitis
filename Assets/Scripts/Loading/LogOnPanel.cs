@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class LogOnWindow : MonoBehaviour
+public class LogOnPanel : MonoBehaviour
 {
     private UniTaskCompletionSource<bool> _taskLogOn;
     YandexSDK _ysdk;
@@ -24,7 +24,7 @@ public class LogOnWindow : MonoBehaviour
             _taskLogOn = new();
             Message.BannerKey("ErrorLogon", MessageType.Error);
         }
-        
+
         music.Stop();
         gameObject.SetActive(false);
 

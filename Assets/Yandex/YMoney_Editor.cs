@@ -10,14 +10,14 @@ public partial class YMoney
 
     private async UniTask<bool> ShowAd(UniTaskCompletionSource<bool> taskCompletion, Action action, bool isOn = true)
     {
-        //_globalMusic.Pause();
+        _globalMusic.Pause();
 
         PauseCallback();
         bool result = await taskCompletion.Task;
         Debug.Log(action.Method.Name + " - " + result);
 
-        //if (isOn)
-        //    _globalMusic.UnPause();
+        if (isOn)
+            _globalMusic.UnPause();
 
         return result;
 

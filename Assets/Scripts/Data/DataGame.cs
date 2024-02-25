@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using System;
 using UnityEngine;
@@ -7,7 +8,7 @@ public class DataGame : ASingleton<DataGame>
     private const string KEY = "gmd";
     
     [Space]
-    [SerializeField] private int _startCountBombs = 2;
+    [SerializeField] private int _startCountBombs = 1;
     [Space]
     [SerializeField] private int _startCountShapes = 20;
     [SerializeField] private int _shapesPerLevel = 2;
@@ -25,14 +26,15 @@ public class DataGame : ASingleton<DataGame>
     public Speeds Speeds => _speeds;
     public int CountShapesMax { get => _countShapesMax; set { _countShapesMax = value; EventChangeCountShapesMax?.Invoke(value); } }
 
-    public GameModeStart ModeStart { get => _data.ModeStart; set => _data.ModeStart = value; }
-    public int Level { get => _data.CurrentLevel; set { _data.CurrentLevel = value; EventChangeLevel?.Invoke(value); } }
+    public GameModeStart ModeStart { get => _data.ModeStart; private set => _data.ModeStart = value; }
+    public int Level { get => _data.CurrentLevel; private set { _data.CurrentLevel = value; EventChangeLevel?.Invoke(value); } }
     public int Score { get => _data.Score; private set { _data.Score = value; EventChangeScore?.Invoke(value.ToString()); } }
     public int CountShapes { get => _data.CountShapes; set { _data.CountShapes = value; EventChangeCountShapes?.Invoke(value); } }
     public ShapeSize ShapeType { get => _data.ShapeType; set => _data.ShapeType = value; }
     public int MinDigit => _minDigit;
     public int MaxDigit { get => _data.MaxDigit; set => _data.MaxDigit = value; }
     public int CountBombs { get => _data.CountBombs; set { _data.CountBombs = value; EventChangeCountBombs?.Invoke(value); } }
+    public int CountBonusBombs { get => _data.CountBonusBombs; private set { _data.CountBonusBombs = value; } }
     public ShapeType NextShape { get => _data.NextShape; set => _data.NextShape = value; }
     public int[] NextBlocksShape { get => _data.NextBlocksShape; set => _data.NextBlocksShape = value; }
     public int[,] SaveArea { get => _data.Area; set => _data.Area = value; }
@@ -66,6 +68,13 @@ public class DataGame : ASingleton<DataGame>
 
     public void Save(bool isSaveHard, Action<bool> callback) => Storage.Save(KEY, _data, isSaveHard, callback);
 
+    public void StartGame()
+    {
+        ModeStart = GameModeStart.GameContinue;
+        CountBombs += CountBonusBombs;
+        CountBonusBombs = 0;
+    }
+
     public void LevelUp()
     {
         Level++;
@@ -77,6 +86,12 @@ public class DataGame : ASingleton<DataGame>
     {
         _data.Reset(_startCountBombs);
         _countShapesMax = _data.CountShapes = _startCountShapes;
+    }
+
+    public UniTask<bool> AddBonusAd(int count)
+    {
+        CountBonusBombs += count;
+        return Storage.SaveAsync(KEY, _data);
     }
 
     public void CalkScore(int digit, int countSeries, int countOne)
@@ -106,8 +121,8 @@ public class DataGame : ASingleton<DataGame>
         public int[,] Area { get; set; } = new int[0, 0];
                
         [JsonConstructor]
-        public GameSave(GameModeStart modeStart, int currentLevel, ShapeSize shapeType, int maxDigit, int score, int countShapes, int countBombs, ShapeType nextShape, int[] nextBlocksShape, int[,] area) 
-            : base(currentLevel, shapeType, maxDigit)
+        public GameSave(GameModeStart modeStart, int currentLevel, ShapeSize shapeType, int maxDigit, int countBonusBombs, int score, int countShapes, int countBombs, ShapeType nextShape, int[] nextBlocksShape, int[,] area) 
+            : base(currentLevel, shapeType, maxDigit, countBonusBombs)
         {
             ModeStart = modeStart;
             Score = score;
@@ -144,6 +159,8 @@ public class DataGame : ASingleton<DataGame>
         private ShapeSize _shapeType = ShapeSize.Domino;
         [JsonProperty("mdg"), SerializeField, Range(4, 9)]
         private int _maxDigit = 7;
+        [JsonProperty("bbb"), SerializeField]
+        private int _countBonusBombs = 0;
 
         [JsonIgnore]
         public int CurrentLevel { get => _currentLevel; set => _currentLevel = value; }
@@ -151,15 +168,18 @@ public class DataGame : ASingleton<DataGame>
         public ShapeSize ShapeType { get => _shapeType; set => _shapeType = value; }
         [JsonIgnore]
         public int MaxDigit { get => _maxDigit; set => _maxDigit = value; }
+        [JsonIgnore]
+        public int CountBonusBombs { get => _countBonusBombs; set => _countBonusBombs = value; }
 
-        public GameSettings(int currentLevel, ShapeSize shapeType, int maxDigit)
+        public GameSettings(int currentLevel, ShapeSize shapeType, int maxDigit, int countBonusBombs)
         {
             _currentLevel = currentLevel;
             _shapeType = shapeType;
             _maxDigit = maxDigit;
+            _countBonusBombs = countBonusBombs;
         }
 
-        public GameSettings(GameSettings gameSettings) : this(gameSettings.CurrentLevel, gameSettings.ShapeType, gameSettings.MaxDigit)
+        public GameSettings(GameSettings gameSettings) : this(gameSettings.CurrentLevel, gameSettings.ShapeType, gameSettings.MaxDigit, gameSettings.CountBonusBombs)
         {
         }
     }

@@ -67,7 +67,7 @@ public class CustomTargetGraphic : MonoBehaviour
         SetColor(targetState.color);
         SetSpeed(targetState.speed);
         _thisRectTransform.sizeDelta = _size * targetState.scale;
-        if(_isIconResize)
+        if (_isIconResize)
             _iconRectTransform.sizeDelta = _sizeIcon * targetState.scale;
 
         if (_isInteractable != isInteractable)
@@ -120,8 +120,8 @@ public class CustomTargetGraphic : MonoBehaviour
         public Color color;
         public float scale;
 
-        public State(float speed, Color32 color, float scale) 
-        { 
+        public State(float speed, Color32 color, float scale)
+        {
             this.speed = speed;
             this.color = color;
             this.scale = scale;

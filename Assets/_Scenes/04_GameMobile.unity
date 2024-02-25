@@ -1308,9 +1308,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b215bc13611713840b04383a7f36117b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeRateUpdateMin: 0.5
-  _timeRateUpdateMax: 5
-  _timeRateUpdateSteep: 0.25
   _verticalSizeMin: 12.55
   _horizontalSizeMin: 8.25
 --- !u!1 &408886791
@@ -1539,7 +1536,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: -688161161
@@ -3631,7 +3628,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 1
   m_SortingLayerID: -688161161

@@ -17,7 +17,6 @@ public class InputDesktopController : AInputController
         {
             if (_device == value) return;
 
-            Debug.Log(value);
             _device = value;
             EventSwitchingDevice?.Invoke(value);
         }
@@ -73,15 +72,15 @@ public class InputDesktopController : AInputController
             return;
         }
 
-        if(Input.GetAxis(_gamepadAxis) != 0)
-        {
-            CurrentDevice = Device.Gamepad;
-            return;
-        }
-
         if (Input.GetAxis(_mouse) != 0)
         {
             CurrentDevice = Device.MouseKeyboard;
+            return;
+        }
+
+        if (Input.GetAxis(_gamepadAxis) != 0)
+        {
+            CurrentDevice = Device.Gamepad;
             return;
         }
     }

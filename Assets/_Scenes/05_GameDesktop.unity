@@ -11880,7 +11880,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &712815071
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12458,7 +12458,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: -688161161
@@ -13696,9 +13696,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80ff5a60b7368cb44987ae62793daf10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeRateUpdateMin: 0.5
-  _timeRateUpdateMax: 5
-  _timeRateUpdateSteep: 0.25
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -22085,7 +22082,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 2.5, y: -0.0535717}
+  m_AnchoredPosition: {x: 2.5, y: -0.053571455}
   m_SizeDelta: {x: 5, y: 0.075}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1046327833
@@ -28384,7 +28381,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 1
   m_SortingLayerID: -688161161
@@ -28688,7 +28685,7 @@ MonoBehaviour:
   - {fileID: 1152214426}
   _gamepadAxis: GamepadAxis
   _mouse: Mouse
-  _gamepadButtons: 4a0100004b0100004c0100004d0100004e0100004f0100005001000051010000520100005301000054010000
+  _gamepadButtons: 4a0100004b0100004c0100004d0100004e0100004f010000500100005101000052010000530100005401000055010000
 --- !u!1 &1553660540
 GameObject:
   m_ObjectHideFlags: 0
@@ -40604,12 +40601,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraSize: {fileID: 819452089}
-  _game: {fileID: 68789447}
   _timeRecolor: 3
   _spreadColor: 0.22
   _emissionPerRadius: 0.45
   _colorGameOver: {r: 1, g: 0.3137255, b: 0, a: 1}
   _speedGameOver: 0.65
+  _game: {fileID: 68789447}
   _speedMin: 0.275
   _speedMax: 1.075
   _speedPerLevel: 0.02

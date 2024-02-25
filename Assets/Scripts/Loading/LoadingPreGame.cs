@@ -5,13 +5,11 @@ using UnityEngine.UI;
 
 public class LoadingPreGame : MonoBehaviour
 {
-    [Scene]
-    [SerializeField] private int _nextSceneMobile = 1;
-    [Scene]
-    [SerializeField] private int _nextSceneDesktop = 1;
+    [SerializeField, Scene] private int _nextSceneMobile = 1;
+    [SerializeField, Scene] private int _nextSceneDesktop = 1;
     [Space]
     [SerializeField] private Slider _slider;
-    [SerializeField] private LogOnWindow _logOnWindow;
+    [SerializeField] private LogOnPanel _logOnPanel;
 
     private void Start() => Loading().Forget();
 
@@ -23,6 +21,7 @@ public class LoadingPreGame : MonoBehaviour
 
         YandexSDK ysdk = YandexSDK.InstanceF;
         Localization localization = Localization.InstanceF;
+        SettingsGame settings = SettingsGame.InstanceF;
 
         if (!localization.Initialize())
             Message.Error("Error loading Localization!");
@@ -34,44 +33,24 @@ public class LoadingPreGame : MonoBehaviour
 
         ProgressLoad(0.2f);
 
-        bool isDesktop;
-        StartLoadScene();
-      
-        ProgressLoad(0.28f);
-
-        await CreateStorages();
-
-        ProgressLoad(0.35f);
-
+        settings.SetPlatform();
         Banners.InstanceF.Initialize();
 
+        ProgressLoad(0.22f);
+
+        StartLoadScene();
+        await CreateStorages();
+        
         if (!ysdk.IsLogOn)
         {
-            if (await _logOnWindow.TryLogOn())
+            if (await _logOnPanel.TryLogOn())
                 await CreateStorages();
         }
-
-        ProgressLoad(0.5f);
 
         Message.Log("End LoadingPreGame");
         loadScene.End();
 
         #region Local Functions
-        void StartLoadScene()
-        {
-            if (ysdk.IsPlayer)
-                isDesktop = ysdk.IsDesktop;
-            else
-                isDesktop = !UtilityJS.IsMobile;
-
-            if (isDesktop)
-                loadScene = new(_nextSceneDesktop, _slider, true);
-            else
-                loadScene = new(_nextSceneMobile, _slider, true);
-
-            loadScene.Start();
-        }
-
         async UniTask<bool> InitializeYSDK()
         {
             if (!await ysdk.InitYsdk())
@@ -85,6 +64,13 @@ public class LoadingPreGame : MonoBehaviour
 
             return true;
         }
+        void StartLoadScene()
+        {
+            loadScene = new(settings.IsDesktop ? _nextSceneDesktop : _nextSceneMobile, _slider, true);
+            loadScene.Start();
+
+            ProgressLoad(0.27f);
+        }
         async UniTask CreateStorages(string key = null)
         {
             if (!Storage.StoragesCreate())
@@ -92,9 +78,9 @@ public class LoadingPreGame : MonoBehaviour
             
             ProgressLoad(0.35f);
 
-            SettingsGame.Instance.IsFirstStart = !await InitializeStorages();
-            
-            ProgressLoad(0.4f);
+            settings.IsFirstStart = !await InitializeStorages();
+
+            ProgressLoad(0.42f);
 
             #region Local Functions
             async UniTask<bool> InitializeStorages()
@@ -102,24 +88,25 @@ public class LoadingPreGame : MonoBehaviour
                 bool isLoad = await Storage.Initialize(key);
             
                 if (isLoad)
-                    Message.Log("Storage Initialize");
+                    Message.Log("Storage initialize");
                 else
-                    Message.Log("Storage Not Initialize");
+                    Message.Log("Storage not initialize");
 
                 return Load(isLoad);
 
                 #region Local Functions
-                bool Load(bool b)
+                bool Load(bool load)
                 {
                     bool result = false;
 
-                    result = SettingsGame.Instance.Initialize(b, isDesktop) || result;
-                    return DataGame.Instance.Initialize(b) || result;
+                    result = settings.Initialize(load) || result;
+                    return DataGame.InstanceF.Initialize(load) || result;
                 }
                 #endregion
             }
             #endregion
         }
+
         void ProgressLoad(float value)
         {
             if (loadScene != null)

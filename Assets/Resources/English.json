@@ -13,9 +13,8 @@
   "Level": "Level",
   "SensitivityButtons": "Press frequency (ms)",
 
-  "RepairForAd": "Repair the probe at 35% for viewing Ad",
-  "AdReward": "Showing ad:",
-  "Repair": "Repaired {0:N} structures",
+  "BombsForAd": "+3 'Zero-Bombs' by watching an Ad",
+  "BombsAdd": "+3 'Zero-Bombs'",
 
   "LevelUp": "Level {0}",
 
@@ -57,5 +56,5 @@
   "Enjoy": "Have fun playing!",
   "GameRulesPart1": "  The goal of the game is to arrange blocks of digits into clusters according to their value. The cluster contains blocks that are adjacent in a straight line (top, left, bottom, right). To remove a group of 2s, you only need two blocks, a group of 3s - three blocks, and so on up to 9s - there must be at least nine of them.",
   "GameRulesPart2": "  When a cluster is deleted, all adjacent 1s and their clusters are destroyed.\n  Points are awarded for each block removed according to its value. 1s score points based on the value of the cluster they join.",
-  "GameRulesPart3": "  You can replace all the blocks of the next shape with \"zero bombs\". When the \"zero bomb\" comes to a stop, it will explode and destroy blocks (without scoring any points) within a radius of two cells in a straight line and one cell in a diagonal line."
+  "GameRulesPart3": "  You can replace all the blocks of the next shape with 'Zero-Bombs'. When the 'Zero-Bomb' comes to a stop, it will explode and destroy blocks (without scoring any points) within a radius of two cells in a straight line and one cell in a diagonal line."
 }

@@ -31,17 +31,29 @@ public class SettingsGame : ASingleton<SettingsGame>
     private YandexSDK _ysdk;
     private Localization _localization;
 
-    public bool Initialize(bool isLoad, bool isDesktop)
+    protected override void Awake()
     {
+        base.Awake();
+
+        IsDesktop = !UtilityJS.IsMobile;
+
         _ysdk = YandexSDK.InstanceF;
         _localization = Localization.InstanceF;
+    }
 
-        IsDesktop = isDesktop;
-        QualitySettings.SetQualityLevel(isDesktop ? _qualityDesktop : _qualityMobile);
+    public void SetPlatform()
+    {
+        if (_ysdk.IsPlayer)
+            IsDesktop = _ysdk.IsDesktop;
+        else
+            IsDesktop = !UtilityJS.IsMobile;
+    }
+
+    public bool Initialize(bool isLoad)
+    {
+        DefaultProfile();
 
         bool result = false;
-
-        DefaultProfile();
         if (isLoad)
             result = Load();
         Apply();
@@ -101,6 +113,7 @@ public class SettingsGame : ASingleton<SettingsGame>
 
     private void DefaultProfile()
     {
+        QualitySettings.SetQualityLevel(IsDesktop ? _qualityDesktop : _qualityMobile);
         _profileCurrent = (IsDesktop ? _profileDesktop : _profileMobile).Clone();
 
         if (_ysdk.IsInitialize)

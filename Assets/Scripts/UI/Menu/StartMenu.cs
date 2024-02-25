@@ -2,41 +2,58 @@ using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class StartMenu : MenuNavigation
 {
     [Scene]
-    [SerializeField] private int _sceneGame = 2;
+    [SerializeField] private int _sceneNext = 3;
     [Space]
     [SerializeField] private LeaderboardUI _leaderboard;
     [Space]
-    [SerializeField] private SelectableInteractable _continue;
+    [SerializeField] private ToggleFullInteractable _toggleContinue;
     [Space]
-    [SerializeField] private SelectableInteractable _size;
-    [SerializeField] private SelectableInteractable _max;
+    [SerializeField] private SliderFullInteractable _sliderSize;
+    [SerializeField] private SliderFullInteractable _sliderMax;
+    [Space]
+    [SerializeField] private RewardAdPanel _rewardAdPanel;
 
-    private Toggle _toggleContinue;
-
-    private Slider _sliderSize;
-    private Slider _sliderMax;
-
-    private DataGame _data;
+    private DataGame _dataGame;
+    private YMoney _money;
 
     private void Start()
     {
-        _data = DataGame.InstanceF;
+        _dataGame = DataGame.Instance;
+        _money = YMoney.Instance;
 
-        _toggleContinue = _continue.ThisSelectable as Toggle;
-        _sliderSize = _size.ThisSelectable as Slider;
-        _sliderMax = _max.ThisSelectable as Slider;
+        _rewardAdPanel.Initialize();
 
-        _sliderSize.value = _data.ShapeType.ToInt();
-        _sliderMax.minValue = _data.MinDigit;
-        _sliderMax.value = _data.MaxDigit;
+        //_toggleContinue = _continue.Slider as Toggle;
+        //_sliderSize = _sliderSize.Slider as Slider;
+        //_sliderMax = _sliderMax.Slider as Slider;
 
-        _size.Interactable = _max.Interactable = !(_toggleContinue.isOn = _continue.Interactable = _data.ModeStart == GameModeStart.GameContinue);
-        _toggleContinue.onValueChanged.AddListener((isOn) => _size.Interactable = _max.Interactable = !isOn);
+        _sliderSize.Value = _dataGame.ShapeType.ToInt();
+        _sliderMax.MinValue = _dataGame.MinDigit;
+        _sliderMax.Value = _dataGame.MaxDigit;
+
+        SetStartInteractable(_dataGame.ModeStart == GameModeStart.GameContinue);
+        _toggleContinue.OnValueChanged.AddListener(SetInvertInteractable);
+
+        #region Local Functions
+        void SetStartInteractable(bool value)
+        {
+            _toggleContinue.Interactable = value;
+            _toggleContinue.IsOn = value;
+            SetInvertInteractable(value);
+        }
+        void SetInvertInteractable(bool value)
+        {
+            value = !value;
+
+            _sliderSize.Interactable = value;
+            _sliderMax.Interactable = value;
+            _rewardAdPanel.Interactable = value;
+        }
+        #endregion
     }
 
     public void OnStart()
@@ -45,18 +62,45 @@ public class StartMenu : MenuNavigation
 
         async UniTaskVoid OnStartAsync()
         {
-            if (!_toggleContinue.isOn)
+            LoadScene loadScene = new(_sceneNext);
+            loadScene.Start();
+
+            if (!_toggleContinue.IsOn)
             {
-                if (_data.ModeStart == GameModeStart.GameContinue && YandexSDK.Instance.IsLeaderboard)
-                    if(await YandexSDK.Instance.TrySetScore(_data.Score))
+                if (_dataGame.ModeStart == GameModeStart.GameContinue && YandexSDK.Instance.IsLeaderboard)
+                    if(await YandexSDK.Instance.TrySetScore(_dataGame.Score))
                         _leaderboard.TryReward().Forget();
-                _data.ResetData();
-                _data.ShapeType = Mathf.RoundToInt(_sliderSize.value).ToEnum<ShapeSize>();
-                _data.MaxDigit = Mathf.RoundToInt(_sliderMax.value);
-                _data.Save(true, null);
+                _dataGame.ResetData();
+                _dataGame.ShapeType = Mathf.RoundToInt(_sliderSize.Value).ToEnum<ShapeSize>();
+                _dataGame.MaxDigit = Mathf.RoundToInt(_sliderMax.Value);
+
+                bool result = _rewardAdPanel.IsOn;
+                if (result)
+                    result = await OnShowAdAsync();
+
+                if (!result)
+                    _dataGame.Save(true, null);
             }
 
-            await SceneManager.LoadSceneAsync(_sceneGame);
+            MusicSingleton.Instance.Stop();
+            loadScene.End();
+        }
+
+        async UniTask<bool> OnShowAdAsync()
+        {
+            bool result = false;
+            if (await _money.ShowRewardedVideo())
+            {
+                result = await _dataGame.AddBonusAd(_money.BombsRewardedAd);
+                await _money.AwaitCloseRewardedVideo();
+                if (result)
+                {
+                    Message.BannerKey("BombsAdd");
+                    await UniTask.Delay(1000, true);
+                }
+            }
+            return result;
         }
     }
+        
 }

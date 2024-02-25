@@ -2,37 +2,40 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Selectable))]
-public class SelectableInteractable : MonoBehaviour
+[RequireComponent(typeof(Slider))]
+public class SliderFullInteractable : MonoBehaviour
 {
     [SerializeField] private Graphic[] _children;
     [SerializeField] private TMP_Text[] _texts;
     [SerializeField] Color _textColor = Color.white;
 
+    private Slider _thisSlider;
+
     public bool Interactable 
     { 
-        get => ThisSelectable.interactable;
+        get => _thisSlider.interactable;
         set
         {
-            ThisSelectable.interactable = value;
+            _thisSlider.interactable = value;
             SetIColor();
         }
     }
-    public Selectable ThisSelectable { get; private set; }
+    public float Value { get => _thisSlider.value; set => _thisSlider.value = value; }
+    public float MinValue { get => _thisSlider.minValue; set => _thisSlider.minValue = value; }
 
     private ColorBlock _colorBlock;
 
     private void Awake()
     {
-        ThisSelectable = GetComponent<Selectable>();
-        _colorBlock = ThisSelectable.colors;
+        _thisSlider = GetComponent<Slider>();
+        _colorBlock = _thisSlider.colors;
 
         SetIColor();
     }
 
     private void SetIColor()
     {
-        Color color = ThisSelectable.interactable ? _colorBlock.normalColor : _colorBlock.disabledColor;
+        Color color = Interactable ? _colorBlock.normalColor : _colorBlock.disabledColor;
 
         foreach (var child in _children)
             child.CrossFadeColor(color, _colorBlock.fadeDuration, true, true);

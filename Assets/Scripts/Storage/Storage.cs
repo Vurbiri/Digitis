@@ -13,7 +13,7 @@ public static class Storage
 
     public static Type TypeStorage => service?.GetType();
 
-    public static bool Create<T>() where T : ASaveLoadJsonTo, new()
+    private static bool Create<T>() where T : ASaveLoadJsonTo, new()
     {
         if (typeof(T) == TypeStorage)
             return true; 
@@ -21,6 +21,7 @@ public static class Storage
         service = new T();
         return service.IsValid;
     }
+
     public static bool StoragesCreate()
     {
         if (Create<JsonToYandex>())

@@ -23,7 +23,7 @@ public class Game : MonoBehaviour
     private const int TIME_UNPAUSE = 250;
     private const int PAUSE_GAMEOVER = 1500;
 
-    private GameModeStart ModeStart { get => _dataGame.ModeStart; set => _dataGame.ModeStart = value; }
+    private GameModeStart ModeStart { get => _dataGame.ModeStart; }
     private int Level { get => _dataGame.Level;}
     private int CountBombs { get => _dataGame.CountBombs; set => _dataGame.CountBombs = value; }
     private int CountShapes { get => _dataGame.CountShapes; set => _dataGame.CountShapes = value; }
@@ -61,6 +61,9 @@ public class Game : MonoBehaviour
             CountShapes = CountShapesMax;
 
         _shapesManager.Initialize();
+        _dataGame.StartGame();
+        Save();
+
         _shapesManager.EventEndMoveDown += OnBlockEndMoveDown;
 
         #region Local Functions
@@ -70,11 +73,8 @@ public class Game : MonoBehaviour
            
             await UniTask.Delay(TIME_COUNTDOWN, true);
 
-            ModeStart = GameModeStart.GameContinue;
             _inputController.ControlEnable = true;
-
             EventStartGame?.Invoke();
-
             StartMoveAsync().Forget();
         }
         #endregion
