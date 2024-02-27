@@ -18,13 +18,12 @@ public class MusicSingleton : ASingleton<MusicSingleton>
     private Coroutine _coroutine;
     float _speedSwitch;
 
-    private void Start()
+    protected override void Awake()
     {
+        base.Awake();
+
         _thisAudio = GetComponent<AudioSource>();
         _thisAudio.volume = _volume;
-
-        _musicMenu.LoadAudioData();
-        _musicGame.LoadAudioData();
     }
 
     public void Switch(Music music, float pitch = 1f)

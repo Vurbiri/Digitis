@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2989751469959527014}
   - component: {fileID: 6895012683750671857}
   - component: {fileID: 7792466184650396125}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: BlockImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6774588091393484116}
   - component: {fileID: 2806086172817912721}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: BlockDigitUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 8648901150148771169}
   - component: {fileID: 4208195409279254292}
   - component: {fileID: 237942668329356325}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: DigitImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -218,7 +218,7 @@ GameObject:
   - component: {fileID: 2878848414507900195}
   - component: {fileID: 5870287916492667918}
   - component: {fileID: 4418793352466218536}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Particle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -300,9 +300,9 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 218911067
-  m_SortingLayer: 4
-  m_SortingOrder: -3
+  m_SortingLayerID: -688161161
+  m_SortingLayer: 5
+  m_SortingOrder: 3
   m_RenderMode: 3
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -334,7 +334,7 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 1
+  m_MaskInteraction: 0
 --- !u!114 &2878848414507900195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,7 +387,7 @@ ParticleSystem:
   looping: 1
   prewarm: 0
   playOnAwake: 0
-  useUnscaledTime: 0
+  useUnscaledTime: 1
   autoRandomSeed: 1
   startDelay:
     serializedVersion: 2

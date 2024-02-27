@@ -44,6 +44,7 @@ public class CustomButton : Button
         }
     }
 
+#if UNITY_EDITOR
     protected override void OnValidate()
     {
         base.OnValidate();
@@ -51,4 +52,5 @@ public class CustomButton : Button
         _thisTargetGraphic = GetComponent<CustomTargetGraphic>();
         _thisTargetGraphic.Initialize(interactable);
     }
+#endif
 }

@@ -1,5 +1,4 @@
 using TMPro;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,8 +9,8 @@ public class LanguageItem : MonoBehaviour
     [SerializeField] private TMP_Text _name;
     [SerializeField] private Animator _animator;
     [Space]
-    [SerializeField] private AnimatorController _controllerClockwise;
-    [SerializeField] private AnimatorController _controllerCounterclockwise;
+    [SerializeField] private RuntimeAnimatorController _controllerClockwise;
+    [SerializeField] private RuntimeAnimatorController _controllerCounterclockwise;
 
     private bool _isSave;
     private int _id = -1;

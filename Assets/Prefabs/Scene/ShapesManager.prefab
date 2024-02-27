@@ -46,15 +46,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _clipMove: {fileID: 8300000, guid: f9b81a11d5dbff440b3d4298670d970f, type: 3}
-  _volumeMove: 1
   _clipRotate: {fileID: 8300000, guid: 916a2b93ab6fe7c49ade334a021a682a, type: 3}
-  _volumeRotate: 1
   _clipDown: {fileID: 8300000, guid: e5ce38c5461d244478e7ec0688b250c5, type: 3}
-  _volumeDown: 1
   _clipToBomb: {fileID: 8300000, guid: 39e10db952d8a02408734b454274a772, type: 3}
-  _volumeToBomb: 1
   _clipError: {fileID: 8300000, guid: 7cb82732bbbad164ab66a973baf3e6f3, type: 3}
-  _volumeError: 1
+  _clipFixed: {fileID: 8300000, guid: 1e2ca625d0634b64dbb04f8aa4827984, type: 3}
 --- !u!82 &1258733559800825864
 AudioSource:
   m_ObjectHideFlags: 0
@@ -66,7 +62,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -4544399203513261525, guid: 9e32bed4354ee284785e950309e531f2,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 1e2ca625d0634b64dbb04f8aa4827984, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -222,9 +218,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5b47345742966ee419dd13b292ab8294, type: 2}
   _tetromino:
   - {fileID: 11400000, guid: 49a978fba4220644f813855183895ac5, type: 2}
-  - {fileID: 11400000, guid: dd6b597820bdc96448d529cbf6505550, type: 2}
   - {fileID: 11400000, guid: 460cb914cc5590d439790b6e905c7914, type: 2}
+  - {fileID: 11400000, guid: dd6b597820bdc96448d529cbf6505550, type: 2}
   - {fileID: 11400000, guid: bcd31694fcdc00545942ab20cbcd96c4, type: 2}
-  - {fileID: 11400000, guid: 8a0a35cbd4c5f774fb2d0f67d4b73026, type: 2}
   - {fileID: 11400000, guid: 5de1f28c0ac9b354ca0b6f8514dca476, type: 2}
+  - {fileID: 11400000, guid: 8a0a35cbd4c5f774fb2d0f67d4b73026, type: 2}
   - {fileID: 11400000, guid: 7ddf7d0ba94a6854dbe60f6627141f64, type: 2}

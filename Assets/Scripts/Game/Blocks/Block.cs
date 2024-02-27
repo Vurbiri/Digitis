@@ -137,9 +137,9 @@ public class Block : APooledObject<Block>
         base.Deactivate();
     }
 
-    public async UniTask Remove(CancellationToken cancellationToken)
+    public async UniTask Remove(float volume, CancellationToken cancellationToken)
     {
-        await _blockSFX.Remove(cancellationToken);
+        await _blockSFX.Remove(volume, cancellationToken);
 
         if (cancellationToken.IsCancellationRequested)
             return;

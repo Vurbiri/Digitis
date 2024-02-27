@@ -5,6 +5,7 @@ using UnityEngine;
 public class ShapeControl
 {
     public event Action EventEndMoveDown;
+    public event Action EventFixedBlocks;
 
     private List<Block> _blocks;
     private readonly Queue<Block> _blocksCollision = new();
@@ -21,13 +22,12 @@ public class ShapeControl
     private readonly BlocksArea area;
     private readonly Speeds speeds;
     private readonly Transform container;
-    private readonly Action<bool> actionPlaySoundFixed;
+    //private readonly Action actionPlaySoundFixed;
 
-    public ShapeControl(BlocksArea area, Speeds speeds, Action<bool> playSoundFixed)
+    public ShapeControl(BlocksArea area, Speeds speeds)
     {
         this.area = area;
         this.speeds = speeds;
-        this.actionPlaySoundFixed = playSoundFixed;
         container = area.Container;
         startPosition = new(area.Size.x / 2 - 1 , area.Size.y);
     }
@@ -144,7 +144,7 @@ public class ShapeControl
         if (--_countBlockMove > 0)
             return;
 
-        if(_blocksCollision.Count == 0)
+        if (_blocksCollision.Count == 0)
         {
             _countBlockMove = _blocks.Count;
             StartMoveDown();
@@ -157,6 +157,9 @@ public class ShapeControl
             FixedBlock(_blocksCollision.Dequeue());
 
         CheckingBoxes();
+
+        if(!block.IsBomb)
+            EventFixedBlocks.Invoke();
 
         _countBlockMove = _blocks.Count;
         if (_countBlockMove == 0)
@@ -181,7 +184,6 @@ public class ShapeControl
         {
             block.EventEndMoveDown -= OnEventEndMoveDown;
             block.Fixed();
-            actionPlaySoundFixed.Invoke(block.IsBomb);
             area.Add(block);
             _blocks.Remove(block);
         }

@@ -9,9 +9,7 @@ public class BlockSFX : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
     [Space] 
     [SerializeField] private AudioClip _clipRemove;
-    [SerializeField] private float _volumeRemove = 1f;
     [SerializeField] private AudioClip _clipExplosionBomb;
-    [SerializeField] private float _volumeExplosionBomb = 1f;
 
 
     private BlockSprites _blockVisual;
@@ -51,7 +49,7 @@ public class BlockSFX : MonoBehaviour
 
     public async UniTask ExplodeBomb()
     {
-        _audioSource.PlayOneShot(_clipExplosionBomb, _volumeExplosionBomb);
+        _audioSource.PlayOneShot(_clipExplosionBomb);
         _blockVisual.Off();
         await _particles.ExplodeBomb();
     }
@@ -64,14 +62,14 @@ public class BlockSFX : MonoBehaviour
 
     public async UniTask Remove()
     {
-        _audioSource.PlayOneShot(_clipRemove, _volumeRemove);
+        _audioSource.PlayOneShot(_clipRemove);
         _blockVisual.Off();
         await _particles.Remove();
     }
 
-    public async UniTask Remove(CancellationToken cancellationToken)
+    public async UniTask Remove(float volume, CancellationToken cancellationToken)
     {
-        _audioSource.PlayOneShot(_clipRemove, _volumeRemove);
+        _audioSource.PlayOneShot(_clipRemove, volume);
         _blockVisual.Off();
         await _particles.Remove(cancellationToken);
     }

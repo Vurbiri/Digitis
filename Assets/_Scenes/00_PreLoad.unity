@@ -622,7 +622,7 @@ MonoBehaviour:
   _prefab: {fileID: 8814119226255713928, guid: a6774964b8213304b90532355cf2178b, type: 3}
   _container: {fileID: 1457277486}
   _repository: {fileID: 1911878397}
-  _sizePool: 4
+  _sizePool: 1
 --- !u!114 &394035157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -720,8 +720,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
-  _lbName: lbDigitis
-  _isDesktop: 0
+  _lbName: lbDigitisTest
+  _isDesktop: 1
   _isLogOn: 1
   _lang: ru
   _isInitialize: 1
@@ -1615,7 +1615,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.019607844, g: 0.019607844, b: 0.039215688, a: 1}
+  m_BackGroundColor: {r: 0.039215688, g: 0.039215688, b: 0.078431375, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

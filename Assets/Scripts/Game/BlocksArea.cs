@@ -150,18 +150,29 @@ public class BlocksArea : MonoBehaviour
     {
         _exitToken = new();
 
-        Block block;
-        for(int y = _size.y - 1; y >= 0; y--)
+        Block blockL, blockR;
+        bool isBlockL, isBlockR;
+        float volume;
+        for (int y = _size.y - 1; y >= 0; y--)
         {
-            for(int x = 0; x < _size.x; x++)
+            for(int x = _size.x / 2 - 1; x >= 0; x--)
             {
                 if (_exitToken.IsCancellationRequested)
                     return;
                 
-                block = _blocks[x, y];
-                if (block != null)
+                blockL = _blocks[x, y];
+                blockR = _blocks[_size.x - x - 1, y];
+                isBlockL = blockL != null;
+                isBlockR = blockR != null;
+
+                if (isBlockL || isBlockR)
                 {
-                    block.Remove(_exitToken.Token).Forget();
+                    volume = isBlockL && isBlockR ? 0.5f : 1f;
+
+                    if(isBlockL)
+                        blockL.Remove(volume, _exitToken.Token).Forget();
+                    if (isBlockR)
+                        blockR.Remove(volume, _exitToken.Token).Forget();
                     await UniTask.Delay(_timePauseRemovedGameOver, cancellationToken: _exitToken.Token);
                 }
             }

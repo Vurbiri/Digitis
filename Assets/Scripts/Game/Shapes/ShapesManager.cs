@@ -47,8 +47,9 @@ public class ShapesManager : MonoBehaviour
 
         _gameData = DataGame.InstanceF;
         _poolBlocks = new(_prefabBlock, _poolRepository, _sizePool);
-        _shapeControl = new ShapeControl(_area, _gameData.Speeds, _SFX.PlayFixed);
+        _shapeControl = new ShapeControl(_area, _gameData.Speeds);
         _shapeControl.EventEndMoveDown += () => EventEndMoveDown?.Invoke();
+        _shapeControl.EventFixedBlocks += _SFX.PlayFixed;
 
         foreach (var d in _domino)
             d.Initialize();
@@ -58,13 +59,14 @@ public class ShapesManager : MonoBehaviour
             t.Initialize();
     }
 
+#if UNITY_EDITOR
     private void OnValidate()
     {
         Array.Sort(_settingsBlocks, (a, b) => a.Digit.CompareTo(b.Digit));
         Array.Sort(_tromino, (a, b) => a.Type.CompareTo(b.Type));
         Array.Sort(_tetromino, (a, b) => a.Type.CompareTo(b.Type));
     }
-
+#endif
     public void Initialize()
     {
         Shape[] shapes = Initialize(_gameData.MaxDigit, _gameData.ShapeType);
