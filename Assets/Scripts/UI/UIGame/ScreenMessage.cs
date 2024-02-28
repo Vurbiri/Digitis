@@ -18,7 +18,7 @@ public class ScreenMessage : MonoBehaviour
 
     private Localization _localization;
 
-    private readonly WaitForSecondsRealtime pauseOneSecond = new(1f);
+    private const float ONE_SECOND = 1f;
     private const string KEY_START = "Start";
     private const string KEY_LEVEL = "Level";
     private const string KEY_GAMEOVER = "GameOver";
@@ -38,6 +38,7 @@ public class ScreenMessage : MonoBehaviour
         #region Local Functions
         IEnumerator CountdownCoroutine()
         {
+            WaitForSecondsRealtime pauseOneSecond = new(ONE_SECOND);
             _thisText.text = string.Empty;
             yield return pauseOneSecond;
             for (int i = _clipsCountdown.Length - 1; i >= 0; i--)
@@ -65,11 +66,12 @@ public class ScreenMessage : MonoBehaviour
         gameObject.SetActive(true); 
         StartCoroutine(LevelUpCoroutine(level));
     }
-    IEnumerator LevelUpCoroutine(int level)
+
+    private IEnumerator LevelUpCoroutine(int level)
     {
         _audioSource.PlayOneShot(_clipLevelUp);
         _thisText.text = _localization.GetText(KEY_LEVEL) + " " + level.ToString();
-        yield return pauseOneSecond;
+        yield return new WaitForSecondsRealtime(ONE_SECOND);
 
         gameObject.SetActive(false);
     }

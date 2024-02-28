@@ -199,8 +199,8 @@ MonoBehaviour:
   - {r: 0.78039217, g: 0.68235296, b: 0.003921569, a: 1}
   - {r: 0.7607843, g: 0, b: 0, a: 1}
   - {r: 1, g: 0.18431373, b: 0, a: 1}
-  _fontSizeDesktop: 16
-  _fontSizeMobile: 16
+  _fontSizeDesktop: 19
+  _fontSizeMobile: 20
 --- !u!222 &9149845474894592146
 CanvasRenderer:
   m_ObjectHideFlags: 0

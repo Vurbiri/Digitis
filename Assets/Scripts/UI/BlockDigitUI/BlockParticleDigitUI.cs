@@ -10,12 +10,10 @@ public class BlockParticleDigitUI : ABlockParticleSystemController
     [SerializeField] private float _emissionRunMiddle = 0.66f;
     [SerializeField] private float _emissionRunEnd = 0.33f;
 
-    private ParticleSystemRenderer _particleRenderer;
-
     private WaitForSecondsRealtime _pauseRunStart;
     private WaitForSecondsRealtime _pauseRunNext;
 
-    public void SetupBlock(Material material, Color color)
+    public void SetupBlock(Color color)
     {
        if(_thisParticle == null)
             base.Awake();
@@ -23,11 +21,8 @@ public class BlockParticleDigitUI : ABlockParticleSystemController
         _pauseRunStart = new(_timeRunStart);
         _pauseRunNext = new(_timeRunNext);
 
-        _particleRenderer = GetComponent<ParticleSystemRenderer>();
-
         _mainModule.gravityModifier = 0;
         Color = color;
-        _particleRenderer.sharedMaterial = material;
     }
 
     public IEnumerator Run()
@@ -39,7 +34,7 @@ public class BlockParticleDigitUI : ABlockParticleSystemController
         yield return _pauseRunStart;
 
         EmissionTimeMultiplier = _emissionRunMiddle;
-        _mainModule.gravityModifier = 1f;
+        _mainModule.gravityModifier = 1.3f;
 
         yield return _pauseRunNext;
 

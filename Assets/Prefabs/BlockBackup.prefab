@@ -10011,7 +10011,7 @@ GameObject:
   - component: {fileID: 5073039849074681645}
   - component: {fileID: 8625316329591890504}
   m_Layer: 7
-  m_Name: Block
+  m_Name: BlockBackup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10250,7 +10250,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shapeTypeForBlock: 18
-  _arcShapeEmitterForBlock: 360
   _radiusThicknessForBlock: 1
   _emissionTimeMultiplierForBlock: 1
   _radialSpeedMultiplierForBlock: 1
@@ -10265,28 +10264,20 @@ MonoBehaviour:
   _sizeMultiplierForBomb: 0.75
   _timeRemoveStart: 1000
   _timeRemoveNext: 300
-  _radialSpeedRemove: 3.5
-  _sizeRemove: 1.2
-  _gravityRemove: 1.75
-  _speedRemoveStart: 0
-  _speedRemoveMiddle: 2
-  _emissionRemoveStart: 16
+  _radialSpeedRemove: 2
+  _speedRemove: 3.5
+  _sizeRemove: 1.4
+  _emissionRemoveStart: 15
   _emissionRemoveMiddle: 10
   _emissionRemoveEnd: 5
   _timeExplodeStart: 650
   _timeExplodeNext: 200
-  _speedExplodeStart: 0
-  _speedExplodeMiddle: 5
+  _speedExplode: 4
   _radialSpeedExplodeStart: 2
-  _radialSpeedExplodeMiddle: -4
+  _radialSpeedExplodeMiddle: -3
   _emissionExplodeStart: 12
   _emissionExplodeMiddle: 8
   _emissionExplodeEnd: 4
-  _timeExplodeBombStart: 500
-  _sizeExplodeBomb: 0.8
-  _speedExplodeBomb: 0
-  _radialSpeedExplodeBomb: 2.5
-  _emissionExplodeBomb: 20
 --- !u!198 &3078532478732392824
 ParticleSystem:
   m_ObjectHideFlags: 0

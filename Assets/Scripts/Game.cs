@@ -144,30 +144,28 @@ public class Game : MonoBehaviour
             CountShapes--;
         else
             GameOver().Forget();
+    }
 
-        #region Local Functions
-        UniTask LevelUpAsync()
-        {
-            _dataGame.LevelUp();
-            Save();
-            return UniTask.Delay(PAUSE_LEVELUP);
-        }
-        async UniTaskVoid GameOver()
-        {
-            _shapesManager.EventEndMoveDown -= OnBlockEndMoveDown;
-            _inputController.ControlEnable = false;
+    private async UniTask LevelUpAsync()
+    {
+        _dataGame.LevelUp();
+        Save();
+        await UniTask.Delay(PAUSE_LEVELUP);
+    }
+    private async UniTaskVoid GameOver()
+    {
+        _shapesManager.EventEndMoveDown -= OnBlockEndMoveDown;
+        _inputController.ControlEnable = false;
 
-            bool isLeaderboard = await YandexSDK.Instance.TrySetScore(_dataGame.Score);
-            _dataGame.ResetData();
-            Save();
-            EventGameOver?.Invoke();
+        bool isLeaderboard = await YandexSDK.Instance.TrySetScore(_dataGame.Score);
+        _dataGame.ResetData();
+        Save();
+        EventGameOver?.Invoke();
 
-            await UniTask.Delay(PAUSE_GAMEOVER);
-            await _shapesManager.RemoveAll();
+        await UniTask.Delay(PAUSE_GAMEOVER);
+        await _shapesManager.RemoveAll();
 
-            EventLeaderboard?.Invoke(isLeaderboard);
-        }
-        #endregion
+        EventLeaderboard?.Invoke(isLeaderboard);
     }
 
     private void OnBomb()

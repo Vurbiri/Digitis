@@ -65,14 +65,13 @@ public class BlocksExampleUI : MonoBehaviour
     private class Blocks
     {
         [SerializeField] private BlockSettings _settings;
-        [SerializeField] private Material _particleMaterial;
         [Space]
         [SerializeField] private BlockDigitUI[] _blocks;
 
         public void Setup()
         {
             foreach (var block in _blocks)
-                block.SetupBlock(_settings, _particleMaterial);
+                block.SetupBlock(_settings);
         }
 
         public IEnumerator ShowBlock(WaitForSecondsRealtime delay)

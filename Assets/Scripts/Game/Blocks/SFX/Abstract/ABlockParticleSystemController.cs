@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class ABlockParticleSystemController : AParticleSystemController
 {
-    private float _rateOverTimeMultiplier;
+    protected float _rateOverTimeMultiplier;
     
     protected Color Color { set => _mainModule.startColor = value; }
     protected ParticleSystemShapeType ShapeType { set => _shapeModule.shapeType = value; }

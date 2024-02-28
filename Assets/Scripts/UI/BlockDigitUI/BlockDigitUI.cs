@@ -7,7 +7,7 @@ public class BlockDigitUI : MonoBehaviour
     [SerializeField] private Image _block;
     [SerializeField] private Image _digit;
 
-    public void SetupBlock(BlockSettings settings, Material material)
+    public void SetupBlock(BlockSettings settings)
     {
         _block.sprite = settings.SpriteBlock;
         _block.color = settings.ColorBlock;
@@ -17,7 +17,7 @@ public class BlockDigitUI : MonoBehaviour
         _digit.color = settings.ColorNumber;
         _digit.enabled = false;
 
-        _particle.SetupBlock(material, settings.ColorBlock);
+        _particle.SetupBlock(settings.ColorBlock);
     }
 
     public void ShowBlock()
