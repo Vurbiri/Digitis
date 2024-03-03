@@ -127,5 +127,4 @@ public class CustomTargetGraphic : MonoBehaviour
             this.scale = scale;
         }
     }
-
 }

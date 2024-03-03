@@ -8,7 +8,6 @@ public abstract class AParticleSystemController : MonoBehaviour
     protected MainModule _mainModule;
     protected EmissionModule _emissionModule;
     protected ShapeModule _shapeModule;
-    
 
     protected virtual void Awake()
     {
@@ -28,5 +27,4 @@ public abstract class AParticleSystemController : MonoBehaviour
         _thisParticle.Clear();
         _thisParticle.Stop();
     }
-
 }

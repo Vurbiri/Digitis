@@ -72,6 +72,4 @@ public class Banner : APooledObject<Banner>
 
         Deactivate();
     }
-
-
 }

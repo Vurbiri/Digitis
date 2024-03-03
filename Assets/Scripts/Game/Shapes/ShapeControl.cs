@@ -14,6 +14,7 @@ public class ShapeControl
     private Vector2Int _offset;
 
     private float _speed;
+    private bool _isInfinityMode = false;
     private bool _isFixed = true;
     private bool _isSpeedDown = false;
     private float _countBlockMove;
@@ -22,18 +23,21 @@ public class ShapeControl
     private readonly BlocksArea area;
     private readonly Speeds speeds;
     private readonly Transform container;
-    //private readonly Action actionPlaySoundFixed;
 
-    public ShapeControl(BlocksArea area, Speeds speeds)
+    public ShapeControl(BlocksArea area, Speeds speeds, bool isInfinityMode)
     {
         this.area = area;
         this.speeds = speeds;
+        _isInfinityMode = isInfinityMode;
         container = area.Container;
-        startPosition = new(area.Size.x / 2 - 1 , area.Size.y);
+        startPosition = new(area.Size.x / 2 - 1, area.Size.y);
     }
 
     public bool SetupForNew(Shape shapeForm)
     {
+        _isFixed = true;
+
+
         CopyFromShapeForm();
 
         bool isEmpty = true;
@@ -59,16 +63,17 @@ public class ShapeControl
         {
             _shape = shapeForm.SubShape;
             _blocks = shapeForm.Blocks;
-            _offset = startPosition + shapeForm.StartOffset;
+            _offset = startPosition + (_isInfinityMode ? shapeForm.StartOffsetInfinity : shapeForm.StartOffset);
         }
         void ResetParameters()
         {
             if (!isEmpty) return;
 
             _speed = speeds.Current;
+            _countBlockMove = _blocks.Count;
             _isFixed = false;
             _isSpeedDown = false;
-            _countBlockMove = _blocks.Count;
+            Debug.Log(_isFixed);
         }
         #endregion
     }
@@ -93,11 +98,17 @@ public class ShapeControl
 
         _isSpeedDown = isSpeedDown;
         _speed = isSpeedDown ? speeds.Down : speeds.Current;
-        _blocks.ForEach(block => block.Speed = _speed);
+        if (_isInfinityMode)
+            _blocks.ForEach(block => block.MoveDown(_speed));
+        else
+            _blocks.ForEach(block => block.Speed = _speed);
     }
 
     public void StartMoveDown()
     {
+        if (_speed == 0)
+            return;
+
         _offset.y -= 1;
         _blocks.ForEach(block => block.MoveDown(_speed));
     }

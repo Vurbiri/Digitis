@@ -22,6 +22,4 @@ public class TextLocalization : MonoBehaviour
     }
 
     protected virtual void SetText() => Text.text = Localization.Instance.GetText(_keyString);
-
-    
 }

@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class ShapesManager : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class ShapesManager : MonoBehaviour
     #endregion
 
     #region private
-    private DataGame _gameData;
+    private DataGame _dataGame;
     private Pool<Block> _poolBlocks;
     private ShapeControl _shapeControl = null;
     private Shape _shape = null;
@@ -40,14 +41,14 @@ public class ShapesManager : MonoBehaviour
 
     private void Awake()
     {
-        // ???
         Array.Sort(_settingsBlocks, (a, b) => a.Digit.CompareTo(b.Digit));
         Array.Sort(_tromino, (a, b) => a.Type.CompareTo(b.Type));
         Array.Sort(_tetromino, (a, b) => a.Type.CompareTo(b.Type));
 
-        _gameData = DataGame.InstanceF;
+        _dataGame = DataGame.InstanceF;
         _poolBlocks = new(_prefabBlock, _poolRepository, _sizePool);
-        _shapeControl = new ShapeControl(_area, _gameData.Speeds);
+
+        _shapeControl = new ShapeControl(_area, _dataGame.Speeds, _dataGame.IsInfinityMode);
         _shapeControl.EventEndMoveDown += () => EventEndMoveDown?.Invoke();
         _shapeControl.EventFixedBlocks += _SFX.PlayFixed;
 
@@ -69,17 +70,19 @@ public class ShapesManager : MonoBehaviour
 #endif
     public void Initialize()
     {
-        Shape[] shapes = Initialize(_gameData.MaxDigit, _gameData.ShapeType);
-        if (_gameData.ModeStart == GameModeStart.GameNew)
+        Shape[] shapes = Initialize(_dataGame.MaxDigit, _dataGame.ShapeType);
+        _area.Initialize(_dataGame.ShapeType);
+
+        if (_dataGame.IsNewGame)
         {
             CreateShape();
         }
         else
         {
-            CreateShapeContinue(_gameData.NextShape, _gameData.NextBlocksShape);
+            CreateShapeContinue(_dataGame.NextShape, _dataGame.NextBlocksShape);
             _area.SetArea(GetBlock);
         }
-
+        
         #region Local Functions
         Shape[] Initialize(int maxDigit, ShapeSize shape)
         {
@@ -99,7 +102,7 @@ public class ShapesManager : MonoBehaviour
 
             void InitializeOneRandomValue()
             {
-                _settingsBlocks[0].Weight = 100 + BASE_WEIGHT * (maxDigit - 2);
+                _settingsBlocks[0].Weight = 100 + BASE_WEIGHT * (maxDigit - 1);
                 _settingsBlocks[0].MaxCount = shape.ToInt() - 1;
             }
         }
@@ -141,7 +144,7 @@ public class ShapesManager : MonoBehaviour
 
     public bool StartMove(int level)
     {
-        _gameData.Speeds.Level = level;
+        _dataGame.Speeds.Level = level;
 
         if (_shapeControl.SetupForNew(_shape))
         {
@@ -178,7 +181,11 @@ public class ShapesManager : MonoBehaviour
         _shapeControl.SetSpeed(true);
         _SFX.PlayDown();
     }
-    public void EndMoveDown() => _shapeControl.SetSpeed(false);
+    public void EndMoveDown()
+    {
+        if(!_dataGame.IsInfinityMode)
+            _shapeControl.SetSpeed(false);
+    }
 
     public void Rotate()
     {
@@ -193,13 +200,13 @@ public class ShapesManager : MonoBehaviour
     public void SaveShape()
     {
         _area.SaveArea();
-        _gameData.NextShape = _shape.Type;
+        _dataGame.NextShape = _shape.Type;
 
         int count = _shape.Blocks.Count;
-        if (_gameData.NextBlocksShape.Length != count)
-            _gameData.NextBlocksShape = new int[count];
+        if (_dataGame.NextBlocksShape.Length != count)
+            _dataGame.NextBlocksShape = new int[count];
         for (int i = 0; count > i; i++)
-            _gameData.NextBlocksShape[i] = _shape.Blocks[i].Digit;
+            _dataGame.NextBlocksShape[i] = _shape.Blocks[i].Digit;
 
     }
 

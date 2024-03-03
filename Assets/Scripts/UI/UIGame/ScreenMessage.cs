@@ -16,24 +16,29 @@ public class ScreenMessage : MonoBehaviour
 
     private TMP_Text _thisText;
 
+    private DataGame _dataGame;
     private Localization _localization;
 
     private const float ONE_SECOND = 1f;
     private const string KEY_START = "Start";
     private const string KEY_LEVEL = "Level";
+    private const string KEY_BEST = "MScore";
     private const string KEY_GAMEOVER = "GameOver";
 
     private void Awake()
     {
+        _dataGame = DataGame.Instance;
         _localization = Localization.Instance;
         _thisText = GetComponent<TMP_Text>();
         _thisText.text = string.Empty;
         gameObject.SetActive(false);
 
         _game.EventCountdown += () => { gameObject.SetActive(true); StartCoroutine(CountdownCoroutine()); };
-        _game.EventStartGame += () => { _thisText.text = string.Empty; gameObject.SetActive(false); };
+        _game.EventStartGame += ClearOff;
+        _game.EventUnPause += () => { gameObject.SetActive(true); StartCoroutine(OnUnPauseCoroutine()); }; ;
         _game.EventGameOver += OnGameOver;
-        DataGame.Instance.EventChangeLevel += LevelUp;
+        _game.EventNewRecord += () => LevelUp(0);
+        _dataGame.EventChangeLevel += LevelUp;
 
         #region Local Functions
         IEnumerator CountdownCoroutine()
@@ -58,6 +63,12 @@ public class ScreenMessage : MonoBehaviour
             gameObject.SetActive(true); 
             _audioSource.PlayOneShot(_gameOver);
         }
+        IEnumerator OnUnPauseCoroutine()
+        {
+            _thisText.text = _localization.GetText(KEY_START);
+            yield return new WaitForSecondsRealtime(_game.TimeUnPause);
+            ClearOff();
+        }
         #endregion
     }
 
@@ -70,9 +81,15 @@ public class ScreenMessage : MonoBehaviour
     private IEnumerator LevelUpCoroutine(int level)
     {
         _audioSource.PlayOneShot(_clipLevelUp);
-        _thisText.text = _localization.GetText(KEY_LEVEL) + " " + level.ToString();
+        _thisText.text = _dataGame.IsInfinityMode ? _localization.GetText(KEY_BEST) + "!" : _localization.GetText(KEY_LEVEL) + " " + level.ToString();
         yield return new WaitForSecondsRealtime(ONE_SECOND);
 
+        gameObject.SetActive(false);
+    }
+
+    private void ClearOff()
+    {
+        _thisText.text = string.Empty;
         gameObject.SetActive(false);
     }
 

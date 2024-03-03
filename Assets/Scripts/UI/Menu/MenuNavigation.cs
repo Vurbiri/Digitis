@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class MenuNavigation : MenuFirstSelect
 {
-
     [Header("Настройка кнопок"), Space]
     [SerializeField] private Buttons[] _buttons;
 

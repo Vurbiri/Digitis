@@ -13,7 +13,6 @@ public class GameMusic : MonoBehaviour
     private DataGame _dataGame;
     private MusicSingleton _music;
       
-
     protected void Awake()
     {
         _dataGame = DataGame.Instance;
@@ -55,7 +54,7 @@ public class GameMusic : MonoBehaviour
         }
     }
 
-    private float CalkPitch(int level) => Mathf.Clamp(_pitchStart + level * _pitchPerLevel, _pitchStart, _pitchMax);
+    private float CalkPitch(int level) => _dataGame.IsInfinityMode ? 1 : Mathf.Clamp(_pitchStart + level * _pitchPerLevel, _pitchStart, _pitchMax);
 
     private void OnDestroy()
     {

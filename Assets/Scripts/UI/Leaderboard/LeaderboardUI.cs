@@ -31,14 +31,15 @@ public class LeaderboardUI : MonoBehaviour
 
     private void Start()
     {
-        InitializeAsync().Forget();
+        if (_rect.content.childCount == 0)
+            InitializeAsync().Forget();
     }
 
     public async UniTask TryReward(bool reInitialize = false)
     {
         if (!YSDK.IsLeaderboard) return;
 
-        await UniTask.Delay(150, true);
+        await UniTask.Delay(100, true);
 
         var player = await YSDK.GetPlayerResult();
         if (!player.Result)
@@ -118,7 +119,6 @@ public class LeaderboardUI : MonoBehaviour
             return;
         }
 
-        Debug.Log("ReInitializeAsync");
         var leaderboard = await YSDK.GetLeaderboard(_maxTop, userRank > (_maxTop - _maxAround), _maxAround, _avatarSize);
         if (!leaderboard.Result)
             return;

@@ -190,7 +190,15 @@ var YandexPlugin =
             .catch((message) => {
                 var code = message.code;
                 console.log("-- GetPlayerResult: " + message.code + "  --");
-                window.unityInstance.SendMessage('YandexSDK', 'OnEndGetPlayerResult', '');
+                if (code === 'LEADERBOARD_PLAYER_NOT_PRESENT') {
+                    var obj = { rank: 0, score: 0 };
+                    var json = JSON.stringify(obj);
+                    window.unityInstance.SendMessage('YandexSDK', 'OnEndGetPlayerResult', json);
+
+                }
+                else {
+                    window.unityInstance.SendMessage('YandexSDK', 'OnEndGetPlayerResult', '');
+                }
             });
     },
     GetLeaderboardJS: function (lbName, qTop, includeUser, qAround, size) {

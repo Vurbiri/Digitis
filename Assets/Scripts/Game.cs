@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class Game : MonoBehaviour
 {
-    
     [SerializeField] private ShapesManager _shapesManager;
     [SerializeField] private AInputController _inputController;
     [Space]
@@ -17,30 +16,35 @@ public class Game : MonoBehaviour
 
     private int _countSave = 0;
     private bool _isSave = false;
+    private bool _isNewRecord = false;
 
     private const int TIME_COUNTDOWN = 5100;
     private const int PAUSE_LEVELUP = 1150;
-    private const int TIME_UNPAUSE = 250;
+    private const int TIME_UNPAUSE = 700;
     private const int PAUSE_GAMEOVER = 1500;
 
-    private GameModeStart ModeStart { get => _dataGame.ModeStart; }
-    private int Level { get => _dataGame.Level;}
+    private bool IsNewGame => _dataGame.IsNewGame;
+    public bool IsInfinity => _dataGame.IsInfinityMode;
+    private int Level => _dataGame.Level;
     private int CountBombs { get => _dataGame.CountBombs; set => _dataGame.CountBombs = value; }
     private int CountShapes { get => _dataGame.CountShapes; set => _dataGame.CountShapes = value; }
-    private int CountShapesMax { get => _dataGame.CountShapesMax; }
+    private int CountShapesMax => _dataGame.CountShapesMax;
 
+    public float TimeUnPause => TIME_UNPAUSE / 1050f;
     public float PauseGameOver => PAUSE_GAMEOVER / 1000f;
-
 
     public event Action EventCountdown;
     public event Action EventStartGame;
+    public event Action EventUnPause;
     public event Action EventGameOver;
+    public event Action EventNewRecord;
     public event Action<bool> EventLeaderboard;
 
     private void Awake()
     {
         _dataGame = DataGame.InstanceF;
         _dataGame.EventChangeScore += OnChangeScore;
+        _dataGame.EventChangeMaxScore += OnChangeMaxScore;
 
         _inputController.EventLeftPress += _shapesManager.Left;
         _inputController.EventRightPress += _shapesManager.Right;
@@ -51,18 +55,20 @@ public class Game : MonoBehaviour
         _inputController.EventPause += OnPause;
         _inputController.EventUnPause += OnUnPause;
     }
-
+    
     private void Start()
     {
         CountdownAsync().Forget();
 
         _dataGame.CalkMaxShapes();
-        if (ModeStart == GameModeStart.GameNew)
+        if (IsNewGame || IsInfinity)
             CountShapes = CountShapesMax;
 
         _shapesManager.Initialize();
         _dataGame.StartGame();
         Save();
+
+        _isNewRecord = _dataGame.MaxScore == _dataGame.Score;
 
         _shapesManager.EventEndMoveDown += OnBlockEndMoveDown;
 
@@ -157,7 +163,7 @@ public class Game : MonoBehaviour
         _shapesManager.EventEndMoveDown -= OnBlockEndMoveDown;
         _inputController.ControlEnable = false;
 
-        bool isLeaderboard = await YandexSDK.Instance.TrySetScore(_dataGame.Score);
+        bool isLeaderboard = !IsInfinity && await YandexSDK.Instance.TrySetScore((int)_dataGame.Score);
         _dataGame.ResetData();
         Save();
         EventGameOver?.Invoke();
@@ -179,6 +185,16 @@ public class Game : MonoBehaviour
 
     private void OnChangeScore(string str) => _isSave = true;
 
+    private void OnChangeMaxScore(string str)
+    {
+        _isSave = true;
+
+        if (_isNewRecord) return;
+
+        _isNewRecord = true;
+        EventNewRecord?.Invoke();
+    }
+
     private void OnPause()
     {
         _inputController.ControlEnable = false;
@@ -191,6 +207,7 @@ public class Game : MonoBehaviour
         #region Local Functions
         async UniTaskVoid OnUnPauseAsync()
         {
+            EventUnPause?.Invoke();
             await UniTask.Delay(TIME_UNPAUSE, true);
             _inputController.ControlEnable = true;
             Time.timeScale = 1f;

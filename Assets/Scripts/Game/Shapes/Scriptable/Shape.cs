@@ -8,12 +8,14 @@ public class Shape : ScriptableObject, IRandomizeObject
     [SerializeField] private int _sizeBound;
     [SerializeField] private Vector2 _offsetForNext;
     [SerializeField] private Vector2Int _offsetForArea;
+    [SerializeField] private Vector2Int _offsetForAreaInfinity;
     [SerializeField] private Vector2Int[] _startBlocksPositions;
     [Header("Random")]
     [SerializeField] private int _randomWeight = 1;
 
     public ShapeType Type => _type;
     public Vector2Int StartOffset => _offsetForArea;
+    public Vector2Int StartOffsetInfinity => _offsetForAreaInfinity;
     public Vector2Int[] BlocksPositions => _startBlocksPositions;
     public SubShape SubShape { get; private set; }
     public List<Block> Blocks {get; private set;}

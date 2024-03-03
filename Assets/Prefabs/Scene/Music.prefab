@@ -46,6 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _game: {fileID: 0}
   _inputController: {fileID: 0}
-  _pitchStart: 0.78
-  _pitchPerLevel: 0.01
-  _pitchMax: 1.22
+  _pitchStart: 0.76
+  _pitchPerLevel: 0.001
+  _pitchMax: 1.26

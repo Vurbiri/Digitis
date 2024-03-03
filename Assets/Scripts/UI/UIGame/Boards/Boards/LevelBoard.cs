@@ -9,6 +9,12 @@ public class LevelBoard : ABoard
     
     private void Start()
     {
+        if (DataGame.Instance.IsInfinityMode)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+        
         SetText(_dataGame.Level.ToString());
         _dataGame.EventChangeLevel += SetValue;
 
@@ -27,7 +33,7 @@ public class LevelBoard : ABoard
 
     private void OnDestroy()
     {
-        if (DataGame.Instance != null)
+        if (DataGame.Instance != null && !DataGame.Instance.IsInfinityMode)
         {
             _dataGame.EventChangeScore -= SetText;
             _dataGame.EventChangeCountShapes -= SetShapes;

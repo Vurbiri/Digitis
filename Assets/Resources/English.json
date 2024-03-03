@@ -11,10 +11,10 @@
   "MaxDigit": "Max digit",
   "Score": "Score",
   "Level": "Level",
-  "SensitivityButtons": "Press frequency (ms)",
+  "SensitivityButtons": "Press speed (ms)",
 
-  "BombsForAd": "+{0} Zero-Bombs by watching an Ad at game startup",
-  "BombsAdd": "+{0} Zero-Bombs",
+  "InfinityMode": "Endless mode",
+  "MScore": "Best",
 
   "LevelUp": "Level {0}",
 

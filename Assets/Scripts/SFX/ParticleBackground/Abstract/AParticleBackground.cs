@@ -11,7 +11,7 @@ public abstract class AParticleBackground : AParticleSystemController
     [SerializeField] protected float _emissionPerRadius = 0.22f;
     [Space]
     [SerializeField] private Color _colorGameOver;
-    [SerializeField] private float _speedGameOver = 0.6f;
+    [SerializeField] protected float _speedGameOver = 0.6f;
 
     private Color _color = Color.white;
     private WaitForSecondsRealtime _delay;

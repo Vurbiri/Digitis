@@ -3,7 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(ButtonClick))]
 public abstract class AButtonBombInteractable : MonoBehaviour
 {
-
     protected ButtonClick _thisButtonClick;
     protected DataGame _dataGame;
 

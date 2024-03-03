@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class MainMenu : MenuNavigation
 {
     [Space]
-    [SerializeField] private Button _leaderboard;
+    [SerializeField] protected Button _leaderboard;
     [SerializeField] private Button _review;
 
     protected YandexSDK _ysdk;
@@ -15,14 +15,14 @@ public class MainMenu : MenuNavigation
         _ysdk = YandexSDK.InstanceF;
 
         ButtonInitialize().Forget();
+    }
 
-        async UniTaskVoid ButtonInitialize()
-        {
-            bool isFirstStart = SettingsGame.Instance.IsFirstStart;
+    protected virtual async UniTask ButtonInitialize()
+    {
+        bool isFirstStart = SettingsGame.Instance.IsFirstStart;
 
-            _leaderboard.interactable = _ysdk.IsLeaderboard;
-            _review.interactable = !isFirstStart && _ysdk.IsLogOn && await _ysdk.CanReview();
-        }
+        _leaderboard.interactable = _ysdk.IsLeaderboard;
+        _review.interactable = !isFirstStart && _ysdk.IsLogOn && await _ysdk.CanReview();
     }
 
     public void OnReview()

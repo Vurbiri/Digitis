@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Bson;
 using UnityEngine;
 
 public class ButtonClickHotkeyBomb : ButtonClickHotkey
@@ -8,32 +9,22 @@ public class ButtonClickHotkeyBomb : ButtonClickHotkey
     public bool IsActive
     {
         get => _isActive;
-        set
-        {
-            _isActive = value;
-
-            if (_thisTargetGraphic == null)
-                return;
-
-            if (IsInteractable)
-                _thisTargetGraphic.SetNormalState();
-            else
-                _thisTargetGraphic.SetDisabledState();
-        }
+        set { _isActive = value; SetButtonState();}
     }
     public override bool IsInteractable
     {
         get => _isInteractable && _isActive;
-        set
-        {
-            if (_isInteractable == value)
-                return;
+        set { _isInteractable = value; SetButtonState(); }
+    }
 
-            _isInteractable = value;
-            if (IsInteractable)
-                _thisTargetGraphic.SetNormalState();
-            else
-                _thisTargetGraphic.SetDisabledState();
-        }
+    private void SetButtonState()
+    {
+        if (_thisTargetGraphic == null)
+            return;
+
+        if (IsInteractable)
+            _thisTargetGraphic.SetNormalState();
+        else
+            _thisTargetGraphic.SetDisabledState();
     }
 }

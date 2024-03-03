@@ -7,7 +7,7 @@ using static UnityEngine.Networking.UnityWebRequest;
 
 public static class Storage
 {
-    private const string keyGlobalSave = "DTS";
+    private const string keyGlobalSave = "DIT";
     
     private static ASaveLoadJsonTo service;
 

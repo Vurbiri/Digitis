@@ -10269,7 +10269,7 @@ MonoBehaviour:
   _sizeRemove: 1.2
   _gravityRemove: 1.75
   _speedRemoveStart: 0
-  _speedRemoveMiddle: 2
+  _speedRemoveMiddle: 1.5
   _emissionRemoveStart: 16
   _emissionRemoveMiddle: 10
   _emissionRemoveEnd: 5

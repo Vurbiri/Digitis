@@ -43,5 +43,4 @@ public abstract class ASaveLoadJsonTo
 
     protected string Serialize(object obj) => Storage.Serialize(obj);
     protected Return<T> Deserialize<T>(string json) where T : class => Storage.Deserialize<T>(json);
-
 }

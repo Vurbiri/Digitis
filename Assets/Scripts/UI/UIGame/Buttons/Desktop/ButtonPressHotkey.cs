@@ -57,6 +57,7 @@ public class ButtonPressHotkey : ButtonPress, IButtonInteractable, IPointerDownH
             _thisTargetGraphic.SetNormalState();
         else
             _thisTargetGraphic.SetHighlightedState();
+
         base.OnPointerUp(eventData);
     }
 

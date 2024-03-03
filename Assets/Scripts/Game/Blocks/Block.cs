@@ -12,7 +12,6 @@ public class Block : APooledObject<Block>
     public bool IsOne { get; private set; }
     public bool IsBomb { get; private set; }
     public float Speed { get => _speed; set { _speed = value; _blockSFX.SetTrailEmissionTimeMultiplier(_speed); } }
-    public bool IsDeferredOrder { get; private set; }
 
     public event Action<Block> EventEndMoveDown;
 
@@ -64,7 +63,7 @@ public class Block : APooledObject<Block>
         SetParent(parent);
         _thisTransform.localPosition = position.ToVector3();
         Position = _thisTransform.localPosition.ToVector2Int();
-        IsDeferredOrder = false;
+        Debug.Log(position.ToVector3());
     }
 
     public void StartFall(float speed) => _blockSFX.StartFall(speed);
@@ -106,14 +105,12 @@ public class Block : APooledObject<Block>
                 {
                     position.y = y;
                     _thisTransform.localPosition = position;
-                    IsDeferredOrder = y - _target < 0.2f;
                     return false;
                 }
                 else
                 {
                     position.y = _target;
                     _thisTransform.localPosition = position;
-                    IsDeferredOrder = false;
                     return true;
                 }
             }

@@ -3,17 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class BlocksArea : MonoBehaviour
 {
     [SerializeField] private Vector2Int _size = new(10, 20);
     [SerializeField] private Transform _container;
     [Space]
+    [SerializeField] private GridStartArea _areaStart;
+    [Space]
     [SerializeField] private int _timePauseBlocksRemoved = 225;
     [SerializeField] private int _timePauseBombExploded = 175;
     [SerializeField] private int _timePauseRemovedGameOver = 125;
 
-    private DataGame _dataGames;
+    private DataGame _dataGame;
     private Block[,] _blocks;
     private readonly List<Block> _blocksAdd = new();
     private readonly List<Block> _bombsAdd = new();
@@ -34,8 +37,13 @@ public class BlocksArea : MonoBehaviour
 
     private void Awake()
     {
-        _dataGames = DataGame.InstanceF;
+        _dataGame = DataGame.InstanceF;
         _blocks = new Block[_size.x, _size.y + ADD_VIRTUAL_Y_SIZE];
+    }
+
+    public void Initialize(ShapeSize sizeShape)
+    {
+        _areaStart.Initialize(_dataGame.IsInfinityMode, sizeShape);
     }
 
     public void SetArea(Func<Vector2, int, Block> getBlock)
@@ -43,12 +51,12 @@ public class BlocksArea : MonoBehaviour
         Vector2Int position = Vector2Int.zero;
         int value;
         Block block;
-        _maxFillY = _dataGames.SaveArea.GetLength(1);
-        for (int x = 0; x < _dataGames.SaveArea.GetLength(0); x++)
+        _maxFillY = _dataGame.SaveArea.GetLength(1);
+        for (int x = 0; x < _dataGame.SaveArea.GetLength(0); x++)
         {
             for (int y = 0; y < _maxFillY; y++)
             {
-                value = _dataGames.SaveArea[x, y];
+                value = _dataGame.SaveArea[x, y];
                 if (value >= 0)
                 {
                     position.x = x; position.y = y;
@@ -62,15 +70,15 @@ public class BlocksArea : MonoBehaviour
     public void SaveArea()
     {
         _maxFillY = MaxNotEmptyLine(_maxFillY - 1);
-        if(_dataGames.SaveArea.GetLength(1) != _maxFillY)
-            _dataGames.SaveArea = new int[_size.x, _maxFillY];
+        if(_dataGame.SaveArea.GetLength(1) != _maxFillY)
+            _dataGame.SaveArea = new int[_size.x, _maxFillY];
         Block block;
         for (int x = 0; x < _size.x; x++)
         {
             for (int y = 0; y < _maxFillY; y++)
             {
                 block = _blocks[x, y];
-                _dataGames.SaveArea[x, y] = block == null ? -1 : block.Digit;
+                _dataGame.SaveArea[x, y] = block == null ? -1 : block.Digit;
             }
         }
 
@@ -199,7 +207,7 @@ public class BlocksArea : MonoBehaviour
 
             if (CreateSeries(block))
             {
-                _dataGames.CalkScore(block.Digit, blocksSeries.Count,  blocksOne.Count);
+                _dataGame.CalkScore(block.Digit, blocksSeries.Count,  blocksOne.Count);
                 blocksRemove.UnionWith(blocksSeries);
                 blocksRemove.UnionWith(blocksOne);
             }
@@ -307,7 +315,6 @@ public class BlocksArea : MonoBehaviour
         #endregion
     }
 
-    
     private bool TryGetBlock(Vector2Int index, out Block block)
     {
         block = null;

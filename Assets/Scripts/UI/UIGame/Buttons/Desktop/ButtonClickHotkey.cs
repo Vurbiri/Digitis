@@ -1,4 +1,5 @@
 using NaughtyAttributes;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,6 +11,7 @@ public class ButtonClickHotkey : ButtonClick, IButtonInteractable, IPointerDownH
 
     protected bool _isInteractable;
     protected CustomTargetGraphic _thisTargetGraphic;
+    private WaitForSecondsRealtime _timePress;
 
     public virtual bool IsInteractable 
     { 
@@ -32,6 +34,8 @@ public class ButtonClickHotkey : ButtonClick, IButtonInteractable, IPointerDownH
         _isInteractable = isInteractable;
         _thisTargetGraphic = GetComponent<CustomTargetGraphic>();
         _thisTargetGraphic.Initialize(isInteractable);
+
+        _timePress = new(SettingsGame.Instance.SensitivityButtons);
     }
 
     public override void OnPointerDown(PointerEventData eventData)
@@ -69,6 +73,17 @@ public class ButtonClickHotkey : ButtonClick, IButtonInteractable, IPointerDownH
         if (!IsInteractable) return;
 
         if (Input.GetButtonDown(_key))
-            base.OnPointerDown(null);
+        {
+            OnPointerDown(null);
+            StartCoroutine(OnPointerUPCoroutine());
+        }
+
+        #region Local Coroutine
+        IEnumerator OnPointerUPCoroutine()
+        {
+            yield return _timePress;
+            _thisTargetGraphic.SetNormalState();
+        }
+        #endregion
     }
 }

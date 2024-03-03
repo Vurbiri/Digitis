@@ -1,5 +1,4 @@
 
-
 public class SliderSensitivityButtons : ASliderSetting
 {
     private void Start()

@@ -27,7 +27,6 @@ public class ButtonHold : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         HoldEnd();
     }
 
-
     private void HoldEnd()
     {
         if (!_isHold)

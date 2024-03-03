@@ -19,6 +19,4 @@ public class BlockParticleTrail : ABlockParticleSystemController
         Color = color;
         ClearAndStop();
     }
-
-    
 }

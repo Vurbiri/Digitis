@@ -75,5 +75,4 @@ public class PersonalPanel : MonoBehaviour
         if (Localization.Instance != null)
             _localization.EventSwitchLanguage -= SetLocalizationName;
     }
-
 }

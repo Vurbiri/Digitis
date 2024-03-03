@@ -57,6 +57,7 @@ public class ButtonHoldHotkey : ButtonHold, IButtonInteractable, IPointerDownHan
             _thisTargetGraphic.SetNormalState();
         else
             _thisTargetGraphic.SetHighlightedState();
+
         base.OnPointerUp(eventData);
     }
 

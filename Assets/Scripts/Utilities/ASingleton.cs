@@ -20,7 +20,6 @@ public abstract class ASingleton<T> : MonoBehaviour where T : ASingleton<T>
 
         if (_isNotDestroying)
             DontDestroyOnLoad(gameObject);
-
     }
 
     protected virtual void OnDestroy()

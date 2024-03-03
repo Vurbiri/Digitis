@@ -56,9 +56,16 @@ public enum MessageType : byte
 
 public enum GameModeStart : byte
 {
-    GameNew,
-    GameContinue
+    New,
+    Continue
 }
+
+public enum GameMode : byte
+{
+    Normal,
+    Infinity
+}
+
 
 public static class ExtensionsEnum
 {

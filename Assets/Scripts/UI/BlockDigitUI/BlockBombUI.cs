@@ -42,7 +42,6 @@ public class BlockBombUI : MonoBehaviour
         }
     }
 
-
     private void OnDisable()
     {
         StopCoroutine(Processing());

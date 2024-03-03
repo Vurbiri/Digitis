@@ -117,7 +117,5 @@ public class LoadingPreGame : MonoBehaviour
         #endregion
     }
 
-
     //private void OnDisable() => YandexSDK.Instance.LoadingAPI_Ready();
-
 }

@@ -64,6 +64,5 @@ public class JsonToCookies : ASaveLoadJsonTo
         {
             callback?.Invoke(result);
         }
-
     }
 }

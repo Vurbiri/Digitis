@@ -75,5 +75,4 @@ public class BlockSFX : MonoBehaviour
     }
 
     public void SetTrailEmissionTimeMultiplier(float rate) => _particles.TrailEmissionTimeMultiplier = rate;
-
 }

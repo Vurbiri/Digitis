@@ -11,46 +11,14 @@ public class StartMenu : MenuNavigation
     [Space]
     [SerializeField] private LeaderboardUI _leaderboard;
     [Space]
-    [SerializeField] private ToggleFullInteractable _toggleContinue;
-    [Space]
-    [SerializeField] private Slider _sliderSize;
-    [SerializeField] private Slider _sliderMax;
-    [Space]
-    [SerializeField] private GameObject _settingsPanel;
-    [SerializeField] private RewardAdPanel _rewardAdPanel;
+    [SerializeField] private SettingsGameStart _settingsGame;
 
     private DataGame _dataGame;
-    private YMoney _money;
 
     private void Start()
     {
         _dataGame = DataGame.Instance;
-        _money = YMoney.Instance;
-
-        _rewardAdPanel.Initialize();
-
-        _sliderSize.value = _dataGame.ShapeType.ToInt();
-        _sliderMax.minValue = _dataGame.MinDigit;
-        _sliderMax.value = _dataGame.MaxDigit;
-
-        SetStartInteractable(_dataGame.ModeStart == GameModeStart.GameContinue);
-        _toggleContinue.OnValueChanged.AddListener(SetInvertShow);
-
-        #region Local Functions
-        void SetStartInteractable(bool value)
-        {
-            _toggleContinue.Interactable = value;
-            _toggleContinue.IsOn = value;
-            SetInvertShow(value);
-        }
-        void SetInvertShow(bool value)
-        {
-            value = !value;
-
-            _settingsPanel.SetActive(value);
-            _rewardAdPanel.Show = value;
-        }
-        #endregion
+        _settingsGame.Initialize();
     }
 
     public void OnStart()
@@ -62,43 +30,113 @@ public class StartMenu : MenuNavigation
             LoadScene loadScene = new(_sceneNext);
             loadScene.Start();
 
-            if (!_toggleContinue.IsOn)
+            if (_settingsGame.IsNewGame)
             {
-                if (_dataGame.ModeStart == GameModeStart.GameContinue && YandexSDK.Instance.IsLeaderboard)
-                    if(await YandexSDK.Instance.TrySetScore(_dataGame.Score))
+                if (!_dataGame.IsNewGame && !_dataGame.IsInfinityMode && YandexSDK.Instance.IsLeaderboard)
+                    if(await YandexSDK.Instance.TrySetScore((int)_dataGame.Score))
                         _leaderboard.TryReward().Forget();
 
                 _dataGame.ResetData();
-                _dataGame.ShapeType = Mathf.RoundToInt(_sliderSize.value).ToEnum<ShapeSize>();
-                _dataGame.MaxDigit = Mathf.RoundToInt(_sliderMax.value);
-
-                bool result = _rewardAdPanel.IsOn;
-                if (result)
-                    result = await OnShowAdAsync();
-
-                if (!result)
-                    _dataGame.Save(true, null);
+                _dataGame.ShapeType = _settingsGame.ShapeType;
+                _dataGame.MaxDigit = _settingsGame.MaxDigit;
+                _dataGame.IsInfinityMode = _settingsGame.IsInfinity;
+                _dataGame.Save(true, null);
             }
 
             MusicSingleton.Instance.Stop();
             loadScene.End();
         }
+    }
 
-        async UniTask<bool> OnShowAdAsync()
+    #region Nested Classe
+    [System.Serializable]
+    private class SettingsGameStart
+    {
+        [SerializeField] private ToggleFullInteractable _toggleContinue;
+        [Space]
+        [SerializeField] private SliderFullInteractable _sliderMax;
+        [SerializeField] private SliderFullInteractable _sliderSize;
+        [SerializeField] private ToggleFullInteractable _infinityToggle;
+        [Space]
+        [SerializeField] private Image _iconButton;
+        [SerializeField] private Sprite _spriteEmpty;
+        [SerializeField] private Sprite _spriteInfinity;
+        [Space]
+        [SerializeField] private Image _iconInfinity;
+
+        private DataGame _dataGame;
+
+        private float _tempValueMax;
+        private float _tempValueSize;
+        private bool _tempValueInfinity;
+
+        private readonly Color _colorOn = Color.white;
+        private readonly Color _colorOff = new(1f, 1f, 1f, 0.25f);
+
+        public int MaxDigit => Mathf.RoundToInt(_sliderMax.Value);
+        public ShapeSize ShapeType => Mathf.RoundToInt(_sliderSize.Value).ToEnum<ShapeSize>();
+        public bool IsInfinity => _infinityToggle.IsOn;
+
+        public bool IsNewGame => !_toggleContinue.IsOn;
+
+        public void Initialize()
         {
-            bool result = false;
-            if (await _money.ShowRewardedVideo())
+            _dataGame = DataGame.Instance;
+
+            _sliderMax.MinValue = _dataGame.MinDigit;
+            
+            SetStart(!_dataGame.IsNewGame);
+            SetIcons(_dataGame.IsInfinityMode);
+            _toggleContinue.OnValueChanged.AddListener(ChangeGameStart);
+            _infinityToggle.OnValueChanged.AddListener(SetIcons);
+
+            _sliderMax.Value = _tempValueMax = _dataGame.MaxDigit;
+            _sliderSize.Value = _tempValueSize = _dataGame.ShapeType.ToInt();
+            _infinityToggle.IsOn = _tempValueInfinity = _dataGame.IsInfinityMode;
+
+            #region Local Functions
+            void SetStart(bool isContinueGame)
             {
-                result = await _dataGame.AddBonusAd(_money.BombsRewardedAd);
-                await _money.AwaitCloseRewardedVideo();
-                if (result)
-                {
-                    Message.BannerKeyFormat("BombsAdd", _money.BombsRewardedAd, time: 4000);
-                    await UniTask.Delay(1000, true);
-                }
+                _toggleContinue.Interactable = isContinueGame;
+                _toggleContinue.IsOn = isContinueGame;
+
+                SetInteractable(!isContinueGame);
             }
-            return result;
+            
+            void ChangeGameStart(bool isContinueGame)
+            {
+                if(isContinueGame)
+                {
+                    _tempValueMax = _sliderMax.Value;
+                    _tempValueSize = _sliderSize.Value;
+                    _tempValueInfinity = _infinityToggle.IsOn;
+
+                    _sliderMax.Value = _dataGame.MaxDigit;
+                    _sliderSize.Value = _dataGame.ShapeType.ToInt();
+                    _infinityToggle.IsOn = _dataGame.IsInfinityMode;
+                }
+                else 
+                {
+                    _sliderMax.Value = _tempValueMax;
+                    _sliderSize.Value = _tempValueSize;
+                    _infinityToggle.IsOn = _tempValueInfinity;
+                }
+
+                SetInteractable(!isContinueGame);
+            }
+            void SetInteractable(bool isNewGame)
+            {
+                _sliderSize.Interactable = isNewGame;
+                _sliderMax.Interactable = isNewGame;
+                _infinityToggle.Interactable = isNewGame;
+            }
+            void SetIcons(bool isInfinity)
+            {
+                _iconButton.sprite = isInfinity ? _spriteInfinity : _spriteEmpty;
+                _iconInfinity.color = isInfinity ? _colorOn : _colorOff;
+            }
+            #endregion
         }
     }
-        
+    #endregion
 }

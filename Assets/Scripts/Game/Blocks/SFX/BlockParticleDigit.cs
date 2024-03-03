@@ -200,7 +200,7 @@ public class BlockParticleDigit : ABlockParticleSystemController
 
         Stop();
     }
-
+/*
 #if UNITY_EDITOR
     [Button]
     public void TestRemove()
@@ -336,5 +336,5 @@ public class BlockParticleDigit : ABlockParticleSystemController
     }
 
 #endif
-
+*/
 }

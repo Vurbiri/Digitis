@@ -3,20 +3,16 @@ using UnityEngine;
 [RequireComponent(typeof(ButtonClickHotkey))]
 public class ButtonBombDesktopInteractable : AButtonBombInteractable
 {
+    ButtonClickHotkeyBomb _thisButtonClickHotkeyBomb;
+
     protected override void SetStatus(int countBomb)
     {
-        ButtonClickHotkeyBomb thisButton = _thisButtonClick as ButtonClickHotkeyBomb;
+        if(_thisButtonClickHotkeyBomb == null)
+            _thisButtonClickHotkeyBomb = _thisButtonClick as ButtonClickHotkeyBomb;
 
         if (countBomb <= 0)
-        {
-            if (thisButton.IsActive)
-                thisButton.IsActive = false;
-        }
+            _thisButtonClickHotkeyBomb.IsActive = false;
         else
-        {
-            if (!thisButton.IsActive)
-                thisButton.IsActive = true;
-        }
+            _thisButtonClickHotkeyBomb.IsActive = true;
     }
-
 }

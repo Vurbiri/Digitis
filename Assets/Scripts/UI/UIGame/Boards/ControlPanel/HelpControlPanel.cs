@@ -7,7 +7,6 @@ public class HelpControlPanel : MonoBehaviour
     [SerializeField] private GameObject _keyboardPanel;
     [SerializeField] private GameObject _gamepadPanel;
 
-
     private void Awake()
     {
         OnSwitchingDevice(_inputDesktopController.CurrentDevice);

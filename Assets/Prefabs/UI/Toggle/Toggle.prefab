@@ -352,6 +352,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _label: {fileID: 529162079260435311}
   _textColor: {r: 1, g: 1, b: 1, a: 1}
+  _checkmarkColor: {r: 0.039215688, g: 0.87058824, b: 1, a: 1}
+  _checkmarkAlfaOff: 0.25
 --- !u!114 &6873077726212203153
 MonoBehaviour:
   m_ObjectHideFlags: 0

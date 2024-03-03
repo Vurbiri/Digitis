@@ -21,7 +21,6 @@ public class KeyboardControlPanel : MonoBehaviour
     private Color _colorOn = Color.white;
     private Color _colorOff = Color.white;
 
-
     private void Awake()
     {
         _timeView = new(_secondsView);
@@ -64,7 +63,6 @@ public class KeyboardControlPanel : MonoBehaviour
             yield return _timeSwitch;
         }
     }
-
 
     #region Nested Classe
     [System.Serializable]

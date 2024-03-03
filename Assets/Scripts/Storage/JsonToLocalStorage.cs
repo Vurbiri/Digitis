@@ -65,6 +65,5 @@ public class JsonToLocalStorage : ASaveLoadJsonTo
         {
             callback?.Invoke(result);
         }
-
     }
 }

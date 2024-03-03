@@ -1,17 +1,19 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
-using static UnityEngine.UI.Toggle;
 
 [RequireComponent(typeof(Toggle))]
 public class ToggleFullInteractable : MonoBehaviour
 {
     [SerializeField] private TMP_Text _label;
-    [SerializeField] Color _textColor = Color.white;
+    [SerializeField] private Color _textColor = Color.white;
+    [SerializeField, Range(0f, 1f)] float _checkmarkAlfaOff = 0.25f;
 
     private Graphic _checkmark;
-    private Color _checkmarkColor = Color.white;
-    private Toggle _thisToggle;
+    protected Toggle _thisToggle;
+
+    private ColorBlock _colorBlock;
 
     public bool Interactable
     {
@@ -19,36 +21,34 @@ public class ToggleFullInteractable : MonoBehaviour
         set
         {
             _thisToggle.interactable = value;
-            SetIColor();
+            SetColor();
         }
     }
-    public bool IsOn { get => _thisToggle.isOn; set => _thisToggle.isOn = value; }
-    public ToggleEvent OnValueChanged => _thisToggle.onValueChanged;
+    public virtual bool IsOn { get => _thisToggle.isOn; set => _thisToggle.isOn = value; }
+    public UnityEvent<bool> OnValueChanged => _thisToggle.onValueChanged;
 
-    private ColorBlock _colorBlock;
-
-    private void Awake()
+    protected virtual void Awake()
     {
         _thisToggle = GetComponent<Toggle>();
         _colorBlock = _thisToggle.colors;
 
         _checkmark = _thisToggle.graphic;
-        _checkmarkColor = _checkmark.color;
+        _thisToggle.graphic = null;
 
-        SetIColor();
+        _thisToggle.onValueChanged.AddListener(SetAlfaCheckmark);
+        SetColor();
     }
 
-    private void SetIColor()
+    private void SetColor()
     {
-        Color color = Interactable ? _colorBlock.normalColor : _colorBlock.disabledColor;
+        Color color = _thisToggle.interactable ? _colorBlock.normalColor : _colorBlock.disabledColor;
         _label.color = _textColor * color;
 
-        if(Interactable)
-            _checkmarkColor.a = IsOn ? 1f : 0f;
-        else
-            _checkmarkColor.a = 0f;
-        _checkmark.CrossFadeColor(_checkmarkColor, _colorBlock.fadeDuration, true, true);
+        SetAlfaCheckmark(_thisToggle.isOn);
+    }
 
-
+    private void SetAlfaCheckmark(bool isOn)
+    {
+        _checkmark.CrossFadeAlpha(Interactable && isOn ? 1f : (isOn ? _checkmarkAlfaOff : 0f) , _colorBlock.fadeDuration, true);
     }
 }

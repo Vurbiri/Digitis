@@ -34,7 +34,7 @@ public class BlockParticleDigitUI : ABlockParticleSystemController
         yield return _pauseRunStart;
 
         EmissionTimeMultiplier = _emissionRunMiddle;
-        _mainModule.gravityModifier = 1.3f;
+        _mainModule.gravityModifier = 1.15f;
 
         yield return _pauseRunNext;
 
