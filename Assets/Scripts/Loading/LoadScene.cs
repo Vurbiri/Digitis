@@ -29,10 +29,10 @@ public class LoadScene
         _isAddProgress = isAddProgress;
     }
 
-    public void Start(bool allowSceneActivation = false)
+    public void Start()
     {
         _asyncOperation = SceneManager.LoadSceneAsync(_nextScene);
-        _asyncOperation.allowSceneActivation = allowSceneActivation;
+        _asyncOperation.allowSceneActivation = false;
         if (_slider != null)
             ProgressAsync().Forget();
 

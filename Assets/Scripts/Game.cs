@@ -25,7 +25,6 @@ public class Game : MonoBehaviour
 
     private bool IsNewGame => _dataGame.IsNewGame;
     public bool IsInfinity => _dataGame.IsInfinityMode;
-    private int Level => _dataGame.Level;
     private int CountBombs { get => _dataGame.CountBombs; set => _dataGame.CountBombs = value; }
     private int CountShapes { get => _dataGame.CountShapes; set => _dataGame.CountShapes = value; }
     private int CountShapesMax => _dataGame.CountShapesMax;
@@ -61,7 +60,7 @@ public class Game : MonoBehaviour
         CountdownAsync().Forget();
 
         _dataGame.CalkMaxShapes();
-        if (IsNewGame || IsInfinity)
+        if (IsNewGame)
             CountShapes = CountShapesMax;
 
         _shapesManager.Initialize();
@@ -146,8 +145,8 @@ public class Game : MonoBehaviour
         else if(++_countSave >= _savePerShapes)
             _isSave = true;
 
-        if (_shapesManager.StartMove(Level))
-            CountShapes--;
+        if (_shapesManager.StartMove())
+            CountShapes -= IsInfinity ? 0 : 1;
         else
             GameOver().Forget();
     }

@@ -5,16 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuGame : MainMenu
 {
-    [Space]
-    [SerializeField] private GameObject _firstOpenMenu;
     [Scene, Space]
     [SerializeField] private int _sceneMenu = 2;
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-        _firstOpenMenu.SetActive(true);
-    }
 
     protected override async UniTask ButtonInitialize()
     {

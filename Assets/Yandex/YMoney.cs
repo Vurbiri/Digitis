@@ -52,7 +52,7 @@ public partial class YMoney : ASingleton<YMoney>
         bool result = await taskCloseRewardedVideo.Task;
         taskCloseRewardedVideo = null;
 
-        //_globalMusic.UnPause();
+        _globalMusic.UnPause();
         return result;
     }
 

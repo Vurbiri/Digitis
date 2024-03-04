@@ -720,7 +720,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
-  _lbName: lbDigitisTest
+  _lbName: lbDigitis
   _isDesktop: 1
   _isLogOn: 1
   _lang: ru
@@ -921,6 +921,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
   _startCountBombs: 3
+  _bombPerLevelBase: 18
+  _bombPerScoreBase: 400
   _startCountShapes: 16
   _steepShapesPerLevel: 10
   _shapesPerLevel:
@@ -931,15 +933,15 @@ MonoBehaviour:
   - 1
   _speeds:
     _start: 0.5
-    _perLevel: 0.225
-    _forInfinity: 0
-    _down: 18
+    _perLevel: 0.25
+    _pseudoSpeedInfinity: 10.5
+    _down: 17
     _fall: 20
   _settings:
     _currentLevel: 1
     _modeGame: 0
     _shapeType: 2
-    _maxDigit: 7
+    _maxDigit: 6
   _minDigit: 5
 --- !u!4 &523976399
 Transform:

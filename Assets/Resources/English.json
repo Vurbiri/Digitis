@@ -11,7 +11,7 @@
   "MaxDigit": "Max digit",
   "Score": "Score",
   "Level": "Level",
-  "SensitivityButtons": "Press speed (ms)",
+  "SensitivityButtons": "Turbo key press (ms)",
 
   "InfinityMode": "Endless mode",
   "MScore": "Best",
@@ -44,7 +44,7 @@
   "GoodSaveSettings": "Settings is saved",
   "WarningAuthorization": "Cloud save, personalization and leaderboard are not available without authorization",
 
-  "Leaderboard": "Leaders",
+  "Leaderboard": "Digit builders",
   "PersonalRecord": "New personal best!",
   "Top": "Top rank!",
 

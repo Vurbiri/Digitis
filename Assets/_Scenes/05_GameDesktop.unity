@@ -2110,7 +2110,7 @@ MonoBehaviour:
   m_fontSizeBase: 1.8
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 1
+  m_fontSizeMin: 0.7
   m_fontSizeMax: 1.7
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -8361,18 +8361,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 603395119}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &603395122 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1913895726954681792, guid: acefed0700264c14f9b22c59cd715e16,
-    type: 3}
-  m_PrefabInstance: {fileID: 603395119}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ed1c09293f1ed8449481d55e3220b03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &616662215
 GameObject:
   m_ObjectHideFlags: 0
@@ -9444,7 +9432,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &712815071
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11462,7 +11450,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _areaStart
       value: 
-      objectReference: {fileID: 603395122}
+      objectReference: {fileID: 0}
     - target: {fileID: 7668651828715812663, guid: 30430d67a9a395b4684a064480a7bc37,
         type: 3}
       propertyPath: _nextContainer
@@ -17078,7 +17066,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_Spacing: 0.75
+  m_Spacing: 0.3
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -24154,7 +24142,7 @@ MonoBehaviour:
   m_fontSizeBase: 1.8
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 1
+  m_fontSizeMin: 0.7
   m_fontSizeMax: 1.8
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -25255,7 +25243,7 @@ MonoBehaviour:
   m_fontSizeBase: 1.8
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 1
+  m_fontSizeMin: 0.7
   m_fontSizeMax: 1.7
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -26433,7 +26421,7 @@ MonoBehaviour:
   m_fontSizeBase: 1.8
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 1
+  m_fontSizeMin: 0.7
   m_fontSizeMax: 1.8
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -26981,7 +26969,6 @@ MonoBehaviour:
         m_Calls: []
   _leaderboard: {fileID: 689625060}
   _review: {fileID: 1363049957}
-  _firstOpenMenu: {fileID: 972411953}
   _sceneMenu: 2
 --- !u!1 &1938043074
 GameObject:
@@ -34154,7 +34141,7 @@ MonoBehaviour:
   _game: {fileID: 68789447}
   _speedMin: 0.275
   _speedMax: 1.075
-  _speedPerLevel: 0.016
+  _speedPerLevel: 0.02
 --- !u!4 &8142617967807359584
 Transform:
   m_ObjectHideFlags: 0

@@ -2,7 +2,6 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class ShapesManager : MonoBehaviour
 {
@@ -28,11 +27,14 @@ public class ShapesManager : MonoBehaviour
     #region private
     private DataGame _dataGame;
     private Pool<Block> _poolBlocks;
-    private ShapeControl _shapeControl = null;
+    private AShapeControl _shapeControl = null;
     private Shape _shape = null;
     private RandomObjects<Shape> _randomShapes;
     private RandomObjects<BlockSettings> _randomBlockSettings;
     private int _countBlocks;
+    private bool _isInfinityMode = false;
+
+    private Func<bool> funcStartMove;
 
     private const int BASE_WEIGHT = 5;
     #endregion
@@ -47,8 +49,11 @@ public class ShapesManager : MonoBehaviour
 
         _dataGame = DataGame.InstanceF;
         _poolBlocks = new(_prefabBlock, _poolRepository, _sizePool);
+        _isInfinityMode = _dataGame.IsInfinityMode;
 
-        _shapeControl = new ShapeControl(_area, _dataGame.Speeds, _dataGame.IsInfinityMode);
+        funcStartMove = _isInfinityMode ? StartMoveInfinity : StartMoveNormal;
+
+        _shapeControl = _isInfinityMode ? new ShapeControlInfinity(_area, _dataGame.Speeds) : new ShapeControlNormal(_area, _dataGame.Speeds);
         _shapeControl.EventEndMoveDown += () => EventEndMoveDown?.Invoke();
         _shapeControl.EventFixedBlocks += _SFX.PlayFixed;
 
@@ -71,11 +76,10 @@ public class ShapesManager : MonoBehaviour
     public void Initialize()
     {
         Shape[] shapes = Initialize(_dataGame.MaxDigit, _dataGame.ShapeType);
-        _area.Initialize(_dataGame.ShapeType);
 
         if (_dataGame.IsNewGame)
         {
-            CreateShape();
+            if (_isInfinityMode) CreateShapeInfinity(); else CreateShapeNormal();
         }
         else
         {
@@ -142,14 +146,23 @@ public class ShapesManager : MonoBehaviour
         return result;
     }
 
-    public bool StartMove(int level)
+    public bool StartMove() => funcStartMove();
+    private bool StartMoveNormal()
     {
-        _dataGame.Speeds.Level = level;
-
         if (_shapeControl.SetupForNew(_shape))
         {
-            CreateShape();
+            CreateShapeNormal();
             _shapeControl.StartMoveDown();
+            return true;
+        }
+        return false;
+    }
+    private bool StartMoveInfinity()
+    {
+        if (_shapeControl.SetupForNew(_shape))
+        {
+            CreateShapeInfinity();
+            _SFX.PlaySpawn();
             return true;
         }
         return false;
@@ -178,13 +191,12 @@ public class ShapesManager : MonoBehaviour
 
     public void StartMoveDown()
     {
-        _shapeControl.SetSpeed(true);
-        _SFX.PlayDown();
+        if(_shapeControl.SetSpeed(true))
+            _SFX.PlayDown();
     }
     public void EndMoveDown()
     {
-        if(!_dataGame.IsInfinityMode)
-            _shapeControl.SetSpeed(false);
+        _shapeControl.SetSpeed(false);
     }
 
     public void Rotate()
@@ -207,12 +219,20 @@ public class ShapesManager : MonoBehaviour
             _dataGame.NextBlocksShape = new int[count];
         for (int i = 0; count > i; i++)
             _dataGame.NextBlocksShape[i] = _shape.Blocks[i].Digit;
-
     }
 
-    private void CreateShape()
+    private void CreateShapeNormal()
     {
         _shape = _randomShapes.Next;
+        _shape.CreateBlock(_poolBlocks.GetObjects(_nextContainer, _countBlocks), _randomBlockSettings.NextRange(_countBlocks));
+    }
+    private void CreateShapeInfinity()
+    {
+        do
+        {
+            _shape = _randomShapes.Next;
+        }
+        while (_countBlocks == 4 && _shape.Type == ShapeType.I);
         _shape.CreateBlock(_poolBlocks.GetObjects(_nextContainer, _countBlocks), _randomBlockSettings.NextRange(_countBlocks));
     }
 

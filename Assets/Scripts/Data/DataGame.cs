@@ -1,8 +1,6 @@
-using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using System;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class DataGame : ASingleton<DataGame>
 {
@@ -10,6 +8,9 @@ public class DataGame : ASingleton<DataGame>
     
     [Space]
     [SerializeField] private int _startCountBombs = 1;
+    [Space]
+    [SerializeField] private int _bombPerLevelBase = 18;
+    [SerializeField] private int _bombPerScoreBase = 400;
     [Space]
     [SerializeField] private int _startCountShapes = 16;
     [SerializeField] private int _steepShapesPerLevel = 10;
@@ -23,9 +24,6 @@ public class DataGame : ASingleton<DataGame>
     private GameSave _data;
     private int _countShapesMax;
     private int _countBombInfinityAdd;
-
-    private const int LEVEL_BOMB_MOD = 14;
-    private const int SCORE_BOMB_MOD = 600;
 
     public Speeds Speeds => _speeds;
     public int CountShapesMax { get => _countShapesMax; set { _countShapesMax = value; EventChangeCountShapesMax?.Invoke(value); } }
@@ -77,12 +75,14 @@ public class DataGame : ASingleton<DataGame>
     public void StartGame()
     {
         _data.ModeStart = GameModeStart.Continue;
-        _countBombInfinityAdd = Mathf.FloorToInt(Score / (CalkRateBomb() * SCORE_BOMB_MOD)) + 1;
-        _speeds.IsInfinitySpeed = IsInfinityMode;
+        _countBombInfinityAdd = Mathf.FloorToInt(Score / (CalkRateBomb() * _bombPerScoreBase)) + 1;
+        _speeds.Initialize(IsInfinityMode, Level);
+
     }
     public void LevelUp()
     {
         Level++;
+        _speeds.SetSpeed(Level);
         CountBombs += Level % CalkRateBomb() == 0 ? 1 : 0;
         CountShapes = CalkMaxShapes();
     }
@@ -103,7 +103,7 @@ public class DataGame : ASingleton<DataGame>
         if (Score > MaxScore)
             MaxScore = Score;
 
-        if (Score > _countBombInfinityAdd * CalkRateBomb() * SCORE_BOMB_MOD)
+        if (Score > _countBombInfinityAdd * CalkRateBomb() * _bombPerScoreBase)
         {
             CountBombs++;
             _countBombInfinityAdd++;
@@ -113,7 +113,7 @@ public class DataGame : ASingleton<DataGame>
     public int CalkMaxShapes()
     {
         if (IsInfinityMode)
-            return CountShapesMax = int.MaxValue;
+            return CountShapesMax = 1;
 
         CountShapesMax = _startCountShapes;
         int lvl = Level - 1;
@@ -128,7 +128,7 @@ public class DataGame : ASingleton<DataGame>
         return CountShapesMax += Mathf.RoundToInt(_shapesPerLevel[^1] * lvl);
     }
 
-    private int CalkRateBomb() => LEVEL_BOMB_MOD - ShapeType.ToInt() - MaxDigit;
+    private int CalkRateBomb() => _bombPerLevelBase - ShapeType.ToInt() * 2 - MaxDigit;
 
     #region Nested Classe
     private class GameSave : GameSettings

@@ -11,7 +11,7 @@
 	"MaxDigit": "Макс. цифра",
 	"Score": "Счет",
 	"Level": "Уровень",
-	"SensitivityButtons": "Скорость нажатия (мс)",
+	"SensitivityButtons": "Автонажатие (мс)",
 
 	"InfinityMode": "Бесконечный режим",
 	"MScore": "Рекорд",
@@ -44,7 +44,7 @@
 	"GoodSaveSettings": "Настройки сохранены",
 	"WarningAuthorization": "Без авторизации недоступны облачное сохранение, персонализация и таблица лидеров",
 
-	"Leaderboard": "Лидеры",
+	"Leaderboard": "Цифроители",
 	"PersonalRecord": "Личный рекорд!",
 	"Top": "Место в топе!",
 

@@ -47,5 +47,5 @@ MonoBehaviour:
   _game: {fileID: 0}
   _inputController: {fileID: 0}
   _pitchStart: 0.76
-  _pitchPerLevel: 0.001
+  _pitchPerLevel: 0.012
   _pitchMax: 1.26

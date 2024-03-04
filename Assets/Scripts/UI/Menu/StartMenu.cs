@@ -92,7 +92,7 @@ public class StartMenu : MenuNavigation
 
             _sliderMax.Value = _tempValueMax = _dataGame.MaxDigit;
             _sliderSize.Value = _tempValueSize = _dataGame.ShapeType.ToInt();
-            _infinityToggle.IsOn = _tempValueInfinity = _dataGame.IsInfinityMode;
+            _infinityToggle.IsOn = _tempValueInfinity = _dataGame.IsInfinityMode || (_dataGame.IsNewGame && _dataGame.MaxScore == 0 && !SettingsGame.Instance.IsFirstStart);
 
             #region Local Functions
             void SetStart(bool isContinueGame)

@@ -23,7 +23,7 @@ public partial class YMoney
 
         async void PauseCallback()
         {
-            await UniTask.Delay(500, true);
+            await UniTask.Delay(1500, true);
             taskCompletion.TrySetResult(true);
             await UniTask.Delay(100, true);
             taskCloseRewardedVideo?.TrySetResult(true);

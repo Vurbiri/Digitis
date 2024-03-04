@@ -63,7 +63,6 @@ public class Block : APooledObject<Block>
         SetParent(parent);
         _thisTransform.localPosition = position.ToVector3();
         Position = _thisTransform.localPosition.ToVector2Int();
-        Debug.Log(position.ToVector3());
     }
 
     public void StartFall(float speed) => _blockSFX.StartFall(speed);

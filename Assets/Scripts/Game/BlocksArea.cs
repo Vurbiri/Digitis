@@ -3,14 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class BlocksArea : MonoBehaviour
 {
     [SerializeField] private Vector2Int _size = new(10, 20);
     [SerializeField] private Transform _container;
     [Space]
-    [SerializeField] private GridStartArea _areaStart;
+    [SerializeField] private GameObject _areaStart;
     [Space]
     [SerializeField] private int _timePauseBlocksRemoved = 225;
     [SerializeField] private int _timePauseBombExploded = 175;
@@ -34,16 +33,13 @@ public class BlocksArea : MonoBehaviour
     public Vector2Int Size => _size;
 
     private const int ADD_VIRTUAL_Y_SIZE = 5;
+    private const int AREA_Y_SIZE_INFINITYMODE = 18;
 
     private void Awake()
     {
         _dataGame = DataGame.InstanceF;
         _blocks = new Block[_size.x, _size.y + ADD_VIRTUAL_Y_SIZE];
-    }
-
-    public void Initialize(ShapeSize sizeShape)
-    {
-        _areaStart.Initialize(_dataGame.IsInfinityMode, sizeShape);
+        _areaStart.SetActive(_dataGame.IsInfinityMode);
     }
 
     public void SetArea(Func<Vector2, int, Block> getBlock)
@@ -101,6 +97,13 @@ public class BlocksArea : MonoBehaviour
                 return false;
         return true;
     }
+    public bool IsCorrectArea(HashSet<Vector2Int> set, int offsetX)
+    {
+        foreach (var s in set)
+            if (!IsCorrectIndexX(s.x + offsetX))
+                return false;
+        return true;
+    }
 
     public bool IsEmptyArea(List<Block> blocks, Vector2Int offset)
     {
@@ -109,9 +112,17 @@ public class BlocksArea : MonoBehaviour
                 return false;
         return true;
     }
+    public bool IsCorrectArea(List<Block> blocks, int offsetX)
+    {
+        foreach (var block in blocks)
+            if (!IsCorrectIndexX(block.Position.x + offsetX))
+                return false;
+        return true;
+    }
     public bool IsEmptyCell(Vector2Int index) => IsCorrectIndex(index) && this[index] == null;
     public bool IsEmptyDownstairs(Block block) => IsEmptyDownstairs(block.Position);
     public bool IsEmptyDownstairs(Vector2Int index) => IsCorrectIndexY(--index.y) && this[index] == null;
+    public bool IsEmptyStartArea => _maxFillY < AREA_Y_SIZE_INFINITYMODE;
     #endregion
 
     public async UniTask<Dictionary<int, int>> CheckNewBlocksAsync()

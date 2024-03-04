@@ -48,7 +48,8 @@ MonoBehaviour:
   _clipMove: {fileID: 8300000, guid: f9b81a11d5dbff440b3d4298670d970f, type: 3}
   _clipRotate: {fileID: 8300000, guid: 916a2b93ab6fe7c49ade334a021a682a, type: 3}
   _clipDown: {fileID: 8300000, guid: e5ce38c5461d244478e7ec0688b250c5, type: 3}
-  _clipToBomb: {fileID: 8300000, guid: 39e10db952d8a02408734b454274a772, type: 3}
+  _clipSpawn: {fileID: 8300000, guid: 39e10db952d8a02408734b454274a772, type: 3}
+  _clipToBomb: {fileID: 8300000, guid: 5c2cfdd7e155cbb418e8a5aab681052f, type: 3}
   _clipError: {fileID: 8300000, guid: 7cb82732bbbad164ab66a973baf3e6f3, type: 3}
   _clipFixed: {fileID: 8300000, guid: 1e2ca625d0634b64dbb04f8aa4827984, type: 3}
 --- !u!82 &1258733559800825864
