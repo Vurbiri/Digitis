@@ -16,6 +16,6 @@ public class MaxScoreBoard : ABoard
     private void OnDestroy()
     {
         if (DataGame.Instance != null && DataGame.Instance.IsInfinityMode)
-            _dataGame.EventChangeScore -= SetText;
+            _dataGame.EventChangeMaxScore -= SetText;
     }
 }
