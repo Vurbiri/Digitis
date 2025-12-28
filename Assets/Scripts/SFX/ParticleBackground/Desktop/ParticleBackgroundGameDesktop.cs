@@ -19,8 +19,6 @@ public class ParticleBackgroundGameDesktop : ParticleBackgroundMenuDesktop
         SetSpeed(CalkSpeed(_dataGame.Level));
         _dataGame.EventChangeLevel += OnChangeLevel;
         _game.EventGameOver += OnGameOver;
-        _game.EventLeaderboard += (b) => { if (!b) return; StartReColorParticlesCoroutine(); };
-
     }
 
     private void OnChangeLevel(int level) => SetSpeed(CalkSpeed(level));

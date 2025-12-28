@@ -14,7 +14,6 @@ public class PersonalPanelAndBoardsGame : MonoBehaviour
     [SerializeField] private GameObject _levelPanel;
     [SerializeField] private GameObject _scoreMaxPanel;
     [Space]
-    [SerializeField] private RawImage _avatar;
     [SerializeField] private TMP_Text _name;
     [SerializeField] private TMP_Text _textLevel;
     [SerializeField] private TMP_Text _textMaxScore;
@@ -29,7 +28,6 @@ public class PersonalPanelAndBoardsGame : MonoBehaviour
         Localization.Instance.EventSwitchLanguage += SetLocalizationName;
 
         _name.text = _personalPanel.Name;
-        _avatar.texture = _personalPanel.Avatar;
 
         _isInfinityMode = DataGame.Instance.IsInfinityMode;
 

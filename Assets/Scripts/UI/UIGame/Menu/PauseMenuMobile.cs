@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,12 +9,6 @@ public class PauseMenuMobile : MenuNavigation
     [SerializeField] private InputMobileController _inputController;
     [Space]
     [SerializeField] private GameObject _panelPause;
-    [Space]
-    [SerializeField] private GameObject _panelLeaderboard;
-    [SerializeField] private LeaderboardUI _leaderboardUI;
-    [Space]
-    [SerializeField] private Title _title;
-    [SerializeField] private string _key = "Digitis";
     [Scene, Space]
     [SerializeField] private int _sceneMenu = 1;
 
@@ -27,24 +20,10 @@ public class PauseMenuMobile : MenuNavigation
         _settings = SettingsGame.Instance;
 
         _inputController.EventPause += () => gameObject.SetActive(true);
-        _game.EventLeaderboard += OnLeaderboard;
 
         _panelPause.SetActive(true);
-        _panelLeaderboard.SetActive(false);
 
         gameObject.SetActive(false);
-
-        void OnLeaderboard(bool isLeaderboard)
-        {
-            if (!isLeaderboard) return;
-            
-            _leaderboardUI.TryReward().Forget();
-
-            _title.Key = _key;
-            _panelPause.SetActive(false);
-            _panelLeaderboard.SetActive(true); 
-            gameObject.SetActive(true);
-        }
     }
 
     public void OnOk()

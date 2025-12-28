@@ -10,6 +10,5 @@ public class ParticleBackgroundGameMobile : ParticleBackgroundMenuMobile
         base.Awake();
 
         _game.EventGameOver += OnGameOver;
-        _game.EventLeaderboard += (b) => { if (!b) return; StartReColorParticlesCoroutine(); };
     }
 }

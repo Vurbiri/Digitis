@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 
@@ -9,7 +8,7 @@ public abstract class ASaveLoadJsonTo
 
     public abstract bool IsValid { get; }
 
-    public abstract UniTask<bool> Initialize(string key);
+    public abstract bool Initialize(string key);
 
     public virtual Return<T> Load<T>(string key) where T : class
     {

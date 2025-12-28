@@ -27,6 +27,7 @@ public class LoadScene
     {
         _slider = slider;
         _isAddProgress = isAddProgress;
+        Start();
     }
 
     public void Start()

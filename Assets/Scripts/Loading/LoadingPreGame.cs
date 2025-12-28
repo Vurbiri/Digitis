@@ -1,121 +1,49 @@
-using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LoadingPreGame : MonoBehaviour
 {
-    [SerializeField, Scene] private int _nextSceneMobile = 1;
-    [SerializeField, Scene] private int _nextSceneDesktop = 1;
-    [Space]
-    [SerializeField] private Slider _slider;
-    [SerializeField] private LogOnPanel _logOnPanel;
+	[SerializeField, Scene] private int _nextSceneMobile = 1;
+	[SerializeField, Scene] private int _nextSceneDesktop = 1;
+	[Space]
+	[SerializeField] private Slider _slider;
 
-    private void Start() => Loading().Forget();
+	private void Start()
+	{
+		Message.Log("Start LoadingPreGame");
 
-    private async UniTaskVoid Loading()
-    {
-        Message.Log("Start LoadingPreGame");
+		var settings = SettingsGame.InstanceF;
+		settings.SetPlatform();
 
-        LoadScene loadScene = null;
+		var loadScene = new LoadScene(settings.IsDesktop ? _nextSceneDesktop : _nextSceneMobile, _slider, true);
 
-        YandexSDK ysdk = YandexSDK.InstanceF;
-        Localization localization = Localization.InstanceF;
-        SettingsGame settings = SettingsGame.InstanceF;
+		var localization = Localization.InstanceF;
+		if (!localization.Initialize())
+			Message.Error("Error loading Localization!");
 
-        if (!localization.Initialize())
-            Message.Error("Error loading Localization!");
+		Banners.InstanceF.Initialize();
 
-        ProgressLoad(0.1f);
+		if (!Storage.StoragesCreate())
+			Message.Banner(localization.GetText("ErrorStorage"), MessageType.Error, 7000);
 
-        if (!await InitializeYSDK())
-            Message.Log("YandexSDK - initialization error!");
+		settings.IsFirstStart = !InitializeStorages();
 
-        ProgressLoad(0.2f);
+		Message.Log("End LoadingPreGame");
+		loadScene.End();
 
-        settings.SetPlatform();
-        Banners.InstanceF.Initialize();
+		#region Local Functions
+		static bool InitializeStorages()
+		{
+			bool isLoad = Storage.Initialize();
 
-        ProgressLoad(0.22f);
+			if (isLoad)
+				Message.Log("Storage initialize");
+			else
+				Message.Log("Storage not initialize");
 
-        StartLoadScene();
-        await CreateStorages();
-        
-        if (!ysdk.IsLogOn)
-        {
-            if (await _logOnPanel.TryLogOn())
-                await CreateStorages();
-        }
-
-        Message.Log("End LoadingPreGame");
-        loadScene.End();
-
-        #region Local Functions
-        async UniTask<bool> InitializeYSDK()
-        {
-            if (!await ysdk.InitYsdk())
-                return false;
-
-            if (!await ysdk.InitPlayer())
-                Message.Log("Player - initialization error!");
-
-            if (!await ysdk.InitLeaderboards())
-                Message.Log("Leaderboards - initialization error!");
-
-            return true;
-        }
-        void StartLoadScene()
-        {
-            loadScene = new(settings.IsDesktop ? _nextSceneDesktop : _nextSceneMobile, _slider, true);
-            loadScene.Start();
-
-            ProgressLoad(0.27f);
-        }
-        async UniTask CreateStorages(string key = null)
-        {
-            if (!Storage.StoragesCreate())
-                Message.Banner(localization.GetText("ErrorStorage"), MessageType.Error, 7000);
-            
-            ProgressLoad(0.35f);
-
-            settings.IsFirstStart = !await InitializeStorages();
-
-            ProgressLoad(0.42f);
-
-            #region Local Functions
-            async UniTask<bool> InitializeStorages()
-            {
-                bool isLoad = await Storage.Initialize(key);
-            
-                if (isLoad)
-                    Message.Log("Storage initialize");
-                else
-                    Message.Log("Storage not initialize");
-
-                return Load(isLoad);
-
-                #region Local Functions
-                bool Load(bool load)
-                {
-                    bool result = false;
-
-                    result = settings.Initialize(load) || result;
-                    return DataGame.InstanceF.Initialize(load) || result;
-                }
-                #endregion
-            }
-            #endregion
-        }
-
-        void ProgressLoad(float value)
-        {
-            if (loadScene != null)
-                loadScene.SetProgress(value);
-            else
-                _slider.value = value;
-        }
-        #endregion
-    }
-
-    private void OnDisable() => YandexSDK.Instance.LoadingAPI_Ready();
+			return SettingsGame.Instance.Initialize(isLoad) | DataGame.InstanceF.Initialize(isLoad);
+		}
+		#endregion
+	}
 }

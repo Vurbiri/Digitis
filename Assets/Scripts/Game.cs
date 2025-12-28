@@ -37,7 +37,6 @@ public class Game : MonoBehaviour
     public event Action EventUnPause;
     public event Action EventGameOver;
     public event Action EventNewRecord;
-    public event Action<bool> EventLeaderboard;
 
     private void Awake()
     {
@@ -162,15 +161,12 @@ public class Game : MonoBehaviour
         _shapesManager.EventEndMoveDown -= OnBlockEndMoveDown;
         _inputController.ControlEnable = false;
 
-        bool isLeaderboard = !IsInfinity && await YandexSDK.Instance.TrySetScore((int)_dataGame.Score);
         _dataGame.ResetData();
         Save();
         EventGameOver?.Invoke();
 
         await UniTask.Delay(PAUSE_GAMEOVER);
         await _shapesManager.RemoveAll();
-
-        EventLeaderboard?.Invoke(isLeaderboard);
     }
 
     private void OnBomb()

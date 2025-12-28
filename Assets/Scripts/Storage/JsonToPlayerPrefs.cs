@@ -1,43 +1,33 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class JsonToLocalStorage : ASaveLoadJsonTo
+public class JsonToPlayerPrefs : ASaveLoadJsonTo
 {
     private string _key;
 
-#if UNITY_EDITOR
-    public override bool IsValid => false;
-#else
-    public override bool IsValid => UtilityJS.IsStorage();
-#endif
+    public override bool IsValid => true;
 
     public override bool Initialize(string key)
     {
         _key = key;
 
-        string json;
-
-        try
+        if (PlayerPrefs.HasKey(_key))
         {
-            json = UtilityJS.GetStorage(_key);
-        }
-        catch (Exception ex)
-        {
-            json = null;
-            Message.Log(ex.Message);
-        }
+            string json = PlayerPrefs.GetString(_key);
 
-        if (!string.IsNullOrEmpty(json))
-        {
-            Return<Dictionary<string, string>> d = Deserialize<Dictionary<string, string>>(json);
-
-            if (d.Result)
+            if (json != null)
             {
-                _saved = d.Value;
-                return true;
+                var d = Deserialize<Dictionary<string, string>>(json);
+
+                if (d.Result)
+                {
+                    _saved = d.Value;
+                    return true;
+                }
             }
         }
-
         _saved = new();
         return false;
     }
@@ -50,12 +40,12 @@ public class JsonToLocalStorage : ASaveLoadJsonTo
             callback?.Invoke(result);
             return;
         }
-
+        
         try
         {
             string json = Serialize(_saved);
-            result = UtilityJS.SetStorage(_key, json);
-
+            PlayerPrefs.SetString(_key, json);
+            PlayerPrefs.Save();
         }
         catch (Exception ex)
         {
@@ -66,5 +56,7 @@ public class JsonToLocalStorage : ASaveLoadJsonTo
         {
             callback?.Invoke(result);
         }
+
     }
 }
+#endif

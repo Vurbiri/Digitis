@@ -1,37 +1,38 @@
+#if UNITY_EDITOR
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
 
-public class JsonToYandex : ASaveLoadJsonTo
+public class JsonToFile : ASaveLoadJsonTo
 {
-    private string _key;
-    private YandexSDK YSDK => YandexSDK.Instance;
+    private string _path;
 
-    public override bool IsValid => YSDK.IsLogOn;
+    public override bool IsValid => true;
 
-    public async override UniTask<bool> Initialize(string key)
+    public override bool Initialize(string fileName)
     {
-        _key = key;
-        string json;
+        _path = Path.Combine(Application.persistentDataPath, fileName);
 
-        try
+        if (File.Exists(_path))
         {
-            json = await YSDK.Load(_key);
-        }
-        catch (Exception ex)
-        {
-            json = null;
-            Message.Log(ex.Message);
-        }
+            string json;
 
-        if (!string.IsNullOrEmpty(json))
-        {
-            Return<Dictionary<string, string>> d = Deserialize<Dictionary<string, string>>(json);
-
-            if (d.Result)
+            using (StreamReader sr = new(_path))
             {
-                _saved = d.Value;
-                return true;
+                json = sr.ReadToEnd();
+            }
+
+            if (!string.IsNullOrEmpty(json))
+            {
+                var d = Deserialize<Dictionary<string, string>>(json);
+
+                if (d.Result)
+                {
+                    _saved = d.Value;
+                    return true;
+                }
             }
         }
 
@@ -57,8 +58,9 @@ public class JsonToYandex : ASaveLoadJsonTo
         try
         {
             string json = Serialize(_saved);
-            result = await YSDK.Save(_key, json);
-            _dictModified = !result;
+            using StreamWriter sw = new(_path);
+            await sw.WriteAsync(json);
+            _dictModified = false;
         }
         catch (Exception ex)
         {
@@ -71,3 +73,4 @@ public class JsonToYandex : ASaveLoadJsonTo
         }
     }
 }
+#endif

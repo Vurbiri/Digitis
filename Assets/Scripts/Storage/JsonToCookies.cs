@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 
@@ -6,15 +5,18 @@ public class JsonToCookies : ASaveLoadJsonTo
 {
     private string _key;
 
+#if UNITY_EDITOR
+    public override bool IsValid => false;
+#else
     public override bool IsValid => UtilityJS.IsCookies();
+#endif
 
-    public async override UniTask<bool> Initialize(string key)
+    public override bool Initialize(string key)
     {
         _key = key;
 
         string json;
 
-        await UniTask.Delay(0, true);
         try
         {
             json = UtilityJS.GetCookies(_key);

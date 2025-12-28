@@ -25,7 +25,7 @@ public class Banner : APooledObject<Banner>
         _image = GetComponent<Image>();
         HorizontalLayoutGroup layoutGroup = GetComponent<HorizontalLayoutGroup>();
 
-        float size = SettingsGame.InstanceF.IsDesktop ? _fontSizeDesktop : _fontSizeMobile;
+        float size = SettingsGame.Instance.IsDesktop ? _fontSizeDesktop : _fontSizeMobile;
         _text.fontSize = size;
         size /= 2f;
         GetComponent<Outline>().effectDistance = Vector2.one * size;

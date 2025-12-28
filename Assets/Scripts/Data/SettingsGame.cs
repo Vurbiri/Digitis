@@ -28,25 +28,9 @@ public class SettingsGame : ASingleton<SettingsGame>
 
     public event Action<float> EventChangeSensitivityButtons;
 
-    private YandexSDK _ysdk;
-    private Localization _localization;
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        IsDesktop = !UtilityJS.IsMobile;
-
-        _ysdk = YandexSDK.InstanceF;
-        _localization = Localization.InstanceF;
-    }
-
     public void SetPlatform()
     {
-        if (_ysdk.IsPlayer)
-            IsDesktop = _ysdk.IsDesktop;
-        else
-            IsDesktop = !UtilityJS.IsMobile;
+        IsDesktop = !UtilityJS.IsMobile;
     }
 
     public bool Initialize(bool isLoad)
@@ -77,7 +61,7 @@ public class SettingsGame : ASingleton<SettingsGame>
 
     public void Save(bool isSaveHard = true, Action<bool> callback = null)
     {
-        _profileCurrent.idLang = _localization.CurrentIdLang;
+        _profileCurrent.idLang = Localization.Instance.CurrentIdLang;
         foreach (var mixer in Enum<MixerGroup>.GetValues())
         {
             _audioMixer.GetFloat(mixer.ToString(), out float volumeDB);
@@ -115,15 +99,11 @@ public class SettingsGame : ASingleton<SettingsGame>
     {
         QualitySettings.SetQualityLevel(IsDesktop ? _qualityDesktop : _qualityMobile);
         _profileCurrent = (IsDesktop ? _profileDesktop : _profileMobile).Clone();
-
-        if (_ysdk.IsInitialize)
-            if (_localization.TryIdFromCode(_ysdk.Lang, out int id))
-                _profileCurrent.idLang = id;
     }
 
     private void Apply()
     {
-        _localization.SwitchLanguage(_profileCurrent.idLang);
+        Localization.Instance.SwitchLanguage(_profileCurrent.idLang);
         foreach (var mixer in Enum<MixerGroup>.GetValues())
             SetVolume(mixer, _profileCurrent.volumes[mixer.ToInt()]);
     }
