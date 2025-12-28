@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1356,7 +1355,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 0.5
   m_fontSizeMax: 2
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1785,7 +1784,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 0.5
   m_fontSizeMax: 2
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -10632,12 +10631,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!81 &819452085
 AudioListener:
   m_ObjectHideFlags: 0
@@ -18379,6 +18378,7 @@ MonoBehaviour:
   _keyAnonymName: Anonym
   _avatarGuest: {fileID: 2800000, guid: 4dc7588d8c059ad4fbb962369d53654c, type: 3}
   _avatarAnonym: {fileID: 2800000, guid: 77b1ed2461573c84caa8d61e26e2b0aa, type: 3}
+  _avatarError: {fileID: 2800000, guid: db519588a4458b34e94860dff24a1277, type: 3}
   _avatarSize: 1
   _avatar: {fileID: 1274396909}
   _name: {fileID: 1088719683}
@@ -19257,7 +19257,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1103610162
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -19268,7 +19268,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 0.5
   m_fontSizeMax: 2
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -19904,6 +19904,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AvatarMaskImage
+      objectReference: {fileID: 0}
+    - target: {fileID: 4295127666206420467, guid: 0e7aec99e5204f348a1adf688b0e33ce,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4548783535263019373, guid: 0e7aec99e5204f348a1adf688b0e33ce,
         type: 3}
@@ -21223,7 +21228,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1103610162
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -21234,7 +21239,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 0.5
   m_fontSizeMax: 2
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -21371,7 +21376,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1103610162
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -21382,7 +21387,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 0.5
   m_fontSizeMax: 2
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -23284,7 +23289,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 0.5
   m_fontSizeMax: 2
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -24280,7 +24285,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 0.5
   m_fontSizeMax: 2
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -25685,7 +25690,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 0.5
   m_fontSizeMax: 2
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -26594,8 +26599,8 @@ MonoBehaviour:
     type: 3}
   _rect: {fileID: 1904437588}
   _avatarSize: 0
-  _maxTop: 20
-  _maxAround: 10
+  _maxTop: 10
+  _maxAround: 5
 --- !u!1 &1923384219
 GameObject:
   m_ObjectHideFlags: 0
@@ -28292,7 +28297,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 0.5
   m_fontSizeMax: 2
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535

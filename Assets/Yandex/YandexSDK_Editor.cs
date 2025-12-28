@@ -44,7 +44,7 @@ public partial class YandexSDK
         return true;
     }
     public UniTask<bool> InitLeaderboards() => UniTask.RunOnThreadPool(() => false);
-    public UniTask<Return<Texture>> GetPlayerAvatar(AvatarSize size) => UniTask.RunOnThreadPool<Return<Texture>>(() => Return<Texture>.Empty);
+    public string GetPlayerAvatarURL(AvatarSize size) => string.Empty;
 
     public UniTask<Return<LeaderboardResult>> GetPlayerResult() => UniTask.RunOnThreadPool(() => new Return<LeaderboardResult>(new LeaderboardResult(6, 1)));
     private UniTask<bool> SetScore(int score) => UniTask.RunOnThreadPool(() => true);

@@ -80,8 +80,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Music
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 28eb44f311d79d8449477a34c109e9d9, type: 2}
-  m_sharedMaterial: {fileID: -4430357540152708083, guid: 28eb44f311d79d8449477a34c109e9d9,
+  m_fontAsset: {fileID: 11400000, guid: d5d3b78081a1d2c408ab4e60ee58f39e, type: 2}
+  m_sharedMaterial: {fileID: 764521181611793953, guid: d5d3b78081a1d2c408ab4e60ee58f39e,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1103610162
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -112,7 +112,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 0.5
   m_fontSizeMax: 2
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 1024
   m_textAlignment: 65535

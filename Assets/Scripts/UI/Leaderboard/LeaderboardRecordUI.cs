@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +13,7 @@ public class LeaderboardRecordUI : MonoBehaviour
     [Space]
     [SerializeField] private string _keyAnonymName = "Anonym";
     [SerializeField] private Texture _avatarAnonym;
+    [SerializeField] private Texture _avatarError;
     [Space]
     [SerializeField] private Image _fonImage;
     [SerializeField] private Image _maskAvatar;
@@ -26,16 +26,21 @@ public class LeaderboardRecordUI : MonoBehaviour
 
     public void Setup(LeaderboardRecord record, bool isPlayer = false)
     {
+        bool isNameEmpty;
+
         SetText(_rankText, record.Rank.ToString());
         SetText(_scoreText, record.Score.ToString());
-        if(!string.IsNullOrEmpty(record.Name))
+        if (!(isNameEmpty = string.IsNullOrEmpty(record.Name)))
             SetText(_nameText, record.Name);
         else
             SetText(_nameText, Localization.Instance.GetText(_keyAnonymName));
 
-        SetAvatar(record.AvatarURL).Forget();
+        if (isNameEmpty)
+            _avatarRawImage.texture = _avatarAnonym;
+        else
+            StartCoroutine(Storage.TryLoadTextureWeb(_avatarRawImage, _avatarError, record.AvatarURL));
 
-        if(isPlayer)
+        if (isPlayer)
             SetFonColor(_fonPlayer);
         else
             SetFonColor(_fonNormal);
@@ -52,16 +57,6 @@ public class LeaderboardRecordUI : MonoBehaviour
         {
             text.text = str;
             text.color = _colorText;
-        }
-
-        async UniTaskVoid SetAvatar(string url)
-        {
-            var texture = await Storage.TryLoadTextureWeb(url);
-            if (texture.Result)
-                _avatarRawImage.texture = texture.Value;
-            else
-                _avatarRawImage.texture = _avatarAnonym;
-
         }
 
         void SetFonColor(Color color)

@@ -1,8 +1,10 @@
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 using static UnityEngine.Networking.UnityWebRequest;
 
 public static class Storage
@@ -66,17 +68,26 @@ public static class Storage
     }
     public static string Serialize(object obj) => JsonConvert.SerializeObject(obj);
 
-    public static async UniTask<Return<Texture>> TryLoadTextureWeb(string url)
+    public static IEnumerator TryLoadTextureWeb(RawImage avatar, Texture avatarError, string url)
     {
-        if (string.IsNullOrEmpty(url))
-            return Return<Texture>.Empty;
+        if (string.IsNullOrEmpty(url) || !url.StartsWith("https://"))
+        {
+            avatar.texture = avatarError;
+            yield break;
+        }
 
-        using var request = UnityWebRequestTexture.GetTexture(url);
-        await request.SendWebRequest();
+        using (var request = UnityWebRequestTexture.GetTexture(url))
+        {
+            yield return request.SendWebRequest();
 
-        if (request.result != Result.Success)
-            return Return<Texture>.Empty;
+            if (request.result != Result.Success || request.downloadHandler == null)
+            {
+                Message.Log("==== UnityWebRequest: " + request.error);
+                avatar.texture = avatarError;
+                yield break;
+            }
 
-        return new(true, ((DownloadHandlerTexture)request.downloadHandler).texture);
+            avatar.texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
+        }
     }
 }

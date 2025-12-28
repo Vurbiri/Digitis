@@ -113,8 +113,27 @@ var UtilityPlugin =
         console.log("== GetCookies: " + isCookieEnabled + " ++");
         return isCookieEnabled;
     },
+	
+	$func: {
+        isEmpty: function (obj) {
+            if (!obj) return true;
+
+            return Object.keys(obj).length === 0;
+        },
+		
+		toUnityString: function (returnStr) {
+            if (func.isEmpty(returnStr))
+                return null;
+
+            var bufferSize = lengthBytesUTF8(returnStr) + 1;
+            var buffer = _malloc(bufferSize);
+            stringToUTF8(returnStr, buffer, bufferSize);
+            return buffer;
+        },
+    },
 
 }
 
+autoAddDeps(UtilityPlugin, '$func');
 mergeInto(LibraryManager.library, UtilityPlugin);
 

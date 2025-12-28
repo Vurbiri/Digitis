@@ -16,11 +16,7 @@ public partial class YandexSDK : ASingleton<YandexSDK>
     public bool IsMobile => IsMobileJS();
 
     public string PlayerName => GetPlayerNameJS();
-    public UniTask<Return<Texture>> GetPlayerAvatar(AvatarSize size)
-    {
-        string url = GetPlayerAvatarURLJS(size.ToString().ToLower());
-        return Storage.TryLoadTextureWeb(url);
-    }
+    public string GetPlayerAvatarURL(AvatarSize size) => GetPlayerAvatarURLJS(size.ToString().ToLower());
     public string Lang => GetLangJS();
 
     public async UniTask<bool> InitYsdk()

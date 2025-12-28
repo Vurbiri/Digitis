@@ -1,4 +1,4 @@
-using Cysharp.Threading.Tasks;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +10,7 @@ public class PersonalPanel : MonoBehaviour
     [Space]
     [SerializeField] private Texture _avatarGuest;
     [SerializeField] private Texture _avatarAnonym;
+    [SerializeField] private Texture _avatarError;
     [SerializeField] private AvatarSize _avatarSize = AvatarSize.Medium;
     [Space]
     [SerializeField] private RawImage _avatar;
@@ -26,30 +27,38 @@ public class PersonalPanel : MonoBehaviour
         _ysdk = YandexSDK.InstanceF;
         _localization = Localization.InstanceF;
 
-        Personalization().Forget();
+        StartCoroutine(Personalization());
 
-        async UniTaskVoid Personalization()
+        IEnumerator Personalization(bool isFirst = true)
         {
+            bool isRepeat = false;
+
             if (_ysdk.IsLogOn)
             {
                 string name = _ysdk.PlayerName;
-                if (!string.IsNullOrEmpty(name))
+                if (!(isRepeat = string.IsNullOrEmpty(name)))
                     _name.text = name;
                 else
                     _name.text = _localization.GetText(_keyAnonymName);
 
-                var texture = await _ysdk.GetPlayerAvatar(_avatarSize);
-                if (texture.Result)
-                    _avatar.texture = texture.Value;
-                else
+                if (isRepeat)
                     _avatar.texture = _avatarAnonym;
-
+                else
+                    StartCoroutine(Storage.TryLoadTextureWeb(_avatar, _avatarError, _ysdk.GetPlayerAvatarURL(_avatarSize)));
             }
             else
             {
                 _name.text = _localization.GetText(_keyGuestName);
                 _avatar.texture = _avatarGuest;
             }
+
+            if (isFirst && isRepeat)
+            {
+                yield return new WaitForSecondsRealtime(3f);
+                StartCoroutine(Personalization(false));
+                yield break;
+            }
+
             _localization.EventSwitchLanguage += SetLocalizationName;
         }
     }
